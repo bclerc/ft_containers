@@ -26,7 +26,7 @@ namespace ft
 	template<bool Cond, class T = void>
 	struct enable_if
 	{
-		T type = Cond ? 1 : 0;
+
 	};
 
 	template <class InputIterator1, class InputIterator2>
