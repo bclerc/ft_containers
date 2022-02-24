@@ -44,7 +44,7 @@ namespace ft {
 				return ;
 			}
 		
-			pointer base() 
+			pointer base() const
 			{
 				return (this->_base);
 			}
