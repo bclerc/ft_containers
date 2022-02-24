@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 17:57:09 by bclerc            #+#    #+#             */
-/*   Updated: 2022/02/23 21:24:49 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/02/24 13:02:36 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,24 +21,23 @@ namespace ft {
 	class reverse_iterator {
 
 		public:
-			typedef Iterator 											iterator_type;
-			typedef ft::iterator_traits<Iterator>::iterator_category	iterator_category;
-			typedef ft::iterator_traits<Iterator>::value_type			value_type;
-			typedef ft::iterator_traits<Iterator>::difference_type		difference_type;
-			typedef ft::iterator_traits<Iterator>::pointer				pointer;
-			typedef ft::iterator_traits<Iterator>::reference			reference; 
+			typedef Iterator 													iterator_type;
+			typedef typename ft::iterator_traits<Iterator>::iterator_category	iterator_category;
+			typedef typename ft::iterator_traits<Iterator>::value_type			value_type;
+			typedef typename ft::iterator_traits<Iterator>::difference_type		difference_type;
+			typedef typename ft::iterator_traits<Iterator>::pointer				pointer;
+			typedef typename ft::iterator_traits<Iterator>::reference			reference; 
 
 		private:
 			iterator_type _base;
-			pointer		 _current;
 
 
 		public:
-			reverse_iterator(void) : _base(-1), _current(-1) {}
-			explicit reverse_iterator(iterator_type it) : _base(it), _current(&_base) {}
+			reverse_iterator(void) : _base(-1) {}
+			explicit reverse_iterator(iterator_type it) : _base(it){}
 				
 			template <class Iter>
-			reverse_iterator (const reverse_iterator<Iterator>& rev_it) : _base(rev_it.base()), _current(&_base) 
+			reverse_iterator (const reverse_iterator<Iterator>& rev_it) : _base(rev_it.base())
 			{
 				*this = rev_it;	
 				return ;
@@ -53,17 +52,17 @@ namespace ft {
 			{
 				iterator_type tmp;
 				tmp = this->_base;
-				return (*--tmp)
+				return (*(--tmp));
 			}
 
 			reverse_iterator operator+(difference_type n) const
 			{
-				return (reverse_iterator(_base - 5));
+				return (reverse_iterator(_base - n));
 			}
 
 			reverse_iterator & operator++()
 			{
-				--_curent;
+				--_base;
 				return(this);
 			}
 
@@ -87,7 +86,7 @@ namespace ft {
 
 			reverse_iterator & operator--() 
 			{
-				++_curent;
+				++_base;
 				return(this);
 			}
 
@@ -104,7 +103,7 @@ namespace ft {
 				return (*this);
 			}
 
-			pointer operator->() const;
+			pointer operator->() const
 			{
 				return &(operator*());
 			}

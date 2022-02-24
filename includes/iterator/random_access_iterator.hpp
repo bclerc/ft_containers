@@ -23,10 +23,10 @@ namespace ft {
 	class random_access_iterator : public ft::iterator<ft::random_access_iterator_tag, T> {
 
 		public:
-			typedef typename ft::iterator<ft::random_access_iterator_tag, T>::value_type	iterator_type;
-			typedef typename ft::iterator<ft::random_access_iterator_tag, T>::Distance		difference_type;
-			typedef T*																		pointer;
-			typedef T&																		reference;
+			typedef typename ft::iterator<ft::random_access_iterator_tag, T>::value_type		iterator_type;
+			typedef typename ft::iterator<ft::random_access_iterator_tag, T>::difference_type	difference_type;
+			typedef T*																			pointer;
+			typedef T&																			reference;
 			
 
 		private:
@@ -34,7 +34,7 @@ namespace ft {
 
 
 		public:
-			random_access_iterator(void) : _base(-1) {}
+			random_access_iterator(void) : _base(nullptr) {}
 			explicit random_access_iterator(pointer it) : _base(it) {}
 				
 			template <class Iter>
@@ -51,9 +51,7 @@ namespace ft {
 
 			reference operator*() const
 			{
-				iterator_type tmp;
-				tmp = this->_base;
-				return (*tmp);
+				return (*this->_base);
 			}
 
 			random_access_iterator operator+(difference_type n) const
@@ -64,7 +62,7 @@ namespace ft {
 			random_access_iterator & operator++()
 			{
 				++_base;
-				return(this);
+				return(*this);
 			}
 
 			random_access_iterator operator++(int)
@@ -88,7 +86,7 @@ namespace ft {
 			random_access_iterator & operator--() 
 			{
 				--_base;
-				return(this);
+				return(*this);
 			}
 
 			random_access_iterator operator--(int)
@@ -111,7 +109,7 @@ namespace ft {
 
 			reference operator[] (difference_type n) const
 			{
-				return (random_access_iterator<const T>(_base[n - 1]));
+				return (*(_base + n));
 			}
 	};
 
