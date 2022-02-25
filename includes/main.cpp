@@ -1,74 +1,52 @@
 #include "pair.tpp"
 #include "equal.tpp"
+#include "Vector.hpp"
+#include <iostream>    
+#include <algorithm>
 #include <vector>
-#include <iostream>     // std::cout
-#include <algorithm>    // std::equal
-#include <vector>  
 
-bool mypredicate (int i, int j) {
-  return (i==j);
-}
-
-bool mycomp (char c1, char c2)
-{ return std::tolower(c1)<std::tolower(c2); }
-
-template <class T>
-typename std::enable_if<std::is_integral<T>::value,bool>::type
-  is_odd (T i) {return bool(i%2);}
-
-// 2. the second template argument is only valid if T is an integral type:
-template < class T,
-           class = typename std::enable_if<std::is_integral<T>::value>::type>
-bool is_even (T i) {return !bool(i%2);}
 
 int main(void)
 {
-	ft::pair<int, int> yo{10, 20};
-	std::cout << yo.first << " " << yo.second << std::endl;
+	ft::vector<int> tab(5);
 
+	std::vector<int> lol;
+	std::cout << lol.capacity() << std::endl;
 
-  int myints[] = {20,40,60,80,100};               //   myints: 20 40 60 80 100
-  std::vector<int>myvector (myints,myints+5);     // myvector: 20 40 60 80 100
+	std::vector<int> tab_std(5);
+	std::cout << "std::vector::capacity = " << tab_std.capacity() << std::endl;
+	std::cout << "ft::vector::capacity = " << tab.capacity() << std::endl;
+	tab.push_back(1);
+	tab.push_back(2);
+	tab.push_back(3);
+	tab.push_back(4);
+	tab.push_back(150);
 
-  // using default comparison:
-  if ( ft::equal (myvector.begin(), myvector.end(), myints) )
-    std::cout << "The contents of both sequences are equal.\n";
-  else
-    std::cout << "The contents of both sequences differ.\n";
+	tab_std.push_back(1);
+	tab_std.push_back(2);
+	tab_std.push_back(3);
+	tab_std.push_back(4);
+	tab_std.push_back(150);
+	
+	std::cout << std::endl <<  "ft::vector::at " << tab.at(9) << std::endl;
+	std::cout <<				"std::vector::at " << tab_std.at(9) << std::endl << std::endl;
 
-  myvector[3]=81;                                 // myvector: 20 40 60 81 100
-  // using predicate comparison:
-  if ( ft::equal (myvector.begin(), myvector.end(), myints, mypredicate) )
-    std::cout << "The contents of both sequences are equal.\n";
-  else
-    std::cout << "The contents of both sequences differ.\n";
+	typedef typename ft::vector<int>::iterator iterator;
+	for (iterator it = tab.begin(); it != tab.end(); it++)
+	{
+		std::cout << "Iterator: " << *it << std::endl;
+	}
+	std::cout << "==" << std::endl; 
+	typedef typename std::vector<int>::iterator iteratorstd;
+	for (iteratorstd it = tab_std.begin(); it != tab_std.end(); it++)
+	{
+		std::cout << "Iterator: " << *it << std::endl;
+	}
 
-	  char foo[]="Apple";
-  char bar[]="apartment";
-
-  std::cout << std::boolalpha;
-
-  std::cout << "Comparing foo and bar lexicographically (foo<bar):\n";
-
-  std::cout << "Using default comparison (operator<): ";
-  std::cout << ft::lexicographical_compare(foo,foo+5,bar,bar+9);
-  std::cout << '\n';
-
-  std::cout << "Using mycomp as comparison object: ";
-  std::cout << ft::lexicographical_compare(foo,foo+5,bar,bar+9,mycomp);
-  std::cout << '\n';
-
-  std::cout << "is_integral:" << std::endl;
-  std::cout << "char: " << ft::is_integral<char>::value << std::endl;
-  std::cout << "int: " << ft::is_integral<int>::value << std::endl;
-  std::cout << "float: " << ft::is_integral<float>::value << std::endl;
-
-
-  short int i = 1;    // code does not compile if type of i is not integral
-
-  std::cout << std::boolalpha;
-  std::cout << "i is odd: " << is_odd(i) << std::endl;
-  std::cout << "i is even: " << is_even(i) << std::endl;
+	std::cout << "std::vector::capacity = " << tab_std.capacity() << std::endl;
+	std::cout << "ft::vector::capacity = " << tab.capacity() << std::endl;
+	std::cout << "std::vector::size = " << tab_std.size() << std::endl;
+	std::cout << "ft::vector::size = " << tab.size() << std::endl;
 
 	return 0;
 }
