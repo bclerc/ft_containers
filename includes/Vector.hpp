@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:56:08 by bclerc            #+#    #+#             */
-/*   Updated: 2022/02/28 13:51:53 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/02/28 14:17:09 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,7 +196,6 @@ namespace ft {
 			const_reverse_iterator rend() const
 			{
 				return const_reverse_iterator(_data + _size);
-
 			}
 
 			bool empty(void) const

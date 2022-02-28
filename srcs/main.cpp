@@ -23,8 +23,8 @@ int main(void)
 	tab_std.push_back(4);
 	tab_std.push_back(150);
 	
-	std::cout << std::endl <<  "ft::vector::at " << tab.at(9) << std::endl;
-	std::cout <<				"std::vector::at " << tab_std.at(9) << std::endl << std::endl;
+	std::cout << std::endl << "ft::vector::at " << tab.at(9) << std::endl;
+	std::cout << "std::vector::at " << tab_std.at(9) << std::endl << std::endl;
 
 	int ints[] = {15, 12 ,58};
 	tab.assign(ints, ints+3);
