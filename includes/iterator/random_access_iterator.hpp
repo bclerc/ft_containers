@@ -34,7 +34,7 @@ namespace ft {
 
 
 		public:
-			random_access_iterator(void) : _base(nullptr) {}
+			random_access_iterator(void) : _base(NULL) {}
 			explicit random_access_iterator(pointer it) : _base(it) {}
 				
 			template <class Iter>

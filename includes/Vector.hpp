@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:56:08 by bclerc            #+#    #+#             */
-/*   Updated: 2022/02/28 11:53:07 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/02/28 13:39:29 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,11 @@
 # include <exception>
 # include "iterator/random_access_iterator.hpp"
 # include "iterator/reverse_iterator.hpp"
-
+# include "equal.hpp"
 
 namespace ft {
 
-	template<class T, class Allocator = std::allocator<T>>
+	template<class T, class Allocator = std::allocator<T> >
 	class vector {
 
 		public:
@@ -52,19 +52,18 @@ namespace ft {
 
 		public :
 	
-			vector (void) : _size(0), _data(nullptr), _capacity(5) {
-				/* _alloc = Allocator;
-				_data = _alloc.allocate(5); */
+			vector (void) : _size(0), _capacity(5) {
+				_alloc = Allocator();
+				_data = _alloc.allocate(5);
 				return ;
 			}
 			
 			explicit vector (const Allocator & alloc)
 			{
-				
-	
-
+				_alloc = Allocator();
+				_data = _alloc.allocate(5);
+				return ;
 			}
-
 			explicit vector (size_type count, const T& value = T(), const Allocator & alloc = Allocator()) : _size(count), _alloc(alloc)
 			{
 				_data = _alloc.allocate(count);
@@ -86,10 +85,28 @@ namespace ft {
 			
 			vector& operator=( const vector& other );
 
-			void assign( size_type count, const T& value );
-		
+			void assign( size_type count, const value_type& value )
+			{
+				resize(count);
+				for (int it = 0; it < count; it++)
+					_alloc.construct(_data + it, value);
+			}
 			template< class InputIt >
-			void assign( InputIt first, InputIt last );
+			void assign( InputIt first,
+				typename ft::enable_if<!ft::is_integral<InputIt>::value, InputIt>::type last)
+			{
+				InputIt tmp = first;
+				int		count = 0;
+
+				for (InputIt it = first; it != last; it++)
+					count++;
+				resize(count);
+				for (int it = 0; it < count; it++)
+				{
+					_alloc.construct(_data + it, *first);
+					first++;
+				}
+			}	
 		
 			allocator_type get_allocator() const;
 			reference at( size_type pos )
@@ -220,7 +237,12 @@ namespace ft {
 				return (this->_capacity);	
 			}
 
-			void clear();
+			void clear()
+			{
+				for (int i = 0; i < _size; i++)
+					_alloc.destroy(_data + i);
+				_size = 0;
+			}
 
 			iterator insert(iterator pos, const T& value );
 			void insert( iterator pos, size_type count, const T& value );
