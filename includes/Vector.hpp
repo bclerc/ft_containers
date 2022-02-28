@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:56:08 by bclerc            #+#    #+#             */
-/*   Updated: 2022/02/24 17:22:49 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/02/28 11:53:07 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,13 +120,19 @@ namespace ft {
 				return (*_data);
 			}
 
-			const_reference front() const;
+			const_reference front() const
 			{
 				return (const_cast<const_reference>(*_data));
 			}
 
-			reference back();
-			const_reference back() const;
+			reference back()
+			{
+				return (_data + (_size - 1));
+			}
+			const_reference back() const
+			{
+				return (const_cast<const_reference>(_data + (_size - 1)));
+			};
 
 			T* data(void)
 			{
@@ -217,9 +223,6 @@ namespace ft {
 			void clear();
 
 			iterator insert(iterator pos, const T& value );
-			{
-				
-			}
 			void insert( iterator pos, size_type count, const T& value );
 			template< class InputIt >
 			void insert( iterator pos, InputIt first, InputIt last );
@@ -234,13 +237,34 @@ namespace ft {
 				_size++;
 			}
 
-			void resize( size_type count, T value = T() );
-			void pop_back()
+			 void resize( size_type count, T value = T())
 			{
-				_alloc.destroy(_data + (_size - 1));
-				_size--;
+				int tmp;
+
+				if (_size > count)
+				{
+					tmp = _size;
+					while (tmp >= 0)
+					{	
+						_alloc.destroy(_data + tmp);
+						tmp--;
+					}				
+					_size = count;
+				}
+				else 
+				{
+					try {
+						if (count > _capacity)
+							reserve(std::max(_capacity * 2, count));
+						for (int i = _size; i < count; i++)
+								_alloc.construct(_data + i , value);
+						_size = count;
+					}
+					catch (std::exception & e ) {
+						std::cerr << e.what() << std::endl;
+					}
+				}
 			}
-			void swap( vector& other );
 	};
 };
 
