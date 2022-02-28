@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:56:08 by bclerc            #+#    #+#             */
-/*   Updated: 2022/02/28 13:39:29 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/02/28 13:51:53 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,9 @@ namespace ft {
 
 		public :
 	
-			vector (void) : _size(0), _capacity(5) {
+			vector (void) : _size(0), _capacity(0) {
 				_alloc = Allocator();
-				_data = _alloc.allocate(5);
+				_data = NULL;
 				return ;
 			}
 			
@@ -254,7 +254,7 @@ namespace ft {
 			void push_back( const T& value )
 			{
 				if (_size  == _capacity)
-					reserve(_capacity * 2);
+					reserve(_capacity < 5 ? _capacity + 1 : _capacity * 2);
 				_alloc.construct(_data + _size , value); 
 				_size++;
 			}

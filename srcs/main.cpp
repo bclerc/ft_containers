@@ -8,10 +8,6 @@
 int main(void)
 {
 	ft::vector<int> tab(5);
-
-	std::vector<int> lol;
-	std::cout << lol.capacity() << std::endl;
-
 	std::vector<int> tab_std(5);
 	std::cout << "std::vector::capacity = " << tab_std.capacity() << std::endl;
 	std::cout << "ft::vector::capacity = " << tab.capacity() << std::endl;
