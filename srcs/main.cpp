@@ -9,6 +9,8 @@ int main(void)
 {
 	ft::vector<int> tab(5);
 	std::vector<int> tab_std(5);
+	ft::vector<int> tabd;
+
 	std::cout << "std::vector::capacity = " << tab_std.capacity() << std::endl;
 	std::cout << "ft::vector::capacity = " << tab.capacity() << std::endl;
 	tab.push_back(1);
@@ -26,16 +28,23 @@ int main(void)
 	std::cout << std::endl << "ft::vector::at " << tab.at(9) << std::endl;
 	std::cout << "std::vector::at " << tab_std.at(9) << std::endl << std::endl;
 
-	int ints[] = {15, 12 ,58};
+/* 	int ints[] = {15, 12 ,58};
 	tab.assign(ints, ints+3);
-	tab_std.assign(ints, ints+3);
+	tab_std.assign(ints, ints+3); */
 	typedef ft::vector<int>::iterator iterator;
+	typedef std::vector<int>::iterator iteratorstd;
+	
+	iteratorstd itd = tab_std.end();
+	iterator it = tab.end();
+	itd--; it--;
+	tab_std.erase(--itd);
+	tab.erase(--it);
+	
 	for (iterator it = tab.begin(); it != tab.end(); it++)
 	{
 		std::cout << "Iterator: " << *it << std::endl;
 	}
 	std::cout << "==" << std::endl; 
-	typedef std::vector<int>::iterator iteratorstd;
 	for (iteratorstd it = tab_std.begin(); it != tab_std.end(); it++)
 	{
 		std::cout << "Iterator: " << *it << std::endl;

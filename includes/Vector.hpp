@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:56:08 by bclerc            #+#    #+#             */
-/*   Updated: 2022/02/28 14:17:09 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/03/01 14:56:45 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,11 @@ namespace ft {
 				_alloc.deallocate(this->_data, _capacity);
 			};
 			
-			vector& operator=( const vector& other );
+			vector& operator=( const vector& other )
+			{
+				this->assign(other.begin(), other.end());
+				return (*this);
+			}
 
 			void assign( size_type count, const value_type& value )
 			{
@@ -91,6 +95,7 @@ namespace ft {
 				for (int it = 0; it < count; it++)
 					_alloc.construct(_data + it, value);
 			}
+
 			template< class InputIt >
 			void assign( InputIt first,
 				typename ft::enable_if<!ft::is_integral<InputIt>::value, InputIt>::type last)
@@ -108,7 +113,11 @@ namespace ft {
 				}
 			}	
 		
-			allocator_type get_allocator() const;
+			allocator_type get_allocator() const
+			{
+				return (this->_alloc);
+			}
+			
 			reference at( size_type pos )
 			{
 				if (pos >= size())
@@ -247,8 +256,36 @@ namespace ft {
 			void insert( iterator pos, size_type count, const T& value );
 			template< class InputIt >
 			void insert( iterator pos, InputIt first, InputIt last );
-			iterator erase( iterator pos );
-			iterator erase( iterator first, iterator last );
+
+			iterator erase( iterator pos )
+			{
+				iterator	it = this->begin();
+				int			i = 0;
+				int			e = 0;
+				T 			*new_data;
+				
+				new_data = _alloc.allocate(_size - 1);
+				while (i < (_size ))
+				{
+					if (pos != it)
+					{	
+						_alloc.construct(new_data + e, *(_data + i));
+						e++;
+					}
+					i++;
+					it++;
+				}
+				this->clear();
+				_alloc.deallocate(_data, _size);
+				_data = new_data;
+				_size = i - 1;
+				return (iterator(_data));
+			}
+
+			iterator erase( iterator first, iterator last )
+			{
+				
+			}
 
 			void push_back( const T& value )
 			{
@@ -258,7 +295,7 @@ namespace ft {
 				_size++;
 			}
 
-			 void resize( size_type count, T value = T())
+			void resize( size_type count, T value = T())
 			{
 				int tmp;
 
