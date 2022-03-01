@@ -36,9 +36,9 @@ int main(void)
 	
 	iteratorstd itd = tab_std.end();
 	iterator it = tab.end();
-	itd--; it--;
-	tab_std.erase(--itd);
-	tab.erase(--it);
+
+	tab_std.erase(tab_std.begin(), tab_std.end());
+	tab.erase(tab.begin(), tab.end());
 	
 	for (iterator it = tab.begin(); it != tab.end(); it++)
 	{

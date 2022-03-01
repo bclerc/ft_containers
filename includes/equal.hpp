@@ -25,6 +25,17 @@ namespace ft
 	template <> struct is_integral<unsigned long long int>	{static const bool value = true;};
 
 
+	template <class Iterator>
+	size_t	distance(Iterator first, Iterator last)
+	{
+		size_t i = 0;
+		for (Iterator it = first; it != last; it++)
+		{
+			i++;
+		}
+		return (i);
+	}
+
 	template <class InputIterator1, class InputIterator2>
 	bool	equal (InputIterator1 first1, InputIterator1 last1, InputIterator2 first2)
 	{

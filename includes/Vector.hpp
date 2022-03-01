@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:56:08 by bclerc            #+#    #+#             */
-/*   Updated: 2022/03/01 15:04:31 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/03/01 16:04:25 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ namespace ft {
 		
 			template< class InputIt >
 			vector( InputIt first, InputIt last, const Allocator& alloc = Allocator());
+			
 			~vector(void)
 			{
 				for(int i = 0; i < _capacity; i++)
@@ -290,7 +291,28 @@ namespace ft {
 
 			iterator erase( iterator first, iterator last )
 			{
-				
+				iterator	it = this->begin();
+				int			i = 0;
+				int			e = 0;
+				int			b = ft::distance<iterator>(first, last);
+				T 			*new_data;
+
+				new_data = _alloc.allocate(_size - b);
+				while (i < (_size))
+				{
+					if (!(it >= first && it < last))
+					{	
+						_alloc.construct(new_data + e, *(_data + i));
+						e++;
+					}
+					i++;
+					it++;
+				}
+				this->clear();
+				_alloc.deallocate(_data, _size);
+				_data = new_data;
+				_size = e;
+				return (iterator(_data));
 			}
 
 			void push_back( const T& value )

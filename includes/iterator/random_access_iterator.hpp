@@ -56,7 +56,9 @@ namespace ft {
 
 			random_access_iterator operator+(difference_type n) const
 			{
-				return (random_access_iterator(_base + 5));
+				T *tmp;
+				tmp = _base + n;
+				return (random_access_iterator(tmp));
 			}
 
 			random_access_iterator & operator++()
@@ -80,7 +82,9 @@ namespace ft {
 
 			random_access_iterator operator-(difference_type n) const
 			{
-				return (random_access_iterator(_base - 5));
+				T *tmp;
+				tmp = _base - n;
+				return (random_access_iterator(tmp));
 			}
 
 			random_access_iterator & operator--() 
