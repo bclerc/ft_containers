@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:56:08 by bclerc            #+#    #+#             */
-/*   Updated: 2022/03/01 15:00:49 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/03/01 15:04:31 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,8 +72,14 @@ namespace ft {
 
 				return ;
 			}
-			vector (vector const & cpy);
-			
+			vector (vector const & cpy)
+			{
+				this->_alloc = cpy->_alloc;
+				this->size = cpy.size();
+				this->capacity = cpy.capacity();
+				this->assign(cpy.begin(), cpy.end());
+			}	
+		
 			template< class InputIt >
 			vector( InputIt first, InputIt last, const Allocator& alloc = Allocator());
 			~vector(void)
