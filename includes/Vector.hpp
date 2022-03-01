@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:56:08 by bclerc            #+#    #+#             */
-/*   Updated: 2022/03/01 14:56:45 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/03/01 15:00:49 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,13 +121,13 @@ namespace ft {
 			reference at( size_type pos )
 			{
 				if (pos >= size())
-					throw std::out_of_range("pos > this->size()");
+					throw std::out_of_range("vector<T>::at (pos > this->size())");
 				return (*(_data + pos));
 			}
 			const_reference at( size_type pos ) const
 			{
 				if (pos >= size())
-					throw std::out_of_range("pos > this->size()");
+					throw std::out_of_range("vector<T>::at (pos > this->size())");
 				return (const_cast<const_reference>(*(_data + pos)));
 			}
 
@@ -226,7 +226,7 @@ namespace ft {
 			{
 				T* new_data;
 				if (new_cap > max_size())
-					throw std::length_error("new_cap > max_size()");
+					throw std::length_error("vector<T>::reserve::new_cap > max_size()");
 				if (new_cap < capacity())
 					return ;
 				new_data = _alloc.allocate(new_cap);
