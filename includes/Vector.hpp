@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:56:08 by bclerc            #+#    #+#             */
-/*   Updated: 2022/03/01 17:07:37 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/03/01 18:08:35 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,11 @@ namespace ft {
 			size_type		_capacity;
 			allocator_type	_alloc;
 
+			void	_move_right(void)
+			{
+				
+			}
+
 		public :
 	
 			vector (void) : _size(0), _capacity(0) {
@@ -69,7 +74,6 @@ namespace ft {
 				_data = _alloc.allocate(count);
 				_capacity = count;
 				std::uninitialized_fill_n(_data, count, value);
-
 				return ;
 			}
 			vector (vector const & cpy)
@@ -115,6 +119,7 @@ namespace ft {
 				resize(count);
 				for (int it = 0; it < count; it++)
 				{
+					_alloc.destroy(_data + it);
 					_alloc.construct(_data + it, *first);
 					first++;
 				}
@@ -122,7 +127,7 @@ namespace ft {
 		
 			allocator_type get_allocator() const
 			{
-				return (this->_alloc);
+				return (_alloc);
 			}
 			
 			reference at( size_type pos )
@@ -169,26 +174,26 @@ namespace ft {
 
 			T* data(void)
 			{
-				return this->_data;
+				return _data;
 			}
 
 			const T* data(void) const
 			{
-				return const_cast<T*>(this->_data);
+				return const_cast<T*>(_data);
 			}
 
 			iterator begin()
 			{
-				return (iterator(this->_data));
+				return (iterator(_data));
 			}
 			const_iterator begin() const
 			{
-				return (const_iterator(this->_data));
+				return (const_iterator(_data));
 			}
 
 			iterator end()
 			{
-				return (iterator(this->_data + _size));
+				return (iterator(_data + _size));
 			}
 
 			const_iterator end() const
@@ -216,12 +221,12 @@ namespace ft {
 
 			bool empty(void) const
 			{
-				return (this->_size == 0);
+				return (_size == 0);
 			}
 
 			size_type size(void) const
 			{
-				return this->_size;
+				return _size;
 			}
 
 			size_type max_size() const
@@ -242,14 +247,14 @@ namespace ft {
 					_alloc.construct(new_data + i, *(_data + i));
 					_alloc.destroy(_data + i);
 				}
-				_alloc.deallocate(this->_data, this->_capacity);
-				this->_data = new_data;
-				this->_capacity = new_cap;
+				_alloc.deallocate(_data, _capacity);
+				_data = new_data;
+				_capacity = new_cap;
 			}
 
 			size_type capacity() const
 			{
-				return (this->_capacity);	
+				return (_capacity);	
 			}
 
 			void clear()
@@ -273,7 +278,7 @@ namespace ft {
 				iterator	it = this->begin();
 				int			i = 0;
 				int			e = 0;
-				T 			*new_data;
+				T 			*new_data[_size - 1];
 
 				while (i < (_size ))
 				{
@@ -295,16 +300,15 @@ namespace ft {
 				iterator	it = this->begin();
 				int			i = 0;
 				int			e = 0;
+				T 			new_data[_size - ft::distance<iterator>(first, last)];
 
 				if (first == last)
 					return (first);
-
-				T 			*new_data;
 				while (i < (_size))
 				{
 					if (!(it >= first && it < last))
 					{	
-						new_data [e] = *(_data + i);
+						new_data[e] = *(_data + i);
 						e++;
 					}
 					i++;
