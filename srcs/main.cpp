@@ -28,17 +28,17 @@ int main(void)
 	std::cout << std::endl << "ft::vector::at " << tab.at(9) << std::endl;
 	std::cout << "std::vector::at " << tab_std.at(9) << std::endl << std::endl;
 
-/* 	int ints[] = {15, 12 ,58};
-	tab.assign(ints, ints+3);
-	tab_std.assign(ints, ints+3); */
+ 	int ints[] = {15, 12 ,58, 50};
+	tab.assign(ints, ints+4);
+	tab_std.assign(ints, ints+4); 
 	typedef ft::vector<int>::iterator iterator;
 	typedef std::vector<int>::iterator iteratorstd;
 	
 	iteratorstd itd = tab_std.end();
 	iterator it = tab.end();
 
-	tab_std.erase(tab_std.begin(), tab_std.end());
-	tab.erase(tab.begin(), tab.end());
+	//tab_std.erase(tab_std.begin(), tab_std.end());
+	//tab.erase(tab.begin(), tab.end());
 	
 	for (iterator it = tab.begin(); it != tab.end(); it++)
 	{

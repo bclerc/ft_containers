@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:56:08 by bclerc            #+#    #+#             */
-/*   Updated: 2022/03/01 16:04:25 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/03/01 17:07:37 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -259,7 +259,11 @@ namespace ft {
 				_size = 0;
 			}
 
-			iterator insert(iterator pos, const T& value );
+			iterator insert(iterator pos, const T& value )
+			{
+				
+			}
+			
 			void insert( iterator pos, size_type count, const T& value );
 			template< class InputIt >
 			void insert( iterator pos, InputIt first, InputIt last );
@@ -270,22 +274,19 @@ namespace ft {
 				int			i = 0;
 				int			e = 0;
 				T 			*new_data;
-				
-				new_data = _alloc.allocate(_size - 1);
+
 				while (i < (_size ))
 				{
 					if (pos != it)
 					{	
-						_alloc.construct(new_data + e, *(_data + i));
+						new_data[e] = *(_data + i);
 						e++;
 					}
 					i++;
 					it++;
 				}
 				this->clear();
-				_alloc.deallocate(_data, _size);
-				_data = new_data;
-				_size = i - 1;
+				this->assign(new_data, new_data + e);
 				return (iterator(_data));
 			}
 
@@ -294,24 +295,23 @@ namespace ft {
 				iterator	it = this->begin();
 				int			i = 0;
 				int			e = 0;
-				int			b = ft::distance<iterator>(first, last);
-				T 			*new_data;
 
-				new_data = _alloc.allocate(_size - b);
+				if (first == last)
+					return (first);
+
+				T 			*new_data;
 				while (i < (_size))
 				{
 					if (!(it >= first && it < last))
 					{	
-						_alloc.construct(new_data + e, *(_data + i));
+						new_data [e] = *(_data + i);
 						e++;
 					}
 					i++;
 					it++;
 				}
 				this->clear();
-				_alloc.deallocate(_data, _size);
-				_data = new_data;
-				_size = e;
+				this->assign(new_data, new_data + e);
 				return (iterator(_data));
 			}
 
