@@ -34,9 +34,9 @@ int main(void)
 	typedef ft::vector<int>::iterator iterator;
 	typedef std::vector<int>::iterator iteratorstd;
 	
-
-	tab_std.erase(tab_std.begin() + 2, tab_std.end() -2);
-	tab.erase(tab.begin() + 2, tab.end() -2);
+	
+	tab_std.erase(tab_std.begin() + 6);
+	tab.erase(tab.begin() + 6);
 	
 	iteratorstd itd = tab_std.end();
 	iterator it = tab.end();
@@ -50,7 +50,6 @@ int main(void)
 	{
 		std::cout << "Iterator: " << *it << std::endl;
 	}
-
 	//tab.clear();
 	//tab_std.clear();
 	std::cout << "std::vector::capacity = " << tab_std.capacity() << std::endl;

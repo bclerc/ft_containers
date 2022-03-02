@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:56:08 by bclerc            #+#    #+#             */
-/*   Updated: 2022/03/01 18:08:35 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/03/02 15:57:00 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,9 @@ namespace ft {
 			size_type		_capacity;
 			allocator_type	_alloc;
 
-			void	_move_right(void)
+			void	_move_right(iterator first, iterator last)
 			{
-				
-			}
+			}	
 
 		public :
 	
@@ -275,24 +274,15 @@ namespace ft {
 
 			iterator erase( iterator pos )
 			{
-				iterator	it = this->begin();
-				int			i = 0;
-				int			e = 0;
-				T 			*new_data[_size - 1];
-
-				while (i < (_size ))
+				pointer del = &(*(pos));
+				_alloc.destroy(del);
+				for (int i = i = 0; i < ((_data + _size) - del) - 1; i++)		
 				{
-					if (pos != it)
-					{	
-						new_data[e] = *(_data + i);
-						e++;
-					}
-					i++;
-					it++;
+					_alloc.construct(del + i, *(del + i + 1));
+					_alloc.destroy(del + i + 1);
 				}
-				this->clear();
-				this->assign(new_data, new_data + e);
-				return (iterator(_data));
+				_size -= 1;
+				return (iterator(del)); 
 			}
 
 			iterator erase( iterator first, iterator last )
@@ -301,7 +291,7 @@ namespace ft {
 				int			i = 0;
 				int			e = 0;
 				T 			new_data[_size - ft::distance<iterator>(first, last)];
-
+				
 				if (first == last)
 					return (first);
 				while (i < (_size))
