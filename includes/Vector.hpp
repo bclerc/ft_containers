@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:56:08 by bclerc            #+#    #+#             */
-/*   Updated: 2022/03/02 16:13:10 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/03/02 17:29:00 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,24 +50,21 @@ namespace ft {
 			size_type		_capacity;
 			allocator_type	_alloc;
 
-			void	_move_right(iterator first, iterator last)
-			{
-			}	
 
 		public :
-	
 			vector (void) : _size(0), _capacity(0) {
 				_alloc = Allocator();
 				_data = NULL;
 				return ;
 			}
-			
+
 			explicit vector (const Allocator & alloc)
 			{
 				_alloc = Allocator();
 				_data = _alloc.allocate(5);
 				return ;
 			}
+
 			explicit vector (size_type count, const T& value = T(), const Allocator & alloc = Allocator()) : _size(count), _alloc(alloc)
 			{
 				_data = _alloc.allocate(count);
@@ -75,6 +72,7 @@ namespace ft {
 				std::uninitialized_fill_n(_data, count, value);
 				return ;
 			}
+
 			vector (vector const & cpy)
 			{
 				this->_alloc = cpy->_alloc;
@@ -82,17 +80,17 @@ namespace ft {
 				this->capacity = cpy.capacity();
 				this->assign(cpy.begin(), cpy.end());
 			}	
-		
+
 			template< class InputIt >
 			vector( InputIt first, InputIt last, const Allocator& alloc = Allocator());
-			
+
 			~vector(void)
 			{
 				for(int i = 0; i < _capacity; i++)
 					_alloc.destroy(_data + i);
 				_alloc.deallocate(this->_data, _capacity);
 			};
-			
+
 			vector& operator=( const vector& other )
 			{
 				this->assign(other.begin(), other.end());
@@ -123,18 +121,19 @@ namespace ft {
 					first++;
 				}
 			}	
-		
+
 			allocator_type get_allocator() const
 			{
 				return (_alloc);
 			}
-			
+
 			reference at( size_type pos )
 			{
 				if (pos >= size())
 					throw std::out_of_range("vector<T>::at (pos > this->size())");
 				return (*(_data + pos));
 			}
+
 			const_reference at( size_type pos ) const
 			{
 				if (pos >= size())
@@ -166,6 +165,7 @@ namespace ft {
 			{
 				return (_data + (_size - 1));
 			}
+
 			const_reference back() const
 			{
 				return (const_cast<const_reference>(_data + (_size - 1)));
@@ -185,6 +185,7 @@ namespace ft {
 			{
 				return (iterator(_data));
 			}
+
 			const_iterator begin() const
 			{
 				return (const_iterator(_data));
@@ -204,15 +205,17 @@ namespace ft {
 			{
 				return reverse_iterator(_data);
 			}
+
 			const_reverse_iterator rbegin() const
 			{
 				return const_reverse_iterator(_data);
 			}
-		
+
 			reverse_iterator rend()
 			{
 				return reverse_iterator(_data + _size);
 			}
+
 			const_reverse_iterator rend() const
 			{
 				return const_reverse_iterator(_data + _size);
@@ -265,7 +268,19 @@ namespace ft {
 
 			iterator insert(iterator pos, const T& value )
 			{
+				pointer p_pos = &(*(pos));
+				size_type	int_pos = p_pos - _data;
 				
+				if (_size == _capacity)
+					reserve(_capacity * 2);
+				for (size_type i = _size; i > int_pos; i--)
+				{
+					_alloc.construct(_data + i, *((_data + i) - 1));
+					_alloc.destroy((_data + i) - 1);
+				}
+				_alloc.construct(_data + (int_pos), value);
+				_size += 1;
+				return iterator(p_pos);
 			}
 			
 			void insert( iterator pos, size_type count, const T& value );

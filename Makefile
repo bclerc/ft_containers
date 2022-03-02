@@ -17,7 +17,7 @@ SOURCES =	srcs/main.cpp
 OBJECTS = $(SOURCES:.cpp=.o)
 
 FSANITIZE = -fsanitize=address 
-CFLAGS = -std=c++98  #-Werror -Wall -Wextra #$(FSANITIZE)
+CFLAGS =  #-g3 -fsanitize=address #-Werror -Wall -Wextra 
  
 .PHONY: all re clean fclean libft force doclean
 
@@ -28,7 +28,7 @@ $(NAME): $(OBJECTS) $(LIBS)
 	@printf "$(PURPLE)$(NAME) $(CYAN)successfully compiled. $(GREEN)✓$(CYAN)\n"
 force: $(OBJECTS)
 	@printf "$(CYAN) All objectsfor $(PURPLE)$(PROJECT_NAME)$(CYAN) where successfully created.\n"
-	@clang++ $(CFLAGS) -o $(NAME) $(OBJECTS) -g
+	@c++ $(CFLAGS) -o $(NAME) $(OBJECTS) -g
 	@printf "$(PURPLE)$(NAME)$(CYAN) successfully compiled. $(CGREEN)✓$(CYAN)\n"
 
 %.o: %.cpp
