@@ -33,10 +33,9 @@ int main(void)
 	//tab_std.assign(ints, ints+4); 
 	typedef ft::vector<int>::iterator iterator;
 	typedef std::vector<int>::iterator iteratorstd;
-	
-	
-	tab_std.erase(tab_std.begin() + 6);
-	tab.erase(tab.begin() + 6);
+
+	tab_std.erase(tab_std.begin() + 2, tab_std.end() - 3);
+	tab.erase(tab.begin() + 2, tab.end() - 3);
 	
 	iteratorstd itd = tab_std.end();
 	iterator it = tab.end();

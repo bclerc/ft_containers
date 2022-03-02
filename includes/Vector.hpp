@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:56:08 by bclerc            #+#    #+#             */
-/*   Updated: 2022/03/02 15:57:00 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/03/02 16:13:10 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -276,7 +276,7 @@ namespace ft {
 			{
 				pointer del = &(*(pos));
 				_alloc.destroy(del);
-				for (int i = i = 0; i < ((_data + _size) - del) - 1; i++)		
+				for (int i = 0; i < ((_data + _size) - del) - 1; i++)		
 				{
 					_alloc.construct(del + i, *(del + i + 1));
 					_alloc.destroy(del + i + 1);
@@ -287,26 +287,18 @@ namespace ft {
 
 			iterator erase( iterator first, iterator last )
 			{
-				iterator	it = this->begin();
-				int			i = 0;
-				int			e = 0;
-				T 			new_data[_size - ft::distance<iterator>(first, last)];
+				pointer p_first = &(*(first));
+				pointer	p_last = &(*(last));
 				
-				if (first == last)
-					return (first);
-				while (i < (_size))
+				for (; first != last; first++)
+					_alloc.destroy(&(*(first)));
+				for (int i = 0; i < ((_data + _size) - p_last); i++)
 				{
-					if (!(it >= first && it < last))
-					{	
-						new_data[e] = *(_data + i);
-						e++;
-					}
-					i++;
-					it++;
+					_alloc.construct(p_first + i, *(p_last + i));
+					_alloc.destroy(p_last + i);
 				}
-				this->clear();
-				this->assign(new_data, new_data + e);
-				return (iterator(_data));
+				_size -= p_last - p_first;
+				return (iterator(p_first));
 			}
 
 			void push_back( const T& value )
