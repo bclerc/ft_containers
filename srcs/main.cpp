@@ -9,7 +9,6 @@ int main(void)
 {
 	ft::vector<int> tab(5);
 	std::vector<int> tab_std(5);
-	ft::vector<int> tabd;
 
 	std::cout << "std::vector::capacity = " << tab_std.capacity() << std::endl;
 	std::cout << "ft::vector::capacity = " << tab.capacity() << std::endl;
@@ -37,8 +36,8 @@ int main(void)
 //	tab_std.erase(tab_std.begin() + 2, tab_std.end() - 3);
 //	tab.erase(tab.begin() + 2, tab.end() - 3);
 
-	tab.insert(tab.begin() + 2, 5);	
-	tab_std.insert(tab_std.begin() + 2, 5);
+	tab.insert(tab.begin() + 2, 5);
+	tab_std.insert(tab_std.begin() +2, 5);
 	iteratorstd itd = tab_std.end();
 	iterator it = tab.end();
 

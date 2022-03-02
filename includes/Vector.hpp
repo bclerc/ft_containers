@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:56:08 by bclerc            #+#    #+#             */
-/*   Updated: 2022/03/02 17:29:00 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/03/03 00:23:44 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,8 @@ namespace ft {
 
 
 		public :
-			vector (void) : _size(0), _capacity(0) {
+			vector (void) : _size(0), _capacity(0) 
+			{
 				_alloc = Allocator();
 				_data = NULL;
 				return ;
@@ -283,7 +284,23 @@ namespace ft {
 				return iterator(p_pos);
 			}
 			
-			void insert( iterator pos, size_type count, const T& value );
+			void insert( iterator pos, size_type count, const T& value )
+			{
+				pointer p_pos = &(*(pos));
+				size_type first = p_pos - _data ;
+				size_type last = (p_pos - _data) + count - 1;	
+
+				if (_size + count >= _capacity)
+					reserve(_capacity + count);
+				for (size_type i = _size ; i >= first; i--)
+				{
+					_alloc.construct(_data + last + i, *((_data + first + i) - 1));
+					_alloc.destroy((_data  + first + i) - 1);
+				}
+				for (int i = 0; i < count; i++)
+					_alloc.construct(_data + first + i, value);
+				_size += count;
+			}
 			template< class InputIt >
 			void insert( iterator pos, InputIt first, InputIt last );
 
