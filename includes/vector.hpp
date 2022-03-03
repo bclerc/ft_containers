@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Vector.hpp                                         :+:      :+:    :+:   */
+/*   vector.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:56:08 by bclerc            #+#    #+#             */
-/*   Updated: 2022/03/03 00:47:58 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/03/03 03:49:33 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ namespace ft {
 
 			vector (vector const & cpy)
 			{
-				this->_alloc = cpy->_alloc;
+				this->_alloc = cpy._alloc;
 				this->assign(cpy.begin(), cpy.end());
 			}	
 
@@ -87,7 +87,7 @@ namespace ft {
 
 			~vector(void)
 			{
-				for(int i = 0; i < _capacity; i++)
+				for(size_type i = 0; i < _capacity; i++)
 					_alloc.destroy(_data + i);
 				_alloc.deallocate(this->_data, _capacity);
 			};
@@ -101,7 +101,7 @@ namespace ft {
 			void assign( size_type count, const value_type& value )
 			{
 				resize(count);
-				for (int it = 0; it < count; it++)
+				for (size_type it = 0; it < count; it++)
 					_alloc.construct(_data + it, value);
 			}
 
@@ -109,7 +109,6 @@ namespace ft {
 			void assign( InputIt first,
 				typename ft::enable_if<!ft::is_integral<InputIt>::value, InputIt>::type last)
 			{
-				InputIt tmp = first;
 				int		count = 0;
 
 				for (InputIt it = first; it != last; it++)
@@ -245,7 +244,7 @@ namespace ft {
 				if (new_cap < capacity())
 					return ;
 				new_data = _alloc.allocate(new_cap);
-				for(int i = 0; i < _size; i++)
+				for(size_type i = 0; i < _size; i++)
 				{
 					_alloc.construct(new_data + i, *(_data + i));
 					_alloc.destroy(_data + i);
@@ -262,7 +261,7 @@ namespace ft {
 
 			void clear()
 			{
-				for (int i = 0; i < _size; i++)
+				for (size_type i = 0; i < _size; i++)
 					_alloc.destroy(_data + i);
 				_size = 0;
 			}
@@ -290,7 +289,6 @@ namespace ft {
 				size_type first = p_pos - _data ;
 				size_type last = (p_pos - _data) + count - 1;	
 
-				std::cout << "Malloc = " <<_capacity + count << std::endl;
 				if (_size + count >= _capacity)
 					reserve(_capacity + count);
 				for (size_type i = _size ; i >= first; i--)
@@ -298,7 +296,7 @@ namespace ft {
 					_alloc.construct(_data + last + i, *((_data + first + i) - 1));
 					_alloc.destroy((_data  + first + i) - 1);
 				}
-				for (int i = 0; i < count; i++)
+				for (size_type i = 0; i < count; i++)
 					_alloc.construct(_data + first + i, value);
 				_size += count;
 			}
@@ -308,7 +306,21 @@ namespace ft {
 				typename ft::enable_if<!ft::is_integral<InputIt>::value, InputIt>::type first,
 				 InputIt last)
 				 {
-					 	///
+					pointer p_pos = &(*(pos));
+					size_type dist = ft::distance<InputIt>(first, last);
+					size_type size_first = p_pos - _data ;
+					size_type size_last = (p_pos - _data) + dist - 1;	
+
+					if (_size + dist >= _capacity)
+						reserve(_capacity + dist);
+					for (size_type i = _size ; i >= size_first; i--)
+					{
+						_alloc.construct(_data + size_last + i, *((_data + size_first + i) - 1));
+						_alloc.destroy((_data  + size_first + i) - 1);
+					}
+					for (size_type i = 0; i < dist; i++)
+						_alloc.construct(_data + size_first + i, *first++);
+					_size += dist;
 				 }
 
 			iterator erase( iterator pos )
@@ -348,6 +360,12 @@ namespace ft {
 				_size++;
 			}
 
+			void pop_back(void)
+			{
+				_alloc.destroy(_data + _size - 1);
+				_size -= 1;
+			}
+
 			void resize( size_type count, T value = T())
 			{
 				int tmp;
@@ -367,7 +385,7 @@ namespace ft {
 					try {
 						if (count > _capacity)
 							reserve(std::max(_capacity * 2, count));
-						for (int i = _size; i < count; i++)
+						for (size_type i = _size; i < count; i++)
 								_alloc.construct(_data + i , value);
 						_size = count;
 					}
@@ -376,7 +394,83 @@ namespace ft {
 					}
 				}
 			}
+
+			void swap (vector& x)
+			{
+				allocator_type alloc_tmp = _alloc;
+				T* data_tmp = _data;
+				size_type size_tmp = _size;
+				size_type capacity_tmp = _capacity;
+
+				_alloc = x._alloc;
+				_data = x._data;
+				_size = x._size;
+				_capacity = x._capacity;
+
+				x._alloc = alloc_tmp;
+				x._data = data_tmp;
+				x._size = size_tmp;
+				x._capacity = capacity_tmp;	
+			}
 	};
+
+	template <class T, class Alloc>
+	void swap (vector<T,Alloc>& x, vector<T,Alloc>& y)
+	{
+		x.swap(y);
+	}
+
+	template <class T>
+	bool	lexic_comp(T first, T second)
+	{
+		return (first < second);
+	}
+
+	template <class T, class Alloc>
+  	bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	{
+		return (ft::lexicographical_compare(lhs.begin(), lhs.end(),
+											rhs.begin(), rhs.end()));
+	}
+
+	template <class T, class Alloc>
+  	bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	{
+		return (!(lhs == rhs));
+	}
+
+	template <class T, class Alloc>
+  	bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	{
+		return (ft::lexicographical_compare(lhs.begin(), lhs.end(),
+											rhs.begin(), rhs.end())
+											lexic_comp());
+	}
+	template <class T, class Alloc>
+ 	bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	{
+		return (!(b < a));
+	}
+	template <class T, class Alloc>
+  	bool operator> (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+  	{
+		return (b < a);
+  	}
+
+	template <class T, class Alloc>
+  	bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+  	{
+		  return !(a < b);
+  	}
 };
+
+namespace std {
+
+	template <class T, class Alloc>
+	void swap (ft::vector<T,Alloc>& x, ft::vector<T,Alloc>& y)
+	{
+		ft::swap(x, y);
+	}
+}
 
 #endif

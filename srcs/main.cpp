@@ -1,5 +1,5 @@
 #include "pair.tpp"
-#include "Vector.hpp"
+#include "vector.hpp"
 #include <iostream>    
 #include <algorithm>
 #include <vector>
@@ -7,8 +7,12 @@
 
 int main(void)
 {
-	ft::vector<int> tab(5);
-	std::vector<int> tab_std(5);
+	typedef ft::vector<int>::iterator iterator;
+	typedef std::vector<int>::iterator iteratorstd;
+
+	ft::vector<int> tab(10);
+	ft::vector<int> test(5, 10);
+	std::vector<int> tab_std(10);
 
 	std::cout << "std::vector::capacity = " << tab_std.capacity() << std::endl;
 	std::cout << "ft::vector::capacity = " << tab.capacity() << std::endl;
@@ -28,18 +32,17 @@ int main(void)
 	std::cout << "std::vector::at " << tab_std.at(9) << std::endl << std::endl;
 
  	int ints[] = {15, 12 ,58, 50};
-	//tab.assign(ints, ints+4);
-	//tab_std.assign(ints, ints+4); 
-	typedef ft::vector<int>::iterator iterator;
-	typedef std::vector<int>::iterator iteratorstd;
+	tab.assign(ints, ints+4);
+	tab_std.assign(ints, ints+4); 
 
-//	tab_std.erase(tab_std.begin() + 2, tab_std.end() - 3);
-//	tab.erase(tab.begin() + 2, tab.end() - 3);
+	tab_std.erase(tab_std.begin() + 2, tab_std.end() - 3);
+	tab.erase(tab.begin() + 2, tab.end() - 3);
 
-	//tab.insert(tab.begin() + 2, 10, 5);
-	//tab_std.insert(tab_std.begin() +2, 10,  5);
-	iteratorstd itd = tab_std.end();
-	iterator it = tab.end();
+	tab.insert(tab.begin() + 2, ints, ints+4);
+	tab_std.insert(tab_std.begin() + 2, ints,  ints+4);
+	ft::swap(tab, test);
+	ft::swap(test, tab);
+	std::swap(tab, test);
 
 	for (iterator it = tab.begin(); it != tab.end(); it++)
 	{
@@ -50,8 +53,8 @@ int main(void)
 	{
 		std::cout << "Iterator: " << *it << std::endl;
 	}
-	//tab.clear();
-	//tab_std.clear();
+	tab.clear();
+	tab_std.clear();
 	std::cout << "std::vector::capacity = " << tab_std.capacity() << std::endl;
 	std::cout << "ft::vector::capacity = " << tab.capacity() << std::endl;
 	std::cout << "std::vector::size = " << tab_std.size() << std::endl;

@@ -17,7 +17,7 @@ SOURCES =	srcs/main.cpp
 OBJECTS = $(SOURCES:.cpp=.o)
 
 FSANITIZE = -fsanitize=address 
-CFLAGS =  #-g3 -fsanitize=address #-Werror -Wall -Wextra 
+CFLAGS =  -Werror -Wall -Wextra 
  
 .PHONY: all re clean fclean libft force doclean
 
