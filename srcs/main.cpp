@@ -36,8 +36,8 @@ int main(void)
 //	tab_std.erase(tab_std.begin() + 2, tab_std.end() - 3);
 //	tab.erase(tab.begin() + 2, tab.end() - 3);
 
-	tab.insert(tab.begin() + 2, 5);
-	tab_std.insert(tab_std.begin() +2, 5);
+	//tab.insert(tab.begin() + 2, 10, 5);
+	//tab_std.insert(tab_std.begin() +2, 10,  5);
 	iteratorstd itd = tab_std.end();
 	iterator it = tab.end();
 

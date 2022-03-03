@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:56:08 by bclerc            #+#    #+#             */
-/*   Updated: 2022/03/03 00:23:44 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/03/03 00:47:58 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,6 @@ namespace ft {
 		private: 
 			T*				_data;
 			size_type		_size;
-			iterator		_start;
-			iterator		_end;
 			size_type		_capacity;
 			allocator_type	_alloc;
 
@@ -61,7 +59,7 @@ namespace ft {
 
 			explicit vector (const Allocator & alloc)
 			{
-				_alloc = Allocator();
+				_alloc = alloc;
 				_data = _alloc.allocate(5);
 				return ;
 			}
@@ -77,13 +75,15 @@ namespace ft {
 			vector (vector const & cpy)
 			{
 				this->_alloc = cpy->_alloc;
-				this->size = cpy.size();
-				this->capacity = cpy.capacity();
 				this->assign(cpy.begin(), cpy.end());
 			}	
 
 			template< class InputIt >
-			vector( InputIt first, InputIt last, const Allocator& alloc = Allocator());
+			vector(typename ft::enable_if<!ft::is_integral<InputIt>::value, InputIt>::type first, InputIt last, const Allocator& alloc = Allocator())
+			{
+				_alloc = alloc;
+				this->assign(first, last);
+			};
 
 			~vector(void)
 			{
@@ -290,6 +290,7 @@ namespace ft {
 				size_type first = p_pos - _data ;
 				size_type last = (p_pos - _data) + count - 1;	
 
+				std::cout << "Malloc = " <<_capacity + count << std::endl;
 				if (_size + count >= _capacity)
 					reserve(_capacity + count);
 				for (size_type i = _size ; i >= first; i--)
@@ -301,8 +302,14 @@ namespace ft {
 					_alloc.construct(_data + first + i, value);
 				_size += count;
 			}
+	
 			template< class InputIt >
-			void insert( iterator pos, InputIt first, InputIt last );
+			void insert( iterator pos,
+				typename ft::enable_if<!ft::is_integral<InputIt>::value, InputIt>::type first,
+				 InputIt last)
+				 {
+					 	///
+				 }
 
 			iterator erase( iterator pos )
 			{

@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 17:57:09 by bclerc            #+#    #+#             */
-/*   Updated: 2022/02/24 13:02:36 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/03/03 00:52:36 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ namespace ft {
 
 		private:
 			iterator_type _base;
-
 
 		public:
 			reverse_iterator(void) : _base(-1) {}
