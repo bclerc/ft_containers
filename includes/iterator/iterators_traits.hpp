@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 17:40:33 by bclerc            #+#    #+#             */
-/*   Updated: 2022/03/03 03:36:44 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/03/03 17:44:20 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ namespace ft {
 	struct	bidirectional_iterator_tag {};
 
 	template <class Iterator>
-	class iterator_traits {
+	struct iterator_traits {
 		public :
 			typedef typename Iterator::difference_type 		difference_type;
 			typedef typename Iterator::value_type			value_type;
@@ -30,7 +30,7 @@ namespace ft {
 	};
 
 	template <class T>
-	class iterator_traits<T*> {
+	struct iterator_traits<T*> {
 		public :
 			typedef ptrdiff_t				 	difference_type;
 			typedef T							value_type;
@@ -40,7 +40,7 @@ namespace ft {
 	};
 
 	template <class T>
-	class iterator_traits<const T*> {
+	struct iterator_traits<const T*> {
 		public :
 			typedef ptrdiff_t				 	difference_type;
 			typedef T							value_type;

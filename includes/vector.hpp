@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:56:08 by bclerc            #+#    #+#             */
-/*   Updated: 2022/03/03 04:06:38 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/03/03 19:20:12 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,9 @@ namespace ft {
 			typedef const value_type & 						const_reference;
 			typedef typename Allocator::pointer				pointer;
 			typedef typename Allocator::const_pointer		const_pointer;
-			typedef random_access_iterator<T>				iterator;
-			typedef random_access_iterator<const T>			const_iterator;
-			typedef	reverse_iterator<iterator>				reverse_iterator;
+			typedef ft::random_access_iterator<T>				iterator;
+			typedef ft::random_access_iterator<const T>			const_iterator;
+			typedef	ft::reverse_iterator<iterator>			reverse_iterator;
 			typedef ft::reverse_iterator<const_iterator>	const_reverse_iterator;
 
 		private: 
@@ -203,22 +203,22 @@ namespace ft {
 
 			reverse_iterator rbegin()
 			{
-				return reverse_iterator(_data);
+				return reverse_iterator(this->end());
 			}
 
 			const_reverse_iterator rbegin() const
 			{
-				return reverse_iterator(_data);
+				return const_reverse_iterator(this->end());
 			}
 
 			reverse_iterator rend()
 			{
-				return reverse_iterator(_data + _size);
+				return reverse_iterator(this->begin());
 			}
 
 			const_reverse_iterator rend() const
 			{
-				return const_reverse_iterator(_data + _size);
+				return const_reverse_iterator(this->begin());
 			}
 
 			bool empty(void) const
@@ -310,15 +310,14 @@ namespace ft {
 					size_type dist = ft::distance<InputIt>(first, last);
 					size_type size_first = p_pos - _data ;
 					size_type size_last = (p_pos - _data) + dist - 1;	
-
 					if (_size + dist >= _capacity)
 						reserve(_capacity + dist);
-					for (size_type i = _size ; i >= size_first; i--)
+					for (int i = _size ; i >= (int)size_first; i--)
 					{
 						_alloc.construct(_data + size_last + i, *((_data + size_first + i) - 1));
 						_alloc.destroy((_data  + size_first + i) - 1);
 					}
-					for (size_type i = 0; i < dist; i++)
+ 					for (size_type i = 0; i < dist; i++)
 						_alloc.construct(_data + size_first + i, *first++);
 					_size += dist;
 				 }
