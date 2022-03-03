@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:56:08 by bclerc            #+#    #+#             */
-/*   Updated: 2022/03/03 03:49:33 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/03/03 04:06:38 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ namespace ft {
 			typedef typename Allocator::pointer				pointer;
 			typedef typename Allocator::const_pointer		const_pointer;
 			typedef random_access_iterator<T>				iterator;
-			typedef const random_access_iterator<T>			const_iterator;
+			typedef random_access_iterator<const T>			const_iterator;
 			typedef	reverse_iterator<iterator>				reverse_iterator;
 			typedef ft::reverse_iterator<const_iterator>	const_reverse_iterator;
 
@@ -138,7 +138,7 @@ namespace ft {
 			{
 				if (pos >= size())
 					throw std::out_of_range("vector<T>::at (pos > this->size())");
-				return (const_cast<const_reference>(*(_data + pos)));
+				return (*(_data + pos));
 			}
 
 			reference operator[]( size_type pos )
@@ -148,7 +148,7 @@ namespace ft {
 
 			const_reference operator[]( size_type pos ) const
 			{
-				return (const_cast<const_reference>(*(_data = pos)));
+				return (*(_data = pos));
 			}
 
 			reference front()
@@ -158,17 +158,17 @@ namespace ft {
 
 			const_reference front() const
 			{
-				return (const_cast<const_reference>(*_data));
+				return (*_data);
 			}
 
 			reference back()
 			{
-				return (_data + (_size - 1));
+				return (*(_data + (_size - 1)));
 			}
 
 			const_reference back() const
 			{
-				return (const_cast<const_reference>(_data + (_size - 1)));
+				return (*(_data + (_size - 1)));
 			};
 
 			T* data(void)
@@ -208,7 +208,7 @@ namespace ft {
 
 			const_reverse_iterator rbegin() const
 			{
-				return const_reverse_iterator(_data);
+				return reverse_iterator(_data);
 			}
 
 			reverse_iterator rend()
@@ -420,21 +420,14 @@ namespace ft {
 		x.swap(y);
 	}
 
-	template <class T>
-	bool	lexic_comp(T first, T second)
-	{
-		return (first < second);
-	}
-
 	template <class T, class Alloc>
   	bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 	{
-		return (ft::lexicographical_compare(lhs.begin(), lhs.end(),
-											rhs.begin(), rhs.end()));
+		return (ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
 	}
 
 	template <class T, class Alloc>
-  	bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+  	bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 	{
 		return (!(lhs == rhs));
 	}
@@ -442,25 +435,26 @@ namespace ft {
 	template <class T, class Alloc>
   	bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 	{
+		
 		return (ft::lexicographical_compare(lhs.begin(), lhs.end(),
-											rhs.begin(), rhs.end())
-											lexic_comp());
+											rhs.begin(), rhs.end()));
 	}
+
 	template <class T, class Alloc>
  	bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 	{
-		return (!(b < a));
+		return (!(lhs < rhs));
 	}
 	template <class T, class Alloc>
   	bool operator> (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
   	{
-		return (b < a);
+		return (lhs < rhs);
   	}
 
 	template <class T, class Alloc>
   	bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
   	{
-		  return !(a < b);
+		  return !(lhs < rhs);
   	}
 };
 
