@@ -4,61 +4,54 @@
 #include <algorithm>
 #include <vector>
 
+# define NAMESPACE ft
 
-int main(void)
+using namespace NAMESPACE;
+
+template <class T>
+void	print(vector<vector<T> >& lst)
 {
-	typedef ft::vector<int>::iterator iterator;
-	typedef std::vector<int>::iterator iteratorstd;
-
-	ft::vector<int> tab(10);
-	ft::vector<int> test(5, 10);
-	std::vector<int> tab_std(10);
-
-	std::cout << "std::vector::capacity = " << tab_std.capacity() << std::endl;
-	std::cout << "ft::vector::capacity = " << tab.capacity() << std::endl;
-	tab.push_back(1);
-	tab.push_back(2);
-	tab.push_back(3);
-	tab.push_back(4);
-	tab.push_back(150);
-
-	tab_std.push_back(1);
-	tab_std.push_back(2);
-	tab_std.push_back(3);
-	tab_std.push_back(4);
-	tab_std.push_back(150);
-	
-	std::cout << std::endl << "ft::vector::at " << tab.at(9) << std::endl;
-	std::cout << "std::vector::at " << tab_std.at(9) << std::endl << std::endl;
-
- 	int ints[] = {15, 12 ,58, 50};
-	tab.assign(ints, ints+4);
-	tab_std.assign(ints, ints+4); 
-
-	tab_std.erase(tab_std.begin() + 2, tab_std.end() - 3);
-	tab.erase(tab.begin() + 2, tab.end() - 3);
-
-	tab.insert(tab.begin() + 2, ints, ints+4);
-	tab_std.insert(tab_std.begin() + 2, ints,  ints+4);
-	ft::swap(tab, test);
-	ft::swap(test, tab);
-	std::swap(tab, test);
-
-	for (iterator it = tab.begin(); it != tab.end(); it++)
+	for (typename vector<vector<T> >::iterator it = lst.begin(); it != lst.end(); it++)
 	{
-		std::cout << "Iterator: " << *it << std::endl;
+		for (typename vector<T>::iterator it2 = it->begin(); it2 != it->end(); it2++)
+			std::cout << *it2 << ' ';
+		std::cout << '\n';
 	}
-	std::cout << "==" << std::endl; 
-	for (iteratorstd it = tab_std.begin(); it != tab_std.end(); it++)
-	{
-		std::cout << "Iterator: " << *it << std::endl;
-	}
-	tab.clear();
-	tab_std.clear();
-	std::cout << "std::vector::capacity = " << tab_std.capacity() << std::endl;
-	std::cout << "ft::vector::capacity = " << tab.capacity() << std::endl;
-	std::cout << "std::vector::size = " << tab_std.size() << std::endl;
-	std::cout << "ft::vector::size = " << tab.size() << std::endl;
-
-	return 0;
 }
+
+template <class T>
+void	print(vector<T>& lst)
+{
+	for (typename vector<T>::iterator it = lst.begin(); it != lst.end(); it++)
+		std::cout << *it << ' ';
+	std::cout << '\n';
+}
+
+
+int main ()
+{
+  vector<int> myvector (3,100);
+  vector<int>::iterator it;
+
+  it = myvector.begin();
+  it = myvector.insert ( it , 200 );
+
+ std::cout << "it after insert " << *it << std::endl;
+  myvector.insert (it,2,300);
+
+  vector<int> anothervector (2,400);
+  std::cout << "myvector contains:";
+  for (it=myvector.begin(); it<myvector.end(); it++)
+    std::cout << ' ' << *it;
+  it = myvector.begin();
+  myvector.insert (it+2,anothervector.begin(),anothervector.end());
+
+  int myarray [] = { 501,502,503 };
+  myvector.insert (myvector.begin(), myarray, myarray+3);
+
+  // "it" no longer valid, get a new one:
+std::cout << std::endl;
+std::cout << "myvector contains: 501 502 503 300 300 400 400 200 100 100 100" << std::endl;
+  return 0;
+}
+

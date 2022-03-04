@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:56:08 by bclerc            #+#    #+#             */
-/*   Updated: 2022/03/03 19:20:12 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/03/04 04:07:19 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
  
 # include <iostream>
 # include <memory>
+# include <cstring>
 # include <algorithm>
 # include <cstddef>
 # include <tgmath.h>
@@ -280,21 +281,18 @@ namespace ft {
 				}
 				_alloc.construct(_data + (int_pos), value);
 				_size += 1;
-				return iterator(p_pos);
+				return iterator(_data + int_pos);
 			}
 			
 			void insert( iterator pos, size_type count, const T& value )
 			{
-				pointer p_pos = &(*(pos));
-				size_type first = p_pos - _data ;
-				size_type last = (p_pos - _data) + count - 1;	
-
+				size_type first = (&(*pos) - _data);
 				if (_size + count >= _capacity)
 					reserve(_capacity + count);
-				for (size_type i = _size ; i >= first; i--)
+				for (size_type i = 0; i < _size - first ; i++)
 				{
-					_alloc.construct(_data + last + i, *((_data + first + i) - 1));
-					_alloc.destroy((_data  + first + i) - 1);
+					_alloc.construct((_data + _size) - i + (count - 1), *((_data + _size) - i - 1));
+					_alloc.destroy((_data + _size) - i - 1);
 				}
 				for (size_type i = 0; i < count; i++)
 					_alloc.construct(_data + first + i, value);
@@ -306,19 +304,17 @@ namespace ft {
 				typename ft::enable_if<!ft::is_integral<InputIt>::value, InputIt>::type first,
 				 InputIt last)
 				 {
-					pointer p_pos = &(*(pos));
+					//pointer p_pos = &(*(pos));
 					size_type dist = ft::distance<InputIt>(first, last);
-					size_type size_first = p_pos - _data ;
-					size_type size_last = (p_pos - _data) + dist - 1;	
+
+					size_type id =  _size - (&(*(pos)) - _data);
+					size_type size_first = _size - id;
 					if (_size + dist >= _capacity)
 						reserve(_capacity + dist);
-					for (int i = _size ; i >= (int)size_first; i--)
-					{
-						_alloc.construct(_data + size_last + i, *((_data + size_first + i) - 1));
-						_alloc.destroy((_data  + size_first + i) - 1);
-					}
+					for (size_type i = 0; i < id; i++)
+						_alloc.construct((_data + _size) + (dist - 1) - i, *((_data + _size) - i - 1));
  					for (size_type i = 0; i < dist; i++)
-						_alloc.construct(_data + size_first + i, *first++);
+						_alloc.construct(_data + size_first + i, *(first++));
 					_size += dist;
 				 }
 
