@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:56:08 by bclerc            #+#    #+#             */
-/*   Updated: 2022/03/04 04:30:40 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/03/04 19:34:08 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,10 +51,12 @@ namespace ft {
 
 
 		public :
-			vector (void) : _size(0), _capacity(0) 
+			vector (void) : _size(0), _capacity(5) 
 			{
 				_alloc = Allocator();
-				_data = NULL;
+				_data = _alloc.allocate(5);
+				std::uninitialized_fill_n(_data, 5, 0);
+
 				return ;
 			}
 
@@ -75,7 +77,10 @@ namespace ft {
 
 			vector (vector const & cpy)
 			{
-				this->_alloc = cpy._alloc;
+				_alloc = cpy._alloc;
+				_data = NULL;
+				_capacity = 0;
+				_size = 0;				
 				this->assign(cpy.begin(), cpy.end());
 			}	
 
@@ -184,22 +189,22 @@ namespace ft {
 
 			iterator begin()
 			{
-				return (iterator(_data));
+				return (_data);
 			}
 
 			const_iterator begin() const
 			{
-				return (const_iterator(_data));
+				return (_data);
 			}
 
 			iterator end()
 			{
-				return (iterator(_data + _size));
+				return (_data + _size);
 			}
 
 			const_iterator end() const
 			{
-				return const_iterator(_data + _size);
+				return (_data + _size);
 			}
 
 			reverse_iterator rbegin()
@@ -452,14 +457,5 @@ namespace ft {
 		  return !(lhs < rhs);
   	}
 };
-
-namespace std {
-
-	template <class T, class Alloc>
-	void swap (ft::vector<T,Alloc>& x, ft::vector<T,Alloc>& y)
-	{
-		ft::swap(x, y);
-	}
-}
 
 #endif

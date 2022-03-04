@@ -35,13 +35,15 @@ namespace ft {
 
 		public:
 			random_access_iterator(void) : _base(NULL) {}
-			explicit random_access_iterator(pointer it) : _base(it) {}
+			random_access_iterator(pointer it) : _base(it) {}
 				
 			random_access_iterator (const random_access_iterator & rev_it) : _base(rev_it.base())
 			{
 				return ;
 			}
 		
+			virtual ~random_access_iterator() {}
+
 			pointer base() const
 			{
 				return (this->_base);
@@ -51,6 +53,16 @@ namespace ft {
 			{
 				return (*this->_base);
 			}
+
+
+			random_access_iterator &operator=(const random_access_iterator & rhs)
+			{
+				if (this == &rhs)
+					return (*this);
+				this->_base = (rhs._base);
+				return *this;
+			}
+
 
 			random_access_iterator operator+(difference_type n) const
 			{
@@ -113,6 +125,12 @@ namespace ft {
 			{
 				return (*(_base + n));
 			}
+
+            operator random_access_iterator<const T> () const
+            {
+				 return (random_access_iterator<const T>(this->_base));
+			}
+
 	};
 
 	template <class T>
