@@ -37,10 +37,8 @@ namespace ft {
 			random_access_iterator(void) : _base(NULL) {}
 			explicit random_access_iterator(pointer it) : _base(it) {}
 				
-			template <class Iter>
-			random_access_iterator (const random_access_iterator<T>& rev_it) : _base(rev_it.base()) 
+			random_access_iterator (const random_access_iterator & rev_it) : _base(rev_it.base())
 			{
-				*this = rev_it;	
 				return ;
 			}
 		
