@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:56:08 by bclerc            #+#    #+#             */
-/*   Updated: 2022/03/04 19:34:08 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/03/04 20:10:44 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,12 +51,8 @@ namespace ft {
 
 
 		public :
-			vector (void) : _size(0), _capacity(5) 
+			vector (void) : _size(0), _capacity(0), _data(NULL), _alloc(Allocator()) 
 			{
-				_alloc = Allocator();
-				_data = _alloc.allocate(5);
-				std::uninitialized_fill_n(_data, 5, 0);
-
 				return ;
 			}
 
@@ -199,11 +195,15 @@ namespace ft {
 
 			iterator end()
 			{
+				if (_size == 0)
+					return (_data);
 				return (_data + _size);
 			}
 
 			const_iterator end() const
 			{
+				if (_size == 0)
+					return (_data);
 				return (_data + _size);
 			}
 
@@ -246,7 +246,7 @@ namespace ft {
 			{
 				T* new_data;
 				if (new_cap > max_size())
-					throw std::length_error("vector<T>::reserve::new_cap > max_size()");
+					throw std::length_error("vector::reserve");
 				if (new_cap < capacity())
 					return ;
 				new_data = _alloc.allocate(new_cap);
@@ -355,7 +355,7 @@ namespace ft {
 			void push_back( const T& value )
 			{
 				if (_size  == _capacity)
-					reserve(_capacity < 5 ? _capacity + 1 : _capacity * 2);
+					reserve(!_capacity ? 1 : _capacity * 2);
 				_alloc.construct(_data + _size , value); 
 				_size++;
 			}
@@ -443,12 +443,12 @@ namespace ft {
 	template <class T, class Alloc>
  	bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 	{
-		return (!(lhs < rhs));
+		return (!(lhs > rhs));
 	}
 	template <class T, class Alloc>
   	bool operator> (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
   	{
-		return (lhs < rhs);
+		return (!(lhs < rhs));
   	}
 
 	template <class T, class Alloc>
