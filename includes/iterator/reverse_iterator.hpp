@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 17:57:09 by bclerc            #+#    #+#             */
-/*   Updated: 2022/03/03 18:50:07 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/03/06 15:34:34 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ namespace ft {
 
 			reference operator[] (difference_type n) const
 			{
-				return (_base()[-n - 1]);
+				return (base()[-n - 1]);
 			}
 	};
 
@@ -159,7 +159,7 @@ namespace ft {
 	template <class Iterator>
 	typename reverse_iterator<Iterator>::difference_type operator- (const reverse_iterator<Iterator> & lhs, const reverse_iterator<Iterator> & rhs)
 	{
-		return (lhs.base() - rhs._base());
+		return (lhs.base() - rhs.base());
 	}
 };
 #endif
