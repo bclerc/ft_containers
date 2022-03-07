@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   reverse_iterator.hpp                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
+/*   By: vscode <vscode@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 17:57:09 by bclerc            #+#    #+#             */
-/*   Updated: 2022/03/06 15:34:34 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/03/06 20:57:04 by vscode           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,25 +128,25 @@ namespace ft {
 	template <class Iterator>
 	bool operator<(const ft::reverse_iterator<Iterator> & lhs, const ft::reverse_iterator<Iterator>& rhs)
 	{
-		return (lhs.base() < rhs.base());	
+		return (lhs.base() > rhs.base());	
 	}
 
 	template <class Iterator>
 	bool operator<=(const ft::reverse_iterator<Iterator> & lhs, const ft::reverse_iterator<Iterator>& rhs)
 	{
-		return (lhs.base() <= rhs.base());	
+		return (lhs.base() >= rhs.base());	
 	}
 
 	template <class Iterator>
 	bool operator>(const ft::reverse_iterator<Iterator> & lhs, const ft::reverse_iterator<Iterator>& rhs)
 	{
-		return (lhs.base() > rhs.base());	
+		return (lhs.base() < rhs.base());	
 	}
 
 	template <class Iterator>
 	bool operator>=(const ft::reverse_iterator<Iterator> & lhs, const ft::reverse_iterator<Iterator>& rhs)
 	{
-		return (lhs.base() >= rhs.base());	
+		return (lhs.base() <= rhs.base());	
 	}
 
 	template <class Iterator>

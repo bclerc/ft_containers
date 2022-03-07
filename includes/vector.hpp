@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vector.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
+/*   By: vscode <vscode@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:56:08 by bclerc            #+#    #+#             */
-/*   Updated: 2022/03/04 20:10:44 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/03/07 01:34:05 by vscode           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,15 +51,21 @@ namespace ft {
 
 
 		public :
-			vector (void) : _size(0), _capacity(0), _data(NULL), _alloc(Allocator()) 
+			vector (void) 
 			{
+				this->_alloc = Allocator();
+				this->_capacity = 0;
+				this->_size = 0;
+				this->_data = NULL;
 				return ;
 			}
 
 			explicit vector (const Allocator & alloc)
 			{
 				_alloc = alloc;
-				_data = _alloc.allocate(5);
+				_capacity = NULL;
+				_data = NULL;
+				_size = 0;
 				return ;
 			}
 
@@ -67,7 +73,7 @@ namespace ft {
 			{
 				_data = _alloc.allocate(count);
 				_capacity = count;
-				std::uninitialized_fill_n(_data, count, value);
+				this->assign(count, value);
 				return ;
 			}
 
@@ -84,44 +90,41 @@ namespace ft {
 			vector(typename ft::enable_if<!ft::is_integral<InputIt>::value, InputIt>::type first, InputIt last, const Allocator& alloc = Allocator())
 			{
 				_alloc = alloc;
+				_capacity = 0;
+				_size = 0;
+				_data = NULL;
 				this->assign(first, last);
 			};
 
 			~vector(void)
 			{
-				for(size_type i = 0; i < _capacity; i++)
-					_alloc.destroy(_data + i);
-				_alloc.deallocate(this->_data, _capacity);
+				this->clear();
+				if (_capacity && _data)
+					_alloc.deallocate(_data, _capacity);
 			};
 
 			vector& operator=( const vector& other )
 			{
+				_size = 0;
+				_capacity = 0;
 				this->assign(other.begin(), other.end());
 				return (*this);
 			}
 
 			void assign( size_type count, const value_type& value )
 			{
-				resize(count);
+				resize(count, value);
 				for (size_type it = 0; it < count; it++)
 					_alloc.construct(_data + it, value);
 			}
 
 			template< class InputIt >
-			void assign( InputIt first,
-				typename ft::enable_if<!ft::is_integral<InputIt>::value, InputIt>::type last)
+			void assign( InputIt first, InputIt last,
+			 typename ft::enable_if<!ft::is_integral<InputIt>::value, InputIt>::type value = NULL)
 			{
-				int		count = 0;
-
-				for (InputIt it = first; it != last; it++)
-					count++;
-				resize(count);
-				for (int it = 0; it < count; it++)
-				{
-					_alloc.destroy(_data + it);
-					_alloc.construct(_data + it, *first);
-					first++;
-				}
+				(void) value;
+				this->clear();
+				this->insert(this->begin(), first, last);
 			}	
 
 			allocator_type get_allocator() const
@@ -256,7 +259,7 @@ namespace ft {
 					_alloc.destroy(_data + i);
 				}
 				_alloc.deallocate(_data, _capacity);
-				_data = new_data;
+				_data = (new_data);
 				_capacity = new_cap;
 			}
 
@@ -267,7 +270,7 @@ namespace ft {
 
 			void clear()
 			{
-				for (size_type i = 0; i < _size; i++)
+				for (size_type i = 0; i < _size; i--)
 					_alloc.destroy(_data + i);
 				_size = 0;
 			}
@@ -292,8 +295,8 @@ namespace ft {
 			void insert( iterator pos, size_type count, const T& value )
 			{
 				size_type first = (&(*pos) - _data);
-				if (_size + count >= _capacity)
-					reserve(_capacity + count);
+				if (_size + count > _capacity)
+					reserve(std::max((_size + count), _capacity * 2));
 				for (size_type i = 0; i < _size - first ; i++)
 				{
 					_alloc.construct((_data + _size) - i + (count - 1), *((_data + _size) - i - 1));
@@ -309,13 +312,11 @@ namespace ft {
 				typename ft::enable_if<!ft::is_integral<InputIt>::value, InputIt>::type first,
 				 InputIt last)
 				 {
-					//pointer p_pos = &(*(pos));
 					size_type dist = ft::distance<InputIt>(first, last);
-
 					size_type id =  _size - (&(*(pos)) - _data);
 					size_type size_first = _size - id;
-					if (_size + dist >= _capacity)
-						reserve(_capacity + dist);
+					if (_size + dist > _capacity)
+					reserve(std::max((_size + dist), _capacity * 2));
 					for (size_type i = 0; i < id; i++)
 						_alloc.construct((_data + _size) + (dist - 1) - i, *((_data + _size) - i - 1));
  					for (size_type i = 0; i < dist; i++)
@@ -368,12 +369,12 @@ namespace ft {
 
 			void resize( size_type count, T value = T())
 			{
-				int tmp;
+				size_type tmp;
 
 				if (_size > count)
 				{
-					tmp = _size;
-					while (tmp >= 0)
+					tmp = _size -  1;
+					while (tmp > count)
 					{	
 						_alloc.destroy(_data + tmp);
 						tmp--;
@@ -414,45 +415,47 @@ namespace ft {
 			}
 	};
 
-	template <class T, class Alloc>
-	void swap (vector<T,Alloc>& x, vector<T,Alloc>& y)
+	template <class T>
+	void swap (vector<T>& x, vector<T>& y)
 	{
 		x.swap(y);
 	}
 
-	template <class T, class Alloc>
-  	bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	template <class T>
+  	bool operator== (const vector<T>& lhs, const vector<T>& rhs)
 	{
+		if (rhs.begin() == rhs.end() && lhs.begin() != lhs.end())
+			return false;
 		return (ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
 	}
 
-	template <class T, class Alloc>
-  	bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	template <class T>
+  	bool operator!= (const vector<T>& lhs, const vector<T>& rhs)
 	{
 		return (!(lhs == rhs));
 	}
 
-	template <class T, class Alloc>
-  	bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	template <class T>
+  	bool operator<  (const vector<T>& lhs, const vector<T>& rhs)
 	{
 		
 		return (ft::lexicographical_compare(lhs.begin(), lhs.end(),
 											rhs.begin(), rhs.end()));
 	}
 
-	template <class T, class Alloc>
- 	bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	template <class T>
+ 	bool operator<= (const vector<T>& lhs, const vector<T>& rhs)
 	{
 		return (!(lhs > rhs));
 	}
-	template <class T, class Alloc>
-  	bool operator> (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	template <class T>
+  	bool operator> (const vector<T>& lhs, const vector<T>& rhs)
   	{
 		return (!(lhs < rhs));
   	}
 
-	template <class T, class Alloc>
-  	bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	template <class T>
+  	bool operator>= (const vector<T>& lhs, const vector<T>& rhs)
   	{
 		  return !(lhs < rhs);
   	}
