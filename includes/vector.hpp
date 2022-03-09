@@ -6,7 +6,7 @@
 /*   By: vscode <vscode@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:56:08 by bclerc            #+#    #+#             */
-/*   Updated: 2022/03/07 01:34:05 by vscode           ###   ########.fr       */
+/*   Updated: 2022/03/07 03:10:52 by vscode           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -247,6 +247,7 @@ namespace ft {
 
 			void reserve(size_type new_cap)
 			{
+				std::cout << std::addressof(_data) << ": Address before" << std::endl;
 				T* new_data;
 				if (new_cap > max_size())
 					throw std::length_error("vector::reserve");
@@ -259,8 +260,11 @@ namespace ft {
 					_alloc.destroy(_data + i);
 				}
 				_alloc.deallocate(_data, _capacity);
-				_data = (new_data);
+				_data = new_data;
 				_capacity = new_cap;
+				std::cout << std::addressof(new_data) << ": Address after" << std::endl;
+				std::cout << std::addressof(_data) << ": Address after ndata" << std::endl;
+
 			}
 
 			size_type capacity() const
@@ -369,12 +373,12 @@ namespace ft {
 
 			void resize( size_type count, T value = T())
 			{
-				size_type tmp;
+				int tmp;
 
 				if (_size > count)
 				{
 					tmp = _size -  1;
-					while (tmp > count)
+					while (tmp >= 0)
 					{	
 						_alloc.destroy(_data + tmp);
 						tmp--;
