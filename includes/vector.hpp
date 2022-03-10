@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vector.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vscode <vscode@student.42.fr>              +#+  +:+       +#+        */
+/*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:56:08 by bclerc            #+#    #+#             */
-/*   Updated: 2022/03/07 03:10:52 by vscode           ###   ########.fr       */
+/*   Updated: 2022/03/10 03:23:42 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,13 +50,23 @@ namespace ft {
 			allocator_type	_alloc;
 
 
+		void	_destruct_data(iterator first, iterator last)
+		{
+			for (iterator it = first; it != last; it++)
+			{
+				_alloc.destroy(&(*it));
+			}
+		}
+
 		public :
 			vector (void) 
 			{
 				this->_alloc = Allocator();
-				this->_capacity = 0;
+ 				this->_capacity = 0;
 				this->_size = 0;
 				this->_data = NULL;
+				std::cout << "I was created here and have for _capacity : " << this->_capacity << " and size : " << _size << std::endl;
+
 				return ;
 			}
 
@@ -66,14 +76,18 @@ namespace ft {
 				_capacity = NULL;
 				_data = NULL;
 				_size = 0;
+				std::cout << "I was created here and have for _capacity : " << this->_capacity << " and size : " << _size << std::endl;
 				return ;
 			}
 
 			explicit vector (size_type count, const T& value = T(), const Allocator & alloc = Allocator()) : _size(count), _alloc(alloc)
 			{
-				_data = _alloc.allocate(count);
-				_capacity = count;
+				_data = NULL;
+				_capacity = 0;
+				_size = 0;
 				this->assign(count, value);
+				std::cout << "I was created here and have for _capacity :" << count << " and size : " << _size << std::endl;
+
 				return ;
 			}
 
@@ -82,8 +96,9 @@ namespace ft {
 				_alloc = cpy._alloc;
 				_data = NULL;
 				_capacity = 0;
-				_size = 0;				
-				this->assign(cpy.begin(), cpy.end());
+				_size = 0;	
+				this->insert(this->begin(), cpy.begin(), cpy.end());	
+				std::cout << "CPY: I was created here and have for _capacity : " << this->_capacity << " and size : " << _size << std::endl;
 			}	
 
 			template< class InputIt >
@@ -94,28 +109,37 @@ namespace ft {
 				_size = 0;
 				_data = NULL;
 				this->assign(first, last);
+				std::cout << "I was created here and have for _capacity : " << this->_capacity << " and size : " << _size << std::endl;
+
 			};
 
 			~vector(void)
 			{
-				this->clear();
-				if (_capacity && _data)
+				std::cout << "called " << _size << " " << _capacity << std::endl;
+				if (_data)
+				{
+					//std::cout << "I was deleted here and have for _capacity :" << _capacity << " and size : " << _size << std::endl;
+					_destruct_data(this->begin(), this->end());
 					_alloc.deallocate(_data, _capacity);
+					_data = NULL;
+				}
+				free(_data);
 			};
 
 			vector& operator=( const vector& other )
 			{
+				if (*this == other)
+					return (*this);
 				_size = 0;
 				_capacity = 0;
-				this->assign(other.begin(), other.end());
+				this->insert(this->begin(), other.begin(), other.end());
 				return (*this);
 			}
 
 			void assign( size_type count, const value_type& value )
 			{
-				resize(count, value);
-				for (size_type it = 0; it < count; it++)
-					_alloc.construct(_data + it, value);
+				this->_destruct_data(this->begin(), this->end());
+				this->insert(this->begin(), count, value);
 			}
 
 			template< class InputIt >
@@ -123,7 +147,7 @@ namespace ft {
 			 typename ft::enable_if<!ft::is_integral<InputIt>::value, InputIt>::type value = NULL)
 			{
 				(void) value;
-				this->clear();
+				this->_destruct_data(this->begin(), this->end());
 				this->insert(this->begin(), first, last);
 			}	
 
@@ -247,24 +271,19 @@ namespace ft {
 
 			void reserve(size_type new_cap)
 			{
-				std::cout << std::addressof(_data) << ": Address before" << std::endl;
 				T* new_data;
+				size_type size = _size;
 				if (new_cap > max_size())
 					throw std::length_error("vector::reserve");
 				if (new_cap < capacity())
 					return ;
 				new_data = _alloc.allocate(new_cap);
-				for(size_type i = 0; i < _size; i++)
-				{
-					_alloc.construct(new_data + i, *(_data + i));
-					_alloc.destroy(_data + i);
-				}
+				std::uninitialized_copy(this->begin(), this->end(), new_data);
+				this->_destruct_data(this->begin(), this->end());
 				_alloc.deallocate(_data, _capacity);
-				_data = new_data;
+				_size = size;
 				_capacity = new_cap;
-				std::cout << std::addressof(new_data) << ": Address after" << std::endl;
-				std::cout << std::addressof(_data) << ": Address after ndata" << std::endl;
-
+				_data = new_data;
 			}
 
 			size_type capacity() const
@@ -274,8 +293,7 @@ namespace ft {
 
 			void clear()
 			{
-				for (size_type i = 0; i < _size; i--)
-					_alloc.destroy(_data + i);
+				this->_destruct_data(this->begin(), this->end());
 				_size = 0;
 			}
 
@@ -320,7 +338,7 @@ namespace ft {
 					size_type id =  _size - (&(*(pos)) - _data);
 					size_type size_first = _size - id;
 					if (_size + dist > _capacity)
-					reserve(std::max((_size + dist), _capacity * 2));
+						reserve(std::max((_size + dist), _capacity * 2));
 					for (size_type i = 0; i < id; i++)
 						_alloc.construct((_data + _size) + (dist - 1) - i, *((_data + _size) - i - 1));
  					for (size_type i = 0; i < dist; i++)

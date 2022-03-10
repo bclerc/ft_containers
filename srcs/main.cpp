@@ -17,16 +17,12 @@ int main()
 	vector<vector<int> >	self_assign;
 	vector<vector<int> >	*ptr = &self_assign;
 	vector<vector<int> >	*ptr2 = &self_assign;
-
 	self_assign.assign(4, test);
 	*ptr = *ptr2;
-
 	std::cout << std::boolalpha << (*ptr == *ptr2) << '\n';
 //	self_assign = self_assign; //compiler doesn't like it!
-
-
-
 	vector<vector<int> > JOHN;
+	std::cout << "Lui " << std::endl;
 	vector<vector<int> > BOB(5, test);
 	std::cout << "BOB(5, test(test, 5)) : \n";
 	for (size_t i = 0; i < BOB.size(); i++)
@@ -36,7 +32,6 @@ int main()
 		std::cout << '\n';
 	}
 	vector<vector<int> > MIKE(BOB);
-
 	// CTORs
 	std::cout << "\nCTORS\n";
 	std::cout << "Empty is empty ? " << std::boolalpha << JOHN.empty() << '\n';
@@ -218,7 +213,6 @@ int main()
 		std::cout << std_insert_in_me.at(i).back() << ' ';
 	std::cout << '\n';
 
-
 	//INSERT RANGE
 	std::cout << "\nINSERT RANGE\n";
 	vector<vector<int> >	insert_bis;
@@ -230,8 +224,9 @@ int main()
 	for (size_t i = 0; i < insert_bis.size(); i++)
 		std::cout << insert_bis[i].back() << ' ';
 	std::cout << '\n';
-
+	std::cout << "Hello ============================================== " << std::endl;
 	insert_bis.insert(insert_bis.begin() + 5, insert_in_me.begin(), insert_in_me.end());
+	return 1;
 	for (size_t i = 0; i < insert_bis.size(); i++)
 		std::cout << insert_bis[i].back() << ' ';
 	std::cout << '\n';
