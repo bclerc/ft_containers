@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:56:08 by bclerc            #+#    #+#             */
-/*   Updated: 2022/03/10 03:23:42 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/03/11 05:53:26 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,8 @@ namespace ft {
 			typedef const value_type & 						const_reference;
 			typedef typename Allocator::pointer				pointer;
 			typedef typename Allocator::const_pointer		const_pointer;
-			typedef ft::random_access_iterator<T>				iterator;
-			typedef ft::random_access_iterator<const T>			const_iterator;
+			typedef ft::random_access_iterator<T>			iterator;
+			typedef ft::random_access_iterator<const T>		const_iterator;
 			typedef	ft::reverse_iterator<iterator>			reverse_iterator;
 			typedef ft::reverse_iterator<const_iterator>	const_reverse_iterator;
 
@@ -52,9 +52,28 @@ namespace ft {
 
 		void	_destruct_data(iterator first, iterator last)
 		{
+			if (first == this->end())
+				return ;
 			for (iterator it = first; it != last; it++)
 			{
 				_alloc.destroy(&(*it));
+			}
+		}
+
+		void	_destruct_data(iterator first, size_type count)
+		{
+			std::cout << "Count " << count  << " first " << &(*first) << " Data: " << _data << std::endl;
+			if (&(*first) == (pointer)0xbebebebebebebebe)			//test
+			{
+				std::cout << "sale merde" << std::endl;
+				return ;
+ 			}
+			if (first == this->end())
+				return ;
+			for (size_type it = 0; it < count; it++)
+			{
+				_alloc.destroy(&(*first));
+				first++;
 			}
 		}
 
@@ -65,65 +84,64 @@ namespace ft {
  				this->_capacity = 0;
 				this->_size = 0;
 				this->_data = NULL;
-				std::cout << "I was created here and have for _capacity : " << this->_capacity << " and size : " << _size << std::endl;
-
+				std::cout << "Data: " << _data << std::endl;
 				return ;
 			}
 
 			explicit vector (const Allocator & alloc)
 			{
 				_alloc = alloc;
-				_capacity = NULL;
 				_data = NULL;
+				_capacity = 0;
 				_size = 0;
-				std::cout << "I was created here and have for _capacity : " << this->_capacity << " and size : " << _size << std::endl;
+				std::cout << "Data: " << _data << std::endl;
 				return ;
 			}
 
 			explicit vector (size_type count, const T& value = T(), const Allocator & alloc = Allocator()) : _size(count), _alloc(alloc)
 			{
-				_data = NULL;
-				_capacity = 0;
-				_size = 0;
-				this->assign(count, value);
-				std::cout << "I was created here and have for _capacity :" << count << " and size : " << _size << std::endl;
-
+				_data = _alloc.allocate( count );
+				_capacity = count;
+				if (count > 0)
+					std::uninitialized_fill(this->begin(), this->begin() + count - 1, value);
+				std::cout << "Data: " << _data << std::endl;
 				return ;
 			}
 
 			vector (vector const & cpy)
 			{
 				_alloc = cpy._alloc;
-				_data = NULL;
-				_capacity = 0;
-				_size = 0;	
-				this->insert(this->begin(), cpy.begin(), cpy.end());	
-				std::cout << "CPY: I was created here and have for _capacity : " << this->_capacity << " and size : " << _size << std::endl;
+				_data = _alloc.allocate( cpy.capacity() );
+				_capacity = cpy._capacity;
+				_size = cpy.size();	
+				std::uninitialized_copy(cpy.begin(), cpy.end(), _data);
 			}	
 
 			template< class InputIt >
 			vector(typename ft::enable_if<!ft::is_integral<InputIt>::value, InputIt>::type first, InputIt last, const Allocator& alloc = Allocator())
 			{
-				_alloc = alloc;
-				_capacity = 0;
-				_size = 0;
-				_data = NULL;
-				this->assign(first, last);
-				std::cout << "I was created here and have for _capacity : " << this->_capacity << " and size : " << _size << std::endl;
+				size_type diff;
 
+				diff = ft::distance( first, last);
+				_alloc = alloc;
+				_data = _alloc.allocate( diff );
+				_capacity = diff;
+				_size = diff;	
+				std::uninitialized_copy(first, last, _data);
+				std::cout << "Data: " << _data << std::endl;
+			
 			};
 
 			~vector(void)
 			{
-				std::cout << "called " << _size << " " << _capacity << std::endl;
 				if (_data)
 				{
-					//std::cout << "I was deleted here and have for _capacity :" << _capacity << " and size : " << _size << std::endl;
-					_destruct_data(this->begin(), this->end());
+					_destruct_data(this->begin(), _capacity);
 					_alloc.deallocate(_data, _capacity);
 					_data = NULL;
+					free(_data);
 				}
-				free(_data);
+				_data = NULL;
 			};
 
 			vector& operator=( const vector& other )
@@ -222,15 +240,11 @@ namespace ft {
 
 			iterator end()
 			{
-				if (_size == 0)
-					return (_data);
 				return (_data + _size);
 			}
 
 			const_iterator end() const
 			{
-				if (_size == 0)
-					return (_data);
 				return (_data + _size);
 			}
 
@@ -271,14 +285,28 @@ namespace ft {
 
 			void reserve(size_type new_cap)
 			{
+				if (new_cap < 1)
+					return ;
 				T* new_data;
 				size_type size = _size;
 				if (new_cap > max_size())
 					throw std::length_error("vector::reserve");
 				if (new_cap < capacity())
 					return ;
+				std::cout << "=====" << std::endl;
 				new_data = _alloc.allocate(new_cap);
-				std::uninitialized_copy(this->begin(), this->end(), new_data);
+				if (_size > 0)
+				{
+					for (size_type i = 0; i < new_cap; i++)
+					{
+						if (i < _size)
+							_alloc.construct(new_cap + i, *(_data + i));
+						else
+							_alloc.construct(new_cap + i, 0);							
+					}
+				}
+				else
+					std::uninitialized_fill(new_data, new_data + new_cap - 1, 0);
 				this->_destruct_data(this->begin(), this->end());
 				_alloc.deallocate(_data, _capacity);
 				_size = size;
@@ -301,7 +329,6 @@ namespace ft {
 			{
 				pointer p_pos = &(*(pos));
 				size_type	int_pos = p_pos - _data;
-				
 				if (_size == _capacity)
 					reserve(_capacity * 2);
 				for (size_type i = _size; i > int_pos; i--)
@@ -433,8 +460,8 @@ namespace ft {
 				x._alloc = alloc_tmp;
 				x._data = data_tmp;
 				x._size = size_tmp;
-				x._capacity = capacity_tmp;	
-			}
+				x._capacity = capacity_tmp;}
+
 	};
 
 	template <class T>

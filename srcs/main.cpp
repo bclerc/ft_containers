@@ -163,6 +163,7 @@ int main()
 	test.assign(2, 42);
 	BOB.push_back(test);
 	std::cout << "last elem of BOB : " << BOB.back().back() << '\n';
+	return 1;
 	BOB.pop_back();
 	std::cout << "last elem of BOB : " << BOB.back().back() << '\n';
 
