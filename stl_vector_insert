@@ -1,0 +1,81 @@
+  template<typename _Tp, typename _Alloc>
+    template<typename _ForwardIterator>
+      void
+      vector<_Tp, _Alloc>::
+      _M_range_insert(iterator __position, _ForwardIterator __first,
+		      _ForwardIterator __last, std::forward_iterator_tag)
+      {
+	if (__first != __last)
+	  {
+	    const size_type __n = std::distance(__first, __last);
+	    if (size_type(this->_M_impl._M_end_of_storage
+			  - this->_M_impl._M_finish) >= __n)
+	      {
+		const size_type __elems_after = end() - __position;
+		pointer __old_finish(this->_M_impl._M_finish);
+		if (__elems_after > __n)
+		  {
+		    std::__uninitialized_move_a(this->_M_impl._M_finish - __n,
+						this->_M_impl._M_finish,
+						this->_M_impl._M_finish,
+						_M_get_Tp_allocator());
+		    this->_M_impl._M_finish += __n;
+		    _GLIBCXX_MOVE_BACKWARD3(__position.base(),
+					    __old_finish - __n, __old_finish);
+		    std::copy(__first, __last, __position);
+		  }
+		else
+		  {
+		    _ForwardIterator __mid = __first;
+		    std::advance(__mid, __elems_after);
+		    std::__uninitialized_copy_a(__mid, __last,
+						this->_M_impl._M_finish,
+						_M_get_Tp_allocator());
+		    this->_M_impl._M_finish += __n - __elems_after;
+		    std::__uninitialized_move_a(__position.base(),
+						__old_finish,
+						this->_M_impl._M_finish,
+						_M_get_Tp_allocator());
+		    this->_M_impl._M_finish += __elems_after;
+		    std::copy(__first, __mid, __position);
+		  }
+	      }
+	    else
+	      {
+		const size_type __len =
+		  _M_check_len(__n, "vector::_M_range_insert");
+		pointer __new_start(this->_M_allocate(__len));
+		pointer __new_finish(__new_start);
+		__try
+		  {
+		    __new_finish
+		      = std::__uninitialized_move_if_noexcept_a
+		      (this->_M_impl._M_start, __position.base(),
+		       __new_start, _M_get_Tp_allocator());
+		    __new_finish
+		      = std::__uninitialized_copy_a(__first, __last,
+						    __new_finish,
+						    _M_get_Tp_allocator());
+		    __new_finish
+		      = std::__uninitialized_move_if_noexcept_a
+		      (__position.base(), this->_M_impl._M_finish,
+		       __new_finish, _M_get_Tp_allocator());
+		  }
+		__catch(...)
+		  {
+		    std::_Destroy(__new_start, __new_finish,
+				  _M_get_Tp_allocator());
+		    _M_deallocate(__new_start, __len);
+		    __throw_exception_again;
+		  }
+		std::_Destroy(this->_M_impl._M_start, this->_M_impl._M_finish,
+			      _M_get_Tp_allocator());
+		_M_deallocate(this->_M_impl._M_start,
+			      this->_M_impl._M_end_of_storage
+			      - this->_M_impl._M_start);
+		this->_M_impl._M_start = __new_start;
+		this->_M_impl._M_finish = __new_finish;
+		this->_M_impl._M_end_of_storage = __new_start + __len;
+	      }
+	  }
+      }

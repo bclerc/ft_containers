@@ -44,9 +44,7 @@ int main()
 	// RESIZE
 	size_t	bob_resize = 2;
 	std::cout << "\nRESIZE\n";
-	std::cout << std::addressof(BOB.front()) << std::endl;
 	BOB.resize(bob_resize);
-	std::cout << std::addressof(BOB.front()) << std::endl;
 
 	std::cout << "Size of JOHN " << JOHN.size() << std::endl;
 	if (JOHN.capacity() >= JOHN.size())
@@ -163,7 +161,6 @@ int main()
 	test.assign(2, 42);
 	BOB.push_back(test);
 	std::cout << "last elem of BOB : " << BOB.back().back() << '\n';
-	return 1;
 	BOB.pop_back();
 	std::cout << "last elem of BOB : " << BOB.back().back() << '\n';
 

@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:56:08 by bclerc            #+#    #+#             */
-/*   Updated: 2022/03/14 05:18:40 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/03/14 05:51:50 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,12 +62,8 @@ namespace ft {
 
 		void	_destruct_data(iterator first, size_type count)
 		{
-			std::cout << "Count " << count  << " first " << &(*first) << " Data: " << _data << std::endl;
 			if (&(*first) == (pointer)0xbebebebebebebebe)			//test
-			{
-				std::cout << "sale merde" << std::endl;
 				return ;
- 			}
 			if (first == this->end())
 				return ;
 			for (size_type it = 0; it < count; it++)
@@ -84,7 +80,6 @@ namespace ft {
  				this->_capacity = 0;
 				this->_size = 0;
 				this->_data = NULL;
-				std::cout << "Data: " << _data << std::endl;
 				return ;
 			}
 
@@ -94,7 +89,6 @@ namespace ft {
 				_data = NULL;
 				_capacity = 0;
 				_size = 0;
-				std::cout << "Data: " << _data << std::endl;
 				return ;
 			}
 
@@ -104,7 +98,6 @@ namespace ft {
 				_capacity = count;
 				if (count > 0)
 					std::uninitialized_fill(this->begin(), this->begin() + count - 1, value);
-				std::cout << "Data: " << _data << std::endl;
 				return ;
 			}
 
@@ -128,8 +121,6 @@ namespace ft {
 				_capacity = diff;
 				_size = diff;	
 				std::uninitialized_copy(first, last, _data);
-				std::cout << "Data: " << _data << std::endl;
-			
 			};
 
 			~vector(void)
