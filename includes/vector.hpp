@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:56:08 by bclerc            #+#    #+#             */
-/*   Updated: 2022/03/11 05:53:26 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/03/14 05:18:40 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -293,16 +293,15 @@ namespace ft {
 					throw std::length_error("vector::reserve");
 				if (new_cap < capacity())
 					return ;
-				std::cout << "=====" << std::endl;
 				new_data = _alloc.allocate(new_cap);
 				if (_size > 0)
 				{
 					for (size_type i = 0; i < new_cap; i++)
 					{
 						if (i < _size)
-							_alloc.construct(new_cap + i, *(_data + i));
+							_alloc.construct(new_data + i, *(_data + i));
 						else
-							_alloc.construct(new_cap + i, 0);							
+							_alloc.construct(new_data + i, T());							
 					}
 				}
 				else
