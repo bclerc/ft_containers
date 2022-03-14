@@ -3,10 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   vector.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
+/*   By: vscode <vscode@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:56:08 by bclerc            #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2022/03/14 05:51:50 by bclerc           ###   ########.fr       */
+=======
+/*   Updated: 2022/03/13 02:49:37 by vscode           ###   ########.fr       */
+>>>>>>> 04e09859265b8a1e501c2d6a6dd002dd270765ed
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +67,10 @@ namespace ft {
 		void	_destruct_data(iterator first, size_type count)
 		{
 			if (&(*first) == (pointer)0xbebebebebebebebe)			//test
+<<<<<<< HEAD
+=======
+			{
+>>>>>>> 04e09859265b8a1e501c2d6a6dd002dd270765ed
 				return ;
 			if (first == this->end())
 				return ;
@@ -287,6 +295,7 @@ namespace ft {
 				new_data = _alloc.allocate(new_cap);
 				if (_size > 0)
 				{
+<<<<<<< HEAD
 					for (size_type i = 0; i < new_cap; i++)
 					{
 						if (i < _size)
@@ -294,6 +303,10 @@ namespace ft {
 						else
 							_alloc.construct(new_data + i, T());							
 					}
+=======
+					std::uninitialized_copy_n(_data, _capacity, new_data);
+					std::uninitialized_fill(new_data + _capacity, new_data + new_cap - 1, 0);
+>>>>>>> 04e09859265b8a1e501c2d6a6dd002dd270765ed
 				}
 				else
 					std::uninitialized_fill(new_data, new_data + new_cap - 1, 0);
