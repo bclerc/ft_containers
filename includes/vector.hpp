@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:56:08 by bclerc            #+#    #+#             */
-/*   Updated: 2022/03/17 01:38:36 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/03/17 08:07:27 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,8 @@ namespace ft {
 			for (iterator it = first; it != last; it++)
 			{
 				_alloc.destroy(&(*it));
-				_size--;
+				if (_size > 0)
+					_size--;
 			}
 		}
 
@@ -71,7 +72,8 @@ namespace ft {
 			{
 				_alloc.destroy(&(*first));
 				first++;
-				_size--;
+				if (_size > 0)
+					_size--;
 			}
 		}
 
@@ -112,10 +114,7 @@ namespace ft {
 
 			vector& operator=( const vector& other )
 			{
-				if (*this == other)
-					return (*this);
-				_size = 0;
-				_capacity = 0;
+				this->clear();
 				this->insert(this->begin(), other.begin(), other.end());
 				return (*this);
 			}
@@ -128,10 +127,8 @@ namespace ft {
 			}
 
 			template< class InputIt >
-			void assign( InputIt first, InputIt last,
-			 typename ft::enable_if<!ft::is_integral<InputIt>::value, InputIt>::type value = NULL)
+			void assign(typename ft::enable_if<!ft::is_integral<InputIt>::value, InputIt>::type first, InputIt last)
 			{
-				(void) value;
 				this->_destruct_data(this->begin(), this->end());
 				reserve(ft::distance(first, last));
  				this->insert(this->begin(), first, last);
@@ -269,7 +266,8 @@ namespace ft {
 				for (size_type i = _size; i < new_cap; i++)
 					_alloc.construct(new_data + i, new_value);
 				_destruct_data(this->begin(), this->end());
-				_alloc.deallocate(_data, _capacity);
+				if (_capacity)
+					_alloc.deallocate(_data, _capacity);
 				_data = new_data;
 				_size = i;
 				_capacity = new_cap;
@@ -292,7 +290,7 @@ namespace ft {
 				pointer p_pos = &(*(pos));
 				size_type	int_pos = p_pos - _data;
 				if (_size == _capacity)
-					reserve(_capacity * 2);
+					reserve(!_capacity ? 1 : _capacity * 2);
 				for (size_type i = _size; i > int_pos; i--)
 				{
 					_alloc.construct(_data + i, *((_data + i) - 1));
@@ -384,12 +382,18 @@ namespace ft {
 
 			void resize( size_type count, T value = T())
 			{
+				if (!count)
+				{
+					this->clear();
+					return ;
+				}
 				if (count < _size)
 				{
-					for (size_type i  = _size - 1; i > count; i--)
+					for (size_type i  = _size - 1; i >= count; i--)
 					{
 						_alloc.destroy(_data + i);
-						_size--;
+						if (_size > 0)
+							_size--;
 					}
 				}
 				else
@@ -418,7 +422,8 @@ namespace ft {
 				x._alloc = alloc_tmp;
 				x._data = data_tmp;
 				x._size = size_tmp;
-				x._capacity = capacity_tmp;}
+				x._capacity = capacity_tmp;
+			}
 	};
 
 	template <class T>
