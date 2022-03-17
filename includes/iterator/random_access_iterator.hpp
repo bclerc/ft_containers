@@ -130,7 +130,6 @@ namespace ft {
             {
 				 return (random_access_iterator<const T>(this->_base));
 			}
-
 	};
 
 	template <class T, class Other>
@@ -169,7 +168,7 @@ namespace ft {
 		return (lhs.base() >= rhs.base());	
 	}
 
-	template <class T, class Other>
+	template <class T>
 	random_access_iterator<T> operator+(typename random_access_iterator<T>::difference_type n, 
 		const random_access_iterator<T> & rev_it)
 	{
