@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:56:08 by bclerc            #+#    #+#             */
-/*   Updated: 2022/03/14 05:45:07 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/03/14 21:24:47 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ namespace ft {
 
 			~stack(void)
 			{
-				Container::~Container();
+				container::~Container();
 			};
 
 			stack& operator=( const stack & other )
