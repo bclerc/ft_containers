@@ -175,8 +175,8 @@ namespace ft {
 		return (rev_it + n);		
 	}
 
-	template <class T>
-	typename random_access_iterator<T>::difference_type operator- (random_access_iterator<T> const & lhs, random_access_iterator<T>  const & rhs)
+	template <class T, class O>
+	typename random_access_iterator<T>::difference_type operator- (random_access_iterator<T> const & lhs, random_access_iterator<O>  const & rhs)
 	{
 		return (lhs.base() - rhs.base());
 	}

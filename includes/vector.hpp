@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:56:08 by bclerc            #+#    #+#             */
-/*   Updated: 2022/03/17 08:07:27 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/03/19 22:51:29 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -462,13 +462,14 @@ namespace ft {
 	template <class T>
   	bool operator> (const vector<T>& lhs, const vector<T>& rhs)
   	{
-		return (!(lhs < rhs));
+		return (ft::lexicographical_compare(rhs.begin(), rhs.end(),
+											lhs.begin(), lhs.end()));
   	}
 
 	template <class T>
   	bool operator>= (const vector<T>& lhs, const vector<T>& rhs)
   	{
-		  return !(lhs < rhs);
+		  return (!(lhs < rhs));
   	}
 };
 
