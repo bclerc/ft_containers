@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:56:08 by bclerc            #+#    #+#             */
-/*   Updated: 2022/03/20 02:14:00 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/03/20 02:29:52 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ namespace ft {
 	class stack {
 
 		public:
-			typedef Container					container_type;
+			typedef Container							container_type;
 			typedef	typename Container::value_type		value_type;
 			typedef typename Container::size_type		size_type;
 			typedef typename Container::reference		reference;
@@ -37,9 +37,10 @@ namespace ft {
 				container = cont;
 			}
 
-			stack (const stack & other)
+			stack (const stack<T, Container> & other)
 			{
-				container = Container(other);
+				this->container = other.container;
+				return ;
 			}
 
 			~stack(void){};
@@ -84,7 +85,7 @@ namespace ft {
 				container.pop_back();
 			}
 
-			friend bool operator==( const stack<T,Container>& lhs, const stack<T,Container>& rhs )
+			friend bool operator== ( const stack<T,Container>& lhs, const stack<T,Container>& rhs )
 			{
 				return (lhs.container == rhs.container);
 			}
