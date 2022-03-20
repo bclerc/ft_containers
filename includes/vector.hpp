@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:56:08 by bclerc            #+#    #+#             */
-/*   Updated: 2022/03/19 22:51:29 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/03/20 01:33:28 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -436,6 +436,8 @@ namespace ft {
   	bool operator== (const vector<T>& lhs, const vector<T>& rhs)
 	{
 		if (rhs.begin() == rhs.end() && lhs.begin() != lhs.end())
+			return false;
+		if (lhs.size() != rhs.size())
 			return false;
 		return (ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
 	}
