@@ -16,6 +16,7 @@
 # define bidirectional_iterator_HPP
 
 #include "iterator.hpp"
+#include "../avl.hpp"
 
 namespace ft {
 
@@ -30,8 +31,7 @@ namespace ft {
 			
 
 		private:
-			pointer _base;
-
+			*RBT _base;
 
 		public:
 			bidirectional_iterator(void) : _base(NULL) {}
@@ -51,7 +51,7 @@ namespace ft {
 
 			reference operator*() const
 			{
-				return (*this->_base);
+				return (_base.);
 			}
 
 

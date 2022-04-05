@@ -17,8 +17,6 @@ namespace ft {
 
 			explicit pair(void)
 			{
-				this->first = NULL;
-				this->second = NULL;
 				return  ;
 			}
 

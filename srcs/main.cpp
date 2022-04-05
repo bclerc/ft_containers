@@ -1,61 +1,99 @@
 #include "pair.tpp"
 #include "stack.hpp"
 #include "vector.hpp"
+#include "avl.hpp"
+
 #include <iostream>    
 #include <algorithm>
 #include <vector>
+#include <map>
+
 
 
 #define TESTED_TYPE int
 #define TESTED_NAMESPACE ft
 
-#define T1 char
-#define t_stack_ TESTED_NAMESPACE::stack<TESTED_TYPE>
-typedef t_stack_::container_type container_type;
-
-template <class T_STACK>
-void	cmp(const T_STACK &lhs, const T_STACK &rhs)
+int main(int argc, char **argv)
 {
-	static int i = 0;
+	std::map<int, int> test;
+	ft::RBT<int, int> rbt;
+	
+	rbt.insert(ft::make_pair(5, 6));
+	rbt.insert(ft::make_pair(-12, -12));
+	rbt.insert(ft::make_pair(3, 3));
+	rbt.insert(ft::make_pair(3, 3));
+	rbt.insert(ft::make_pair(3, 3));
+	rbt.insert(ft::make_pair(3, 3));
 
-	std::cout << "\033[0;35m;############### [" << i++ << "] ###############"  << std::endl;
-	std::cout << "eq: " << (lhs == rhs) << " | ne: " << (lhs != rhs) << std::endl;
-	std::cout << "lt: " << (lhs <  rhs) << " | le: " << (lhs <= rhs) << std::endl;
-	std::cout << "gt: " << (lhs >  rhs) << " | ge: " << (lhs >= rhs) << std::endl;
+	rbt.insert(ft::make_pair(2, 2));
+	rbt.insert(ft::make_pair(151, 151));
+	rbt.insert(ft::make_pair(1, 1));
+	rbt.insert(ft::make_pair(4, 4));
+	rbt.insert(ft::make_pair(10, 10));
+	rbt.insert(ft::make_pair(15, 15));
+	rbt.insert(ft::make_pair(23, 23));
+	rbt.insert(ft::make_pair(-132, -150));
+	rbt.insert(ft::make_pair(85, 85));
+	rbt.insert(ft::make_pair(650, 650));
+
+
+
+	rbt.printHelper(rbt.getRoot(), " ", true);
+
+
+
+	for (int i = 1; i < argc; i++)
+	{
+		try
+		{
+			std::cout << "Find " << argv[i] <<  " : " << rbt.find(atoi(argv[i])) << std::endl;
+		}
+		catch(const std::exception& e)
+		{
+			std::cerr << e.what() << '\n';
+		}
+	}
+
 }
 
-int		main(void)
-{
-	container_type	ctnr;
 
-	ctnr.push_back(21);
-	ctnr.push_back(42);
-	ctnr.push_back(1337);
-	ctnr.push_back(19);
-	ctnr.push_back(0);
-	ctnr.push_back(183792);
+//int main(void)
+//{
+// 	ft::AVL<int, std::string> avl;
 
-	t_stack_	stck(ctnr);
-	t_stack_	stck2(ctnr);
+// 	avl._root = avl.insert(avl._root, ft::pair<int, std::string>(2, std::string("Caca 2")));
+// 	avl._root = avl.insert(avl._root, ft::pair<int, std::string>(3, std::string("Trop bien b 3")));
+// 	avl._root = avl.insert(avl._root, ft::pair<int, std::string>(1, std::string("ouou 1")));
+// 	avl._root = avl.insert(avl._root, ft::pair<int, std::string>(0, std::string("Youhou 0")));
+// 	avl._root = avl.insert(avl._root, ft::pair<int, std::string>(4, std::string("Caca lol 4")));
 
-	cmp(stck, stck);  // 0
-	cmp(stck, stck2); // 1
+// 	for (int i = 0; i < 5; i++)
+// 		std::cout << "Value find : " << avl.find(i) << std::endl;
+// 	try
+// 	{
+// 			std::cout << "Value find : " << avl.find(2) << std::endl;
+// 	}
+// 	catch(const std::exception& e)
+// 	{
+// 		std::cerr << e.what() << '\n';
+// 	}
+	
+// 	avl._root = avl.deleteNode(avl._root, 0);
+// 	avl._root = avl.deleteNode(avl._root, 5);
+// 	avl._root = avl.deleteNode(avl._root, 1);	
+// 	avl._root = avl.deleteNode(avl._root, 12);
+// 	avl._root = avl.deleteNode(avl._root, 3);
+// 	avl._root = avl.deleteNode(avl._root, 4);
+// 	avl._root = avl.insert(avl._root, ft::pair<int, std::string>(4, std::string("Caca lol 5")));
 
-	stck2.push(60);
-	stck2.push(61);
-	stck2.push(62);
+// 	std::cout << " ===== Value find : " << avl.find(4) << std::endl;
+// 	avl._root = avl.deleteNode(avl._root, 4);
 
-	cmp(stck, stck2); // 2
-	cmp(stck2, stck); // 3
+// 	ft::AVL<std::string, std::string> test;
+// 	test._root = test.insert(test._root, ft::pair<std::string, std::string>("testouille", std::string("ouou 1")));
+// 	test._root = test.insert(test._root, ft::pair<std::string, std::string>("chalu", std::string("ouou 2")));
+// 	std::cout << " ===== Value find : " << test.find("testouille") << std::endl;
+// 	std::cout << " ===== Value find : " << test.find("chalu") << std::endl;
 
-	stck.push(42);
 
-	cmp(stck, stck2); // 4
-	cmp(stck2, stck); // 5
-
-	stck.push(100);
-
-	cmp(stck, stck2); // 6
-	cmp(stck2, stck); // 7
-	return (0);
-}
+// }

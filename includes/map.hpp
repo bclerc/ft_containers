@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 01:48:13 by bclerc            #+#    #+#             */
-/*   Updated: 2022/03/22 02:59:18 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/04/04 03:39:47 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,13 @@
 
 namespace ft 
 {
+	template <class T> struct less : binary_function <T,T,bool> {
+		bool operator() (const T& x, const T& y) const 
+		{
+			return x < y ;
+		}
+	};
+
 	template<
 		class Key,
 		class T,
