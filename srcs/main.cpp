@@ -2,6 +2,7 @@
 #include "stack.hpp"
 #include "vector.hpp"
 #include "avl.hpp"
+#include "iterator/bidirectional_iterator.hpp"
 
 #include <iostream>    
 #include <algorithm>
@@ -16,37 +17,39 @@
 int main(int argc, char **argv)
 {
 	std::map<int, int> test;
-	ft::RBT<int, int> rbt;
+
+
+	test.insert(std::make_pair(5, 12));
+	test.insert(std::make_pair(15, 12));
+	test.insert(std::make_pair(98, 12));
+	test.insert(std::make_pair(85, 12));
+	test.insert(std::make_pair(12, 12));
+
 	
-	rbt.insert(ft::make_pair(5, 6));
-	rbt.insert(ft::make_pair(-12, -12));
-	rbt.insert(ft::make_pair(3, 3));
-	rbt.insert(ft::make_pair(3, 3));
-	rbt.insert(ft::make_pair(3, 3));
-	rbt.insert(ft::make_pair(3, 3));
 
-	rbt.insert(ft::make_pair(2, 2));
-	rbt.insert(ft::make_pair(151, 151));
-	rbt.insert(ft::make_pair(1, 1));
-	rbt.insert(ft::make_pair(4, 4));
-	rbt.insert(ft::make_pair(10, 10));
-	rbt.insert(ft::make_pair(15, 15));
-	rbt.insert(ft::make_pair(23, 23));
-	rbt.insert(ft::make_pair(-132, -150));
-	rbt.insert(ft::make_pair(85, 85));
-	rbt.insert(ft::make_pair(650, 650));
+	typedef std::map<int, int>::iterator its;
+	for (its lol = test.begin(); lol != test.end(); lol++)
+		std::cout << "test map :: " << (*lol).first << std::endl;
 
+	ft::RBT<ft::pair<int, int> > rbt;
+	
+	rbt.insert(ft::make_pair(5,12));
+	rbt.insert(ft::make_pair(15, -12));
+	rbt.insert(ft::make_pair(98, 3));
+	rbt.insert(ft::make_pair(85, 3));
+	rbt.insert(ft::make_pair(12, 3));
 
+	rbt.test(rbt.getRoot());
 
-	rbt.printHelper(rbt.getRoot(), " ", true);
+	ft::bidirectional_iterator<ft::RBT<ft::pair<int, int> >::t_node> it(rbt.getRoot(), rbt.getLast());
 
-
+	std::cout << "Iterator test : " <<  (*(++it)).first << std::endl << std::endl;
 
 	for (int i = 1; i < argc; i++)
 	{
 		try
 		{
-			std::cout << "Find " << argv[i] <<  " : " << rbt.find(atoi(argv[i])) << std::endl;
+			std::cout << "Key: " << argv[i]  << " = " << rbt.find(ft::make_pair(atoi(argv[i]), int())).second << std::endl;
 		}
 		catch(const std::exception& e)
 		{

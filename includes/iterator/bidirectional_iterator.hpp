@@ -17,6 +17,7 @@
 
 #include "iterator.hpp"
 #include "../avl.hpp"
+#include <typeinfo>
 
 namespace ft {
 
@@ -24,18 +25,19 @@ namespace ft {
 	class bidirectional_iterator : public ft::iterator<ft::bidirectional_iterator_tag, T> {
 
 		public:
-			typedef typename ft::iterator<ft::bidirectional_iterator_tag, T>::value_type		iterator_type;
-			typedef typename ft::iterator<ft::bidirectional_iterator_tag, T>::difference_type	difference_type;
-			typedef T*																			pointer;
-			typedef T&																			reference;
-			
-
+			typedef typename T::value_type																value_type;
+			typedef typename ft::iterator<ft::bidirectional_iterator_tag, value_type>::value_type		iterator_type;
+			typedef typename ft::iterator<ft::bidirectional_iterator_tag, value_type>::difference_type	difference_type;
+			typedef typename ft::iterator<ft::bidirectional_iterator_tag, value_type>::pointer			pointer;
+			typedef typename ft::iterator<ft::bidirectional_iterator_tag, value_type>::reference		reference;
+			typedef T*																					node;
 		private:
-			*RBT _base;
+			T* _base;
+			T* _end;
 
 		public:
 			bidirectional_iterator(void) : _base(NULL) {}
-			bidirectional_iterator(pointer it) : _base(it) {}
+			bidirectional_iterator(T *it, T* end) : _base(it), _end(end) {}
 				
 			bidirectional_iterator (const bidirectional_iterator & rev_it) : _base(rev_it.base())
 			{
@@ -44,16 +46,15 @@ namespace ft {
 		
 			virtual ~bidirectional_iterator() {}
 
-			pointer base() const
+			reference base() const
 			{
-				return (this->_base);
+				return (this->_base->data);
 			}
 
 			reference operator*() const
 			{
-				return (_base.);
+				return (_base->data);
 			}
-
 
 			bidirectional_iterator &operator=(const bidirectional_iterator & rhs)
 			{
@@ -64,17 +65,16 @@ namespace ft {
 			}
 
 
-			bidirectional_iterator operator+(difference_type n) const
-			{
-				T *tmp;
-				tmp = _base + n;
-				return (bidirectional_iterator(tmp));
-			}
-
 			bidirectional_iterator & operator++()
 			{
-				++_base;
-				return(*this);
+				if (_base->left != _end)
+				{
+					std::cout << "Coucou ? " << _base->data.first << std::endl;
+					_base = _base->left;
+					std::cout << "Coucou ? " << _base->data.first << std::endl;
+
+				}
+				return (*this);
 			}
 
 			bidirectional_iterator operator++(int)
@@ -82,19 +82,6 @@ namespace ft {
 				bidirectional_iterator tmp = *this;
 				++(*this);
 				return (tmp);
-			}
-
-			bidirectional_iterator operator+=(difference_type n)
-			{
-				_base += n;
-				return (*this);
-			}
-
-			bidirectional_iterator operator-(difference_type n) const
-			{
-				T *tmp;
-				tmp = _base - n;
-				return (bidirectional_iterator(tmp));
 			}
 
 			bidirectional_iterator & operator--() 
@@ -110,20 +97,9 @@ namespace ft {
 				return (tmp);
 			}
 
-			bidirectional_iterator operator-=(difference_type n)
-			{
-				_base -= n;
-				return (*this);
-			}
-
 			pointer operator->() const
 			{
-				return &(operator*());
-			}
-
-			reference operator[] (difference_type n) const
-			{
-				return (*(_base + n));
+				return &(_base->data);
 			}
 
             operator bidirectional_iterator<const T> () const
@@ -142,43 +118,6 @@ namespace ft {
 	bool operator!=(ft::bidirectional_iterator<T> const & lhs, ft::bidirectional_iterator<Other> const& rhs)
 	{
 		return (lhs.base() != rhs.base());	
-	}
-
-	template <class T, class Other>
-	bool operator<(ft::bidirectional_iterator<T> const & lhs, ft::bidirectional_iterator<Other> const& rhs)
-	{
-		return (lhs.base() < rhs.base());	
-	}
-
-	template <class T, class Other>
-	bool operator<=(ft::bidirectional_iterator<T> const & lhs, ft::bidirectional_iterator<Other> const& rhs)
-	{
-		return (lhs.base() <= rhs.base());	
-	}
-
-	template <class T, class Other>
-	bool operator>(ft::bidirectional_iterator<T> const & lhs, ft::bidirectional_iterator<Other> const& rhs)
-	{
-		return (lhs.base() > rhs.base());	
-	}
-
-	template <class T, class Other>
-	bool operator>=(ft::bidirectional_iterator<T> const & lhs, ft::bidirectional_iterator<Other> const& rhs)
-	{
-		return (lhs.base() >= rhs.base());	
-	}
-
-	template <class T>
-	bidirectional_iterator<T> operator+(typename bidirectional_iterator<T>::difference_type n, 
-		const bidirectional_iterator<T> & rev_it)
-	{
-		return (rev_it + n);		
-	}
-
-	template <class T, class O>
-	typename bidirectional_iterator<T>::difference_type operator- (bidirectional_iterator<T> const & lhs, bidirectional_iterator<O>  const & rhs)
-	{
-		return (lhs.base() - rhs.base());
 	}
 };
 

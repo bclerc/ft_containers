@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/01 03:15:51 by bclerc            #+#    #+#             */
-/*   Updated: 2022/04/05 06:41:40 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/04/06 11:57:46 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,20 +19,34 @@
 # define BLACK 0
 # define RED 1
 
+template <class T>
+struct s_node {
+
+	typedef T			value_type;
+	
+	T					data;			
+	int 				color;
+	struct s_node 		*parent;
+	struct s_node 		*left;
+	struct s_node		*right;
+
+
+	struct s_node &operator=(const struct s_node & rhs)
+	{
+		if (this == &rhs)
+			return (*this);
+		return &rhs;
+	}
+};
+
 namespace ft {
 
-	template <class Key, class Value>
+	template <class T>
 	class RBT {
-		
-		typedef struct s_node {
-			
-			pair<Key, Value>	data;			
-			int 				color;
-			struct s_node 		*parent;
-			struct s_node 		*left;
-			struct s_node		*right;
-		}				t_node;
 	
+	public:
+		typedef	s_node<T>	t_node;
+
 	private:
 		t_node * TNULL;
 		t_node * root;
@@ -46,7 +60,7 @@ namespace ft {
 			node->right = NULL;
 		}
 
-		t_node *_newNode(pair<Key, Value> data)
+		t_node *_newNode(T data)
 		{
 			t_node *node = new t_node;
 
@@ -58,13 +72,13 @@ namespace ft {
 			return node;
 		}
 
-		t_node *_search(t_node *node, Key key)
+		t_node *_search(t_node *node, T key)
 		{
 			t_node *ret;
 
-			if (node == TNULL || key == node->data.first)
+			if (node == TNULL || key.first == node->data.first)
 				ret = node;
-			else if(key < node->data.first)
+			else if(key.first < node->data.first)
 				ret = _search(node->left, key);
 			else
 				ret =_search(node->right, key);
@@ -257,12 +271,11 @@ namespace ft {
 			node_x->parent = node_y;
 		}
 
-		void insert(pair<Key, Value> data)
+		void insert(T data)
 		{
 			t_node *node = _newNode(data);
 			t_node *node_y = NULL;
 			t_node *node_x = root;
-			
 			while (node_x != TNULL)	//	find position of new node
 			{
 				node_y = node_x;
@@ -289,7 +302,7 @@ namespace ft {
 
 		}
 
-		void deleteNode( Key key)
+		void deleteNode(T key)
 		{
 			t_node *node = root;
 			t_node *node_z = TNULL;
@@ -299,9 +312,9 @@ namespace ft {
 
 			while (node != TNULL)
 			{
-				if (node->data.first == key)
+				if (node->data.first == key.first)
 					node_z = node;
-				if (node->data.first <= key)
+				if (node->data.first <= key.first)
 					node = node->right;
 				else
 					node = node->left;
@@ -351,13 +364,21 @@ namespace ft {
 			return (tmp);
 		}
 
-		Value find(Key key)
+		T find(T key)
 		{
-			return (_search(root, key)->data.second);
+			T ret = _search(root, key)->data; 
+			return (ret);
 		}
+
+
 		t_node *getRoot(void)
 		{
 			return this->root;
+		}
+		
+		t_node *getLast(void)
+		{
+			return this->TNULL;
 		}
 	};
 }
