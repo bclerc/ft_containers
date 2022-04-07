@@ -30,11 +30,12 @@ namespace ft {
 			typedef typename ft::iterator<ft::bidirectional_iterator_tag, value_type>::difference_type	difference_type;
 			typedef typename ft::iterator<ft::bidirectional_iterator_tag, value_type>::pointer			pointer;
 			typedef typename ft::iterator<ft::bidirectional_iterator_tag, value_type>::reference		reference;
-			typedef T*																					node;
+			typedef T*
+																							node;
 		private:
 			T* _base;
 			T* _end;
-
+		
 		public:
 			bidirectional_iterator(void) : _base(NULL) {}
 			bidirectional_iterator(T *it, T* end) : _base(it), _end(end) {}
@@ -67,12 +68,19 @@ namespace ft {
 
 			bidirectional_iterator & operator++()
 			{
-				if (_base->left != _end)
-				{
-					std::cout << "Coucou ? " << _base->data.first << std::endl;
-					_base = _base->left;
-					std::cout << "Coucou ? " << _base->data.first << std::endl;
+				T*	tmp;
 
+				if (this->_base->right != _end)
+					_base = ft::node_min(this->_base->right, _end);
+				else
+				{
+					tmp = _base->parent;
+					while (tmp != _end && _base == tmp->right)
+					{
+						_base = tmp;
+						tmp = tmp->parent;
+					}
+					_base = tmp;
 				}
 				return (*this);
 			}
@@ -86,8 +94,21 @@ namespace ft {
 
 			bidirectional_iterator & operator--() 
 			{
-				--_base;
-				return(*this);
+				T*	tmp;
+
+				if (this->_base->left != _end)
+					_base = ft::node_max(this->_base->left, _end);
+				else
+				{
+					tmp = _base->parent;
+					while (tmp != _end && _base == tmp->left)
+					{
+						_base = tmp;
+						tmp = tmp->parent;
+					}
+					_base = tmp;
+				}
+				return (*this);
 			}
 
 			bidirectional_iterator operator--(int)

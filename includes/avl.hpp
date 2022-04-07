@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/01 03:15:51 by bclerc            #+#    #+#             */
-/*   Updated: 2022/04/06 11:57:46 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/04/07 09:22:55 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,6 @@ struct s_node {
 	struct s_node 		*left;
 	struct s_node		*right;
 
-
-	struct s_node &operator=(const struct s_node & rhs)
-	{
-		if (this == &rhs)
-			return (*this);
-		return &rhs;
-	}
 };
 
 namespace ft {
@@ -50,15 +43,6 @@ namespace ft {
 	private:
 		t_node * TNULL;
 		t_node * root;
-	
-		void _initializeNode(t_node *node, t_node *parent)
-		{
-			node->data = NULL;
-			node->color = BLACK;
-			node->parent = parent;
-			node->left = NULL;
-			node->right = NULL;
-		}
 
 		t_node *_newNode(T data)
 		{
@@ -230,9 +214,14 @@ namespace ft {
 				root(TNULL)
 		{
 			TNULL->color = BLACK;
-			TNULL->left = NULL;
-			TNULL->right = NULL;
+			TNULL->left = TNULL;
+			TNULL->right = TNULL;
 			return ;
+		}
+		
+		~RBT()
+		{
+			delete TNULL;
 		}
 
 		void	leftRotate(t_node *node_x)
@@ -355,15 +344,6 @@ namespace ft {
 				_deleteFix(node_x);
 		}
 
-		t_node *min(t_node *node)
-		{
-			t_node *tmp = node;
-
-			while (tmp->left != TNULL)
-				tmp = tmp->left;
-			return (tmp);
-		}
-
 		T find(T key)
 		{
 			T ret = _search(root, key)->data; 
@@ -380,7 +360,47 @@ namespace ft {
 		{
 			return this->TNULL;
 		}
+		
+		t_node *min(t_node *node)
+		{
+			t_node *tmp = node;
+
+			while (tmp->left != TNULL)
+				tmp = tmp->left;
+			return (tmp);
+		}
+
 	};
+
+	template <class T>
+	T *node_min(T *node, T* end)
+	{
+		T *tmp = node;
+
+		while (tmp->left != end)
+			tmp = tmp->left;
+		return (tmp);
+	}
+
+	template <class T>
+	T *node_max(T *node, T* end)
+	{
+		T *tmp = node;
+
+		while (tmp->right != end)
+			tmp = tmp->right;
+		return (tmp);
+	}
+
+	template <class T>
+	T *node_root(T *node)
+	{
+		T *tmp = node;
+
+		while (tmp->parent != NULL)
+			tmp = tmp->parent;
+		return (tmp);
+	}
 }
 
 
