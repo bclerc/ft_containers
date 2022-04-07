@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 01:48:13 by bclerc            #+#    #+#             */
-/*   Updated: 2022/04/04 03:39:47 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/04/07 10:16:30 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,13 @@
 #include <memory>
 #include "equal.hpp"
 #include "iterator/reverse_iterator.hpp"
-#include "bidirectional_iterator.hpp"
+#include "iterator/bidirectional_iterator.hpp"
+#include "avl.hpp"
 
 
 namespace ft 
 {
-	template <class T> struct less : binary_function <T,T,bool> {
+	template <class T> struct less : std::binary_function <T,T,bool> {
 		bool operator() (const T& x, const T& y) const 
 		{
 			return x < y ;
@@ -32,41 +33,52 @@ namespace ft
 		class Key,
 		class T,
 		class Compare = std::less<Key>,
-		class Allocator = std::allocator<std::pair<const Key, T> >
+		class Allocator = std::allocator<ft::pair<const Key, T> >
 	>
 	class map
 	{
 		public:
-			typedef Key											key_type;
-			typedef T											mapped_type;
-			typedef	value_type									ft::pair<const Key, T>
-			typedef std::size_t									size_type;
-			typedef std::ptrdiff_t								difference_type;
-			typedef	Compare										key_compare;
-			typedef allocator_type								Allocator;
-			typedef value_type &								reference;
-			typedef const value_type & 							const_reference;
-			typedef	Allocator::pointer							pointer;
-			typedef Allocator::const_pointer					const_pointer;
-			typedef typename bidirectional_iterator<T>			iterator;
-			typedef typename bidirectional_iterator<const T>	const_iterator;
-			typedef reverse_iterator<Iterator>					reverse_iterator;
-			typedef	reverse_iterator<const_iterator>			const_reverse_iterator;
+			typedef Key													key_type;
+			typedef T													mapped_type;
+			typedef	ft::pair<Key, T>									value_type;
+			typedef std::size_t											size_type;
+			typedef std::ptrdiff_t										difference_type;
+			typedef	Compare												key_compare;
+			typedef Allocator											allocator_type;
+			typedef value_type &										reference;
+			typedef const value_type & 									const_reference;
+			typedef	typename Allocator::pointer							pointer;
+			typedef typename Allocator::const_pointer					const_pointer;
+			typedef RBT<ft::pair<Key, T> >								tree;
+			typedef bidirectional_iterator<typename tree::t_node>		iterator;
+			typedef bidirectional_iterator<const typename  tree::t_node>			const_iterator;
+			//typedef reverse_iterator<Iterator>					reverse_iterator;
+			//typedef	reverse_iterator<const_iterator>			const_reverse_iterator;
 		
 		private:
 			Allocator _alloc;
-			size_type _size;
-			size_type _capacity;
+			size_t _size;
+			tree	rbt;
 
 		public:
-			map();
+			map()
+			{
+				rbt = tree();
+				_size = 0;
+				_alloc = Allocator();
+			}
 
 			explicit map( const Compare& comp,
 						const Allocator& alloc = Allocator() );
 			template< class InputIt >
-			map( InputIt first, InputIt last, const Compare& comp = Compare(), const Allocator& alloc = Allocator() );
-			map( const map& other );
-			~map();
+
+			map( InputIt first, InputIt last, const Compare& comp = Compare(), const Allocator& alloc = Allocator());
+			map( const map& other )
+			{
+
+			}
+			~map()
+			{}
 			map& operator=( const map& other );
 			allocator_type get_allocator() const
 			{
@@ -75,12 +87,15 @@ namespace ft
 			T& at( const Key& key );
 			const T& at( const Key& key ) const;
 			T& operator[]( const Key& key );
-			iterator begin();
+			iterator begin()
+			{
+				return (iterator(rbt.min(), rbt.getLast()));
+			}
 			iterator end();
-			reverse_iterator rbegin();
-			const_reverse_iterator rbegin() const;
-			reverse_iterator rend();
-			const_reverse_iterator rend() const;
+			//reverse_iterator rbegin();
+			//const_reverse_iterator rbegin() const;
+			//sreverse_iterator rend();
+			//const_reverse_iterator rend() const;
 
 			bool empty() const
 			{
@@ -94,11 +109,15 @@ namespace ft
 
 			size_type max_size() const
 			{
-				return (this->_alloc.max_size()));
+				return (this->_alloc.max_size());
 			}
 
 			void clear();
-			ft::pair<iterator, bool> insert( const value_type& value );
+			ft::pair<long, bool> insert( const value_type& value )
+			{
+				rbt.insert(value);
+				return (make_pair(NULL, true));
+			}
 			iterator insert( iterator hint, const value_type& value );
 			void erase( iterator pos );
 			void erase( iterator first, iterator last );
@@ -113,7 +132,7 @@ namespace ft
 			const_iterator lower_bound( const Key& key ) const;
 			iterator upper_bound( const Key& key );
 			const_iterator upper_bound( const Key& key ) const;
-	}
+	};
 };
 
 #endif

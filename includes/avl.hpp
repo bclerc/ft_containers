@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/01 03:15:51 by bclerc            #+#    #+#             */
-/*   Updated: 2022/04/07 09:22:55 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/04/07 10:10:07 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,7 +221,7 @@ namespace ft {
 		
 		~RBT()
 		{
-			delete TNULL;
+			//delete TNULL;
 		}
 
 		void	leftRotate(t_node *node_x)
@@ -246,7 +246,6 @@ namespace ft {
 		{
 			t_node *node_y = node_x->left;
 
-			node_x->left = node_y->right;
 			if (node_y->right != TNULL)
 				node_y->right->parent = node_x;
 			node_y->parent = node_x->parent;
@@ -368,6 +367,11 @@ namespace ft {
 			while (tmp->left != TNULL)
 				tmp = tmp->left;
 			return (tmp);
+		}
+
+		t_node *min()
+		{
+			return (min(root));
 		}
 
 	};

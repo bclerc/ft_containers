@@ -38,12 +38,12 @@ namespace ft {
 		
 		public:
 			bidirectional_iterator(void) : _base(NULL) {}
-			bidirectional_iterator(T *it, T* end) : _base(it), _end(end) {}
+			bidirectional_iterator(T *it, T *end) : _base(it), _end(end) {}
 				
-			bidirectional_iterator (const bidirectional_iterator & rev_it) : _base(rev_it.base())
-			{
-				return ;
-			}
+			//bidirectional_iterator (const bidirectional_iterator & rev_it) : _base(rev_it.base())
+			//{
+			//	return ;
+			//}
 		
 			virtual ~bidirectional_iterator() {}
 
