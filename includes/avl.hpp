@@ -6,43 +6,47 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/01 03:15:51 by bclerc            #+#    #+#             */
-/*   Updated: 2022/04/07 10:10:07 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/04/08 15:32:32 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef AVL_HPP
-# define AVL_HPP
+#define AVL_HPP
 
 #include "pair.tpp"
 #include <ostream>
 
-# define BLACK 0
-# define RED 1
+#define BLACK 0
+#define RED 1
 
 template <class T>
-struct s_node {
+struct s_node
+{
 
-	typedef T			value_type;
-	
-	T					data;			
-	int 				color;
-	struct s_node 		*parent;
-	struct s_node 		*left;
-	struct s_node		*right;
+	typedef T value_type;
+
+	T data;
+	int color;
+	struct s_node *parent;
+	struct s_node *left;
+	struct s_node *right;
+
 
 };
 
-namespace ft {
+namespace ft
+{
 
 	template <class T>
-	class RBT {
-	
+	class RBT
+	{
+
 	public:
-		typedef	s_node<T>	t_node;
+		typedef s_node<T> t_node;
 
 	private:
-		t_node * TNULL;
-		t_node * root;
+		t_node *TNULL;
+		t_node *root;
 
 		t_node *_newNode(T data)
 		{
@@ -52,7 +56,7 @@ namespace ft {
 			node->data = data;
 			node->left = TNULL;
 			node->right = TNULL;
-			node->color = RED;			// Red by default
+			node->color = RED; // Red by default
 			return node;
 		}
 
@@ -62,18 +66,18 @@ namespace ft {
 
 			if (node == TNULL || key.first == node->data.first)
 				ret = node;
-			else if(key.first < node->data.first)
+			else if (key.first < node->data.first)
 				ret = _search(node->left, key);
 			else
-				ret =_search(node->right, key);
+				ret = _search(node->right, key);
 			if (ret == TNULL)
 				throw std::invalid_argument("Node not found");
 			return (ret);
 		}
 
-		void	_deleteFix(t_node *node)
+		void _deleteFix(t_node *node)
 		{
-			t_node * tmp;
+			t_node *tmp;
 
 			while (node != root && node->color == BLACK)
 			{
@@ -91,7 +95,8 @@ namespace ft {
 					{
 						tmp->color = RED;
 						node = node->parent;
-					} else
+					}
+					else
 					{
 						if (tmp->right->color == BLACK)
 						{
@@ -100,13 +105,14 @@ namespace ft {
 							rightRotate(tmp);
 							tmp = node->parent->right;
 						}
-						tmp->color = node->parent->color ;
+						tmp->color = node->parent->color;
 						node->parent->color = 0;
 						tmp->right->color = 0;
 						leftRotate(node->parent);
 						node = root;
 					}
-				} else
+				}
+				else
 				{
 					tmp = node->parent->left;
 					if (tmp->color == RED)
@@ -121,7 +127,8 @@ namespace ft {
 						tmp->color = RED;
 						node = node->parent;
 					}
-					else{
+					else
+					{
 						if (tmp->left->color == BLACK)
 						{
 							tmp->right->color = BLACK;
@@ -142,71 +149,15 @@ namespace ft {
 		}
 
 		// Replace the first node by second for detach the deleted node from rbt
-		void	_transplant(t_node *first, t_node *second)
+		void _transplant(t_node *first, t_node *second)
 		{
 			if (!first->parent)
 				root = second;
 			else if (first == first->parent->left)
-				first->parent->left = second;		
+				first->parent->left = second;
 			else
 				first->parent->right = second;
 			second->parent = first->parent;
-		}
-
-		void	_insertFix(t_node *new_node)
-		{
-			t_node *tmp;
-
-			while (new_node->parent->color == RED)
-			{
-				if (new_node->parent == new_node->parent->parent->right)
-				{
-					tmp = new_node->parent->parent->left;
-					if (tmp->color == RED)
-					{
-						tmp->color = BLACK;
-						new_node->parent->color = BLACK;
-						new_node->parent->parent->color = RED;
-						new_node = new_node->parent->parent;
-					}
-					else
-					{
-						if (new_node == new_node->parent->left)
-						{
-							new_node = new_node->parent;
-							rightRotate(new_node);
-						}
-						new_node->parent->color = BLACK;
-						new_node->parent->parent->color = RED;
-						leftRotate(new_node->parent->parent);
-					}
-				}
-				else 
-				{
-					tmp = new_node->parent->parent->right;
-					if (tmp->color == RED)
-					{
-						tmp->color = BLACK;
-						new_node->parent->color = BLACK;
-						new_node->parent->parent->color = RED;
-						new_node = new_node->parent->parent;
-					}
-					else
-					{
-						if (new_node == new_node->parent->right)
-						{
-							new_node = new_node->parent;
-							leftRotate(new_node);
-						}
-						new_node->parent->color = BLACK;
-						new_node->parent->parent->color = RED;
-						rightRotate(new_node->parent->parent);
-					}
-				}
-				if (new_node == root)
-					break ;
-			}
-			root->color = BLACK;
 		}
 
 	public:
@@ -216,15 +167,17 @@ namespace ft {
 			TNULL->color = BLACK;
 			TNULL->left = TNULL;
 			TNULL->right = TNULL;
-			return ;
-		}
-		
-		~RBT()
-		{
-			//delete TNULL;
+			TNULL->parent = TNULL;
+			TNULL->data = T();
+			return;
 		}
 
-		void	leftRotate(t_node *node_x)
+		~RBT()
+		{
+			// delete TNULL;
+		}
+
+		void leftRotate(t_node *node_x)
 		{
 			t_node *node_y = node_x->right;
 
@@ -239,10 +192,11 @@ namespace ft {
 			else
 				node_x->parent->right = node_y;
 			node_y->left = node_x;
-			node_x->parent = node_y;		
-		}	
-	
-		void	rightRotate(t_node *node_x)
+			node_x->parent = node_y;
+			root->parent = NULL;
+		}
+
+		void rightRotate(t_node *node_x)
 		{
 			t_node *node_y = node_x->left;
 
@@ -257,6 +211,7 @@ namespace ft {
 				node_x->parent->left = node_y;
 			node_y->right = node_x;
 			node_x->parent = node_y;
+		
 		}
 
 		void insert(T data)
@@ -264,7 +219,7 @@ namespace ft {
 			t_node *node = _newNode(data);
 			t_node *node_y = NULL;
 			t_node *node_x = root;
-			while (node_x != TNULL)	//	find position of new node
+			while (node_x != TNULL) //	find position of new node
 			{
 				node_y = node_x;
 				if (node->data.first < node_x->data.first)
@@ -279,15 +234,9 @@ namespace ft {
 				node_y->left = node;
 			else
 				node_y->right = node;
-			if (node->parent == NULL) // set black color to node if the tree is empty
-			{
-				node->color = BLACK;
-				return ;
-			}
-			if (node->parent->parent == NULL)
-				return;
-			_insertFix(node);
 
+		//	_insertFix(node);
+		
 		}
 
 		void deleteNode(T key)
@@ -296,7 +245,7 @@ namespace ft {
 			t_node *node_z = TNULL;
 			t_node *node_x;
 			t_node *node_y;
-			int		y_color;
+			int y_color;
 
 			while (node != TNULL)
 			{
@@ -315,11 +264,13 @@ namespace ft {
 			{
 				node_x = node_z->right;
 				_transplant(node_z, node_z->right);
-			} else if (node_z->right == TNULL)
+			}
+			else if (node_z->right == TNULL)
 			{
 				node_x = node_z->left;
 				_transplant(node_z, node_z->left);
-			} else
+			}
+			else
 			{
 				node_y = min(node_z->right);
 				y_color = node_y->color;
@@ -339,27 +290,26 @@ namespace ft {
 				node_y->color = node_z->color;
 			}
 			delete node_z;
-			if (y_color == BLACK)
-				_deleteFix(node_x);
+		//	if (y_color == BLACK)
+		//		_deleteFix(node_x);
 		}
 
 		T find(T key)
 		{
-			T ret = _search(root, key)->data; 
+			T ret = _search(root, key)->data;
 			return (ret);
 		}
-
 
 		t_node *getRoot(void)
 		{
 			return this->root;
 		}
-		
+
 		t_node *getLast(void)
 		{
 			return this->TNULL;
 		}
-		
+
 		t_node *min(t_node *node)
 		{
 			t_node *tmp = node;
@@ -373,11 +323,10 @@ namespace ft {
 		{
 			return (min(root));
 		}
-
 	};
 
 	template <class T>
-	T *node_min(T *node, T* end)
+	T *node_min(T *node, T *end)
 	{
 		T *tmp = node;
 
@@ -387,7 +336,7 @@ namespace ft {
 	}
 
 	template <class T>
-	T *node_max(T *node, T* end)
+	T *node_max(T *node, T *end)
 	{
 		T *tmp = node;
 
@@ -406,6 +355,5 @@ namespace ft {
 		return (tmp);
 	}
 }
-
 
 #endif

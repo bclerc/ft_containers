@@ -33,12 +33,22 @@ namespace ft {
 			typedef T*
 																							node;
 		private:
-			T* _base;
+			T* _min;
+			T* _max;
+			T* _root;
 			T* _end;
-		
+			T* _base;
+	
 		public:
 			bidirectional_iterator(void) : _base(NULL) {}
-			bidirectional_iterator(T *it, T *end) : _base(it), _end(end) {}
+			bidirectional_iterator(T *it, T *end) : _base(it), _end(end) {
+				if (_base != _end)
+				{
+					_root = node_root(_base);
+					_max = node_max(_root, _end);
+					_min  = node_min(_root, _end);
+				}
+			}
 				
 			//bidirectional_iterator (const bidirectional_iterator & rev_it) : _base(rev_it.base())
 			//{
@@ -71,17 +81,23 @@ namespace ft {
 				T*	tmp;
 
 				if (this->_base->right != _end)
-					_base = ft::node_min(this->_base->right, _end);
-				else
+				{
+					_base = _base->right;
+					while (_base->left != _end)
+						_base = _base->left;
+				}
+				else if (_base != _end && _max != _base)
 				{
 					tmp = _base->parent;
-					while (tmp != _end && _base == tmp->right)
+					while (tmp && _base == tmp->right)
 					{
 						_base = tmp;
 						tmp = tmp->parent;
 					}
 					_base = tmp;
 				}
+				else
+					_base = _end;
 				return (*this);
 			}
 
@@ -98,16 +114,18 @@ namespace ft {
 
 				if (this->_base->left != _end)
 					_base = ft::node_max(this->_base->left, _end);
-				else
+				else if (_base != _end && _min != _base)
 				{
 					tmp = _base->parent;
-					while (tmp != _end && _base == tmp->left)
+					while  (tmp && _base == tmp->left)
 					{
 						_base = tmp;
 						tmp = tmp->parent;
 					}
 					_base = tmp;
 				}
+				else
+					_base = _end;
 				return (*this);
 			}
 
@@ -132,13 +150,13 @@ namespace ft {
 	template <class T, class Other>
 	bool operator==(ft::bidirectional_iterator<T> const & lhs, ft::bidirectional_iterator<Other> const& rhs)
 	{
-		return (lhs.base() == rhs.base());	
+		return (lhs->first == rhs->first && lhs->second == lhs->second);	
 	}
 
 	template <class T, class Other>
 	bool operator!=(ft::bidirectional_iterator<T> const & lhs, ft::bidirectional_iterator<Other> const& rhs)
 	{
-		return (lhs.base() != rhs.base());	
+		return (!(lhs == rhs));	
 	}
 };
 

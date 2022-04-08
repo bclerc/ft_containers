@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 01:48:13 by bclerc            #+#    #+#             */
-/*   Updated: 2022/04/07 10:16:30 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/04/08 12:11:40 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,10 @@ namespace ft
 			}
 			~map()
 			{}
+			void print()
+			{
+				rbt.printHelper(rbt.getRoot(), " ", true);
+			}
 			map& operator=( const map& other );
 			allocator_type get_allocator() const
 			{
@@ -91,7 +95,10 @@ namespace ft
 			{
 				return (iterator(rbt.min(), rbt.getLast()));
 			}
-			iterator end();
+			iterator end()
+			{
+				return iterator(rbt.getLast(), rbt.getLast());
+			}
 			//reverse_iterator rbegin();
 			//const_reverse_iterator rbegin() const;
 			//sreverse_iterator rend();
@@ -115,6 +122,7 @@ namespace ft
 			void clear();
 			ft::pair<long, bool> insert( const value_type& value )
 			{
+				_size++;
 				rbt.insert(value);
 				return (make_pair(NULL, true));
 			}
