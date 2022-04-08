@@ -1,6 +1,8 @@
 #include "pair.tpp"
 #include "stack.hpp"
 #include "vector.hpp"
+#include "../includes/map.hpp"
+
 #include "avl.hpp"
 #include "iterator/bidirectional_iterator.hpp"
 
@@ -10,14 +12,60 @@
 #include <map>
 
 
-
 #define TESTED_TYPE int
 #define TESTED_NAMESPACE ft
 
 int main(int argc, char **argv)
 {
 	std::map<int, int> test;
+	ft::map<int, int>	youpi;
 
+
+	
+	youpi.insert(ft::make_pair(5, 5));
+	youpi.insert(ft::make_pair(12, 12));
+	youpi.insert(ft::make_pair(89, 89));
+	youpi.insert(ft::make_pair(9, 89));
+	youpi.insert(ft::make_pair(65, 89));
+	youpi.insert(ft::make_pair(-12, 89));
+	youpi.insert(ft::make_pair(-12, 89));
+	youpi.insert(ft::make_pair(-12, 89));
+	youpi.insert(ft::make_pair(-12, 89));
+	youpi.insert(ft::make_pair(-12, 89));
+	youpi.insert(ft::make_pair(-12, 89));
+
+
+
+	typedef ft::map<int, int>::iterator anotheriterator;
+	anotheriterator y = youpi.begin();
+	for (anotheriterator i = youpi.begin(); i != youpi.end(); i++)
+		std::cout << i->first << std::endl;
+	std::cout << "====== " <<  youpi.end()->first  << " " << youpi.size() <<"=========" << std::endl;
+	std::cout << "TEST MAP : " << (y)->first << std::endl;
+	std::cout << "TEST MAP : " << (++y)->first << std::endl;
+	std::cout << "TEST MAP : " << (++y)->first << std::endl;
+	std::cout << "TEST MAP : " << (++y)->first << std::endl;
+	std::cout << "TEST MAP : " << (++y)->first << std::endl;
+	std::cout << "TEST MAP : " << (++y)->first << std::endl;
+	std::cout << "TEST MAP : " << (++y)->first << std::endl;
+	std::cout << "TEST MAP : " << (++y)->first << std::endl;
+	std::cout << "TEST MAP : " << (++y)->first << std::endl;
+	std::cout << "TEST MAP : " << (++y)->first << std::endl;
+
+	std::cout << "TEST MAP : " << (++y)->first << std::endl;
+
+	std::cout << "TEST MAP : " << (++y)->first << std::endl;
+		
+	//	std::cout << "TEST MAP : " << (++y)->first << std::endl;
+	//std::cout << "TEST MAP : " << (--y)->first << std::endl;
+	
+//	std::cout << "TEST MAP : " << (--y)->first << std::endl;
+	//std::cout << "TEST MAP : " << (--y)->first << std::endl;
+	//std::cout << "TEST MAP : " << (--y)->first << std::endl;
+
+	std::cout << "===============" << std::endl;
+
+	test.insert(std::make_pair(5, 12));
 
 	test.insert(std::make_pair(5, 12));
 	test.insert(std::make_pair(15, 12));
@@ -27,10 +75,17 @@ int main(int argc, char **argv)
 
 	
 
-	typedef std::map<int, int>::iterator its;
-	for (its lol = test.begin(); lol != test.end(); lol++)
-		std::cout << "test map :: " << (*lol).first << std::endl;
+	typedef ft::map<int, int>::iterator its;
+	its tu = youpi.begin();
+	for (int i = 0; i < 50; i++)
+	{
+		std::cout << "PTT: " << (tu++)->first; 
+	}
+	std:: cout << " STD END : " <<	(test.end())->first << std::endl;
+	//its endtest = test.end();
 
+
+	//std::cout << "Test end : " << (++endtest)->first << std::endl; 
 	ft::RBT<ft::pair<int, int> > rbt;
 	
 	rbt.insert(ft::make_pair(5,12));
@@ -39,11 +94,13 @@ int main(int argc, char **argv)
 	rbt.insert(ft::make_pair(85, 3));
 	rbt.insert(ft::make_pair(12, 3));
 
-	rbt.test(rbt.getRoot());
+	ft::bidirectional_iterator<ft::RBT<ft::pair<int, int> >::t_node> it(ft::node_min(rbt.getRoot(), rbt.getLast()), rbt.getLast());
 
-	ft::bidirectional_iterator<ft::RBT<ft::pair<int, int> >::t_node> it(rbt.getRoot(), rbt.getLast());
+	std::cout << "IT : " << it->first << std::endl;
+	std::cout << "IT : " << (++it)->first << std::endl;
+	std::cout << "IT : " << (++it)->first << std::endl;
+	std::cout << "IT : " << (++it)->first << std::endl;
 
-	std::cout << "Iterator test : " <<  (*(++it)).first << std::endl << std::endl;
 
 	for (int i = 1; i < argc; i++)
 	{
