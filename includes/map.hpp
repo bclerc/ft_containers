@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 01:48:13 by bclerc            #+#    #+#             */
-/*   Updated: 2022/04/08 12:11:40 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/04/09 07:38:59 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ namespace ft
 	template<
 		class Key,
 		class T,
-		class Compare = std::less<Key>,
+		class Compare = ft::less<Key>,
 		class Allocator = std::allocator<ft::pair<const Key, T> >
 	>
 	class map
@@ -49,7 +49,7 @@ namespace ft
 			typedef const value_type & 									const_reference;
 			typedef	typename Allocator::pointer							pointer;
 			typedef typename Allocator::const_pointer					const_pointer;
-			typedef RBT<ft::pair<Key, T> >								tree;
+			typedef RBT<ft::pair<Key, T>, Compare>						tree;
 			typedef bidirectional_iterator<typename tree::t_node>		iterator;
 			typedef bidirectional_iterator<const typename  tree::t_node>			const_iterator;
 			//typedef reverse_iterator<Iterator>					reverse_iterator;
@@ -63,7 +63,6 @@ namespace ft
 		public:
 			map()
 			{
-				rbt = tree();
 				_size = 0;
 				_alloc = Allocator();
 			}
@@ -73,12 +72,11 @@ namespace ft
 			template< class InputIt >
 
 			map( InputIt first, InputIt last, const Compare& comp = Compare(), const Allocator& alloc = Allocator());
-			map( const map& other )
-			{
-
-			}
+			map( const map& other );
 			~map()
-			{}
+			{
+	
+			}
 			void print()
 			{
 				rbt.printHelper(rbt.getRoot(), " ", true);

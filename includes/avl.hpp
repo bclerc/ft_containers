@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/01 03:15:51 by bclerc            #+#    #+#             */
-/*   Updated: 2022/04/08 15:32:32 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/04/09 07:38:11 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,39 +19,53 @@
 #define BLACK 0
 #define RED 1
 
-template <class T>
-struct s_node
-{
-
-	typedef T value_type;
-
-	T data;
-	int color;
-	struct s_node *parent;
-	struct s_node *left;
-	struct s_node *right;
-
-
-};
-
 namespace ft
 {
 
-	template <class T>
+	template <class T, class Compare, class Allocator = std::allocator<T> >
 	class RBT
 	{
+	
+		private:
+			class Node
+			{
+				public:
+					typedef T		value_type;
 
-	public:
-		typedef s_node<T> t_node;
+					T		data;
+					Node*	parent;
+					Node*	left;
+					Node*	right;
+					int		color;
 
-	private:
-		t_node *TNULL;
-		t_node *root;
+					Node()
+					: data(T()), parent(NULL), left(NULL), right(NULL), color(RED)
+					{
+						data.first = 0;
+						data.second = 0;
+						return ;
+					}
+					
+					Node(T data, Node* parent, Node* left, Node* right)
+					: data(data), parent(parent), left(left), right(right), color(RED)
+					{
+						return ;
+					}
 
-		t_node *_newNode(T data)
+					~Node() {}
+			};
+
+		typedef std::allocator<Node> node_allocator;
+
+		Node			*TNULL;
+		Node			*root;
+		Allocator 		_alloc;
+		node_allocator	_node_alloc; 
+
+		Node *_newNode(T data)
 		{
-			t_node *node = new t_node;
-
+			Node *node = _node_alloc.allocate(1);
+			_node_alloc.construct(node, Node());
 			node->parent = NULL;
 			node->data = data;
 			node->left = TNULL;
@@ -60,9 +74,9 @@ namespace ft
 			return node;
 		}
 
-		t_node *_search(t_node *node, T key)
+		Node *_search(Node *node, T key)
 		{
-			t_node *ret;
+			Node *ret;
 
 			if (node == TNULL || key.first == node->data.first)
 				ret = node;
@@ -75,81 +89,8 @@ namespace ft
 			return (ret);
 		}
 
-		void _deleteFix(t_node *node)
-		{
-			t_node *tmp;
-
-			while (node != root && node->color == BLACK)
-			{
-				if (node == node->parent->left)
-				{
-					tmp = node->parent->right;
-					if (tmp->color == RED)
-					{
-						tmp->color = BLACK;
-						node->parent->color = RED;
-						leftRotate(node->parent);
-						tmp = node->parent->right;
-					}
-					if (tmp->left->color == BLACK)
-					{
-						tmp->color = RED;
-						node = node->parent;
-					}
-					else
-					{
-						if (tmp->right->color == BLACK)
-						{
-							tmp->left->color = BLACK;
-							tmp->color = RED;
-							rightRotate(tmp);
-							tmp = node->parent->right;
-						}
-						tmp->color = node->parent->color;
-						node->parent->color = 0;
-						tmp->right->color = 0;
-						leftRotate(node->parent);
-						node = root;
-					}
-				}
-				else
-				{
-					tmp = node->parent->left;
-					if (tmp->color == RED)
-					{
-						tmp->color = BLACK;
-						node->parent->color = RED;
-						rightRotate(node->parent);
-						tmp = node->parent->left;
-					}
-					if (tmp->right->color == BLACK)
-					{
-						tmp->color = RED;
-						node = node->parent;
-					}
-					else
-					{
-						if (tmp->left->color == BLACK)
-						{
-							tmp->right->color = BLACK;
-							tmp->color = RED;
-							leftRotate(tmp);
-							tmp = node->parent->left;
-						}
-
-						tmp->color = node->parent->color;
-						node->parent->color = BLACK;
-						tmp->left->color = BLACK;
-						rightRotate(node->parent);
-						node = root;
-					}
-				}
-			}
-			node->color = BLACK;
-		}
-
 		// Replace the first node by second for detach the deleted node from rbt
-		void _transplant(t_node *first, t_node *second)
+		void _transplant(Node *first, Node *second)
 		{
 			if (!first->parent)
 				root = second;
@@ -161,25 +102,32 @@ namespace ft
 		}
 
 	public:
-		RBT() : TNULL(new t_node),
-				root(TNULL)
+		typedef Node	t_node;
+
+		RBT()
 		{
-			TNULL->color = BLACK;
-			TNULL->left = TNULL;
-			TNULL->right = TNULL;
-			TNULL->parent = TNULL;
-			TNULL->data = T();
+			_alloc = Allocator();
+			_node_alloc = node_allocator();
+			TNULL = _node_alloc.allocate(1);
+			_node_alloc.construct(TNULL, Node());
+			root = TNULL;
 			return;
 		}
 
 		~RBT()
 		{
-			// delete TNULL;
+			if (TNULL)
+			{
+				destroy();
+				_node_alloc.destroy(TNULL);
+				_node_alloc.deallocate(TNULL, 1);
+			}
+			TNULL = NULL;
 		}
 
-		void leftRotate(t_node *node_x)
+		void leftRotate(Node *node_x)
 		{
-			t_node *node_y = node_x->right;
+			Node *node_y = node_x->right;
 
 			node_x->right = node_y->left;
 			if (node_y->left != TNULL)
@@ -196,9 +144,9 @@ namespace ft
 			root->parent = NULL;
 		}
 
-		void rightRotate(t_node *node_x)
+		void rightRotate(Node *node_x)
 		{
-			t_node *node_y = node_x->left;
+			Node *node_y = node_x->left;
 
 			if (node_y->right != TNULL)
 				node_y->right->parent = node_x;
@@ -211,14 +159,13 @@ namespace ft
 				node_x->parent->left = node_y;
 			node_y->right = node_x;
 			node_x->parent = node_y;
-		
 		}
 
 		void insert(T data)
 		{
-			t_node *node = _newNode(data);
-			t_node *node_y = NULL;
-			t_node *node_x = root;
+			Node *node = _newNode(data);
+			Node *node_y = NULL;
+			Node *node_x = root;
 			while (node_x != TNULL) //	find position of new node
 			{
 				node_y = node_x;
@@ -235,16 +182,15 @@ namespace ft
 			else
 				node_y->right = node;
 
-		//	_insertFix(node);
-		
+			//	_insertFix(node);
 		}
 
 		void deleteNode(T key)
 		{
-			t_node *node = root;
-			t_node *node_z = TNULL;
-			t_node *node_x;
-			t_node *node_y;
+			Node *node = root;
+			Node *node_z = TNULL;
+			Node *node_x;
+			Node *node_y;
 			int y_color;
 
 			while (node != TNULL)
@@ -289,9 +235,26 @@ namespace ft
 				node_y->left->parent = node_y;
 				node_y->color = node_z->color;
 			}
-			delete node_z;
-		//	if (y_color == BLACK)
-		//		_deleteFix(node_x);
+			_alloc.destroy(node_z);
+			_alloc.deallocate(node_z, 1);
+			//	if (y_color == BLACK)
+			//		_deleteFix(node_x);
+		}
+
+		void destroy()
+		{
+			destroy(root);
+		}
+
+		void destroy(Node *node)
+		{
+			if (node != TNULL)
+			{
+				destroy(node->left);
+				destroy(node->right);
+				_node_alloc.destroy(node);
+				_node_alloc.deallocate(node, 1);
+			}
 		}
 
 		T find(T key)
@@ -300,26 +263,26 @@ namespace ft
 			return (ret);
 		}
 
-		t_node *getRoot(void)
+		Node *getRoot(void)
 		{
 			return this->root;
 		}
 
-		t_node *getLast(void)
+		Node *getLast(void)
 		{
 			return this->TNULL;
 		}
 
-		t_node *min(t_node *node)
+		Node *min(Node *node)
 		{
-			t_node *tmp = node;
+			Node *tmp = node;
 
 			while (tmp->left != TNULL)
 				tmp = tmp->left;
 			return (tmp);
 		}
 
-		t_node *min()
+		Node *min()
 		{
 			return (min(root));
 		}

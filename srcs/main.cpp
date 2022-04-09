@@ -15,7 +15,7 @@
 #define TESTED_TYPE int
 #define TESTED_NAMESPACE ft
 
-int main(int argc, char **argv)
+int main()
 {
 	std::map<int, int> test;
 	ft::map<int, int>	youpi;
@@ -46,22 +46,7 @@ int main(int argc, char **argv)
 	std::cout << "TEST MAP : " << (++y)->first << std::endl;
 	std::cout << "TEST MAP : " << (++y)->first << std::endl;
 	std::cout << "TEST MAP : " << (++y)->first << std::endl;
-	std::cout << "TEST MAP : " << (++y)->first << std::endl;
-	std::cout << "TEST MAP : " << (++y)->first << std::endl;
-	std::cout << "TEST MAP : " << (++y)->first << std::endl;
-	std::cout << "TEST MAP : " << (++y)->first << std::endl;
-	std::cout << "TEST MAP : " << (++y)->first << std::endl;
 
-	std::cout << "TEST MAP : " << (++y)->first << std::endl;
-
-	std::cout << "TEST MAP : " << (++y)->first << std::endl;
-		
-	//	std::cout << "TEST MAP : " << (++y)->first << std::endl;
-	//std::cout << "TEST MAP : " << (--y)->first << std::endl;
-	
-//	std::cout << "TEST MAP : " << (--y)->first << std::endl;
-	//std::cout << "TEST MAP : " << (--y)->first << std::endl;
-	//std::cout << "TEST MAP : " << (--y)->first << std::endl;
 
 	std::cout << "===============" << std::endl;
 
@@ -74,45 +59,9 @@ int main(int argc, char **argv)
 	test.insert(std::make_pair(12, 12));
 
 	
-
-	typedef ft::map<int, int>::iterator its;
-	its tu = youpi.begin();
-	for (int i = 0; i < 50; i++)
-	{
-		std::cout << "PTT: " << (tu++)->first; 
-	}
-	std:: cout << " STD END : " <<	(test.end())->first << std::endl;
 	//its endtest = test.end();
 
 
-	//std::cout << "Test end : " << (++endtest)->first << std::endl; 
-	ft::RBT<ft::pair<int, int> > rbt;
-	
-	rbt.insert(ft::make_pair(5,12));
-	rbt.insert(ft::make_pair(15, -12));
-	rbt.insert(ft::make_pair(98, 3));
-	rbt.insert(ft::make_pair(85, 3));
-	rbt.insert(ft::make_pair(12, 3));
-
-	ft::bidirectional_iterator<ft::RBT<ft::pair<int, int> >::t_node> it(ft::node_min(rbt.getRoot(), rbt.getLast()), rbt.getLast());
-
-	std::cout << "IT : " << it->first << std::endl;
-	std::cout << "IT : " << (++it)->first << std::endl;
-	std::cout << "IT : " << (++it)->first << std::endl;
-	std::cout << "IT : " << (++it)->first << std::endl;
-
-
-	for (int i = 1; i < argc; i++)
-	{
-		try
-		{
-			std::cout << "Key: " << argv[i]  << " = " << rbt.find(ft::make_pair(atoi(argv[i]), int())).second << std::endl;
-		}
-		catch(const std::exception& e)
-		{
-			std::cerr << e.what() << '\n';
-		}
-	}
 
 }
 

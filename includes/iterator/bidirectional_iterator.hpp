@@ -17,7 +17,6 @@
 
 #include "iterator.hpp"
 #include "../avl.hpp"
-#include <typeinfo>
 
 namespace ft {
 
@@ -36,8 +35,8 @@ namespace ft {
 			T* _min;
 			T* _max;
 			T* _root;
-			T* _end;
 			T* _base;
+			T* _end;
 	
 		public:
 			bidirectional_iterator(void) : _base(NULL) {}
