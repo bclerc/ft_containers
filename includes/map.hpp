@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 01:48:13 by bclerc            #+#    #+#             */
-/*   Updated: 2022/04/09 09:53:11 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/04/09 11:05:10 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,7 +149,7 @@ namespace ft
 				iterator ret;
 				value_type search;
 
-				search = make_pair(key, T());
+				search = ft::make_pair(key, T());
 				ret = iterator(rbt.find(search), rbt.getLast());
 				return (ret);
 			}

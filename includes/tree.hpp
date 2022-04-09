@@ -41,26 +41,20 @@ namespace ft
 					Node()
 					: data(T()), parent(NULL), left(NULL), right(NULL), color(RED)
 					{
-						data.first = 0;
-						data.second = 0;
 						return ;
 					}
 					
 					Node(Node* parent, Node* left, Node* right)
 					: data(T()), parent(parent), left(left), right(right), color(RED)
 					{
-						data.first = 0;
-						data.second = 0;
 						return ;
 					}
-
 
 					Node(T data, Node* parent, Node* left, Node* right)
 					: data(data), parent(parent), left(left), right(right), color(RED)
 					{
 						return ;
 					}
-
 					~Node() {}
 			};
 
@@ -104,6 +98,17 @@ namespace ft
 				else
 					first->parent->right = second;
 				second->parent = first->parent;
+			}
+
+			void _destroy(Node *node)
+			{
+				if (node != TNULL)
+				{
+					_destroy(node->left);
+					_destroy(node->right);
+					_node_alloc.destroy(node);
+					_node_alloc.deallocate(node, 1);
+				}
 			}
 
 		public:
@@ -241,25 +246,13 @@ namespace ft
 				}
 				_alloc.destroy(node_z);
 				_alloc.deallocate(node_z, 1);
-				//	if (y_color == BLACK)
-				//		_deleteFix(node_x);
 			}
 
 			void destroy()
 			{
-				destroy(root);
+				_destroy(root);
 			}
 
-			void destroy(Node *node)
-			{
-				if (node != TNULL)
-				{
-					destroy(node->left);
-					destroy(node->right);
-					_node_alloc.destroy(node);
-					_node_alloc.deallocate(node, 1);
-				}
-			}
 
 			Node *find(T key)
 			{
