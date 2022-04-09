@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 01:48:13 by bclerc            #+#    #+#             */
-/*   Updated: 2022/04/09 07:38:59 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/04/09 09:53:11 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include "equal.hpp"
 #include "iterator/reverse_iterator.hpp"
 #include "iterator/bidirectional_iterator.hpp"
-#include "avl.hpp"
+#include "tree.hpp"
 
 
 namespace ft 
@@ -49,7 +49,7 @@ namespace ft
 			typedef const value_type & 									const_reference;
 			typedef	typename Allocator::pointer							pointer;
 			typedef typename Allocator::const_pointer					const_pointer;
-			typedef RBT<ft::pair<Key, T>, Compare>						tree;
+			typedef TREE<ft::pair<Key, T>, Compare>						tree;
 			typedef bidirectional_iterator<typename tree::t_node>		iterator;
 			typedef bidirectional_iterator<const typename  tree::t_node>			const_iterator;
 			//typedef reverse_iterator<Iterator>					reverse_iterator;
@@ -73,22 +73,34 @@ namespace ft
 
 			map( InputIt first, InputIt last, const Compare& comp = Compare(), const Allocator& alloc = Allocator());
 			map( const map& other );
-			~map()
+			~map() 	{}
+
+			map& operator=( const map& other )
 			{
-	
+				*this = other;
+				return (*this);
 			}
-			void print()
-			{
-				rbt.printHelper(rbt.getRoot(), " ", true);
-			}
-			map& operator=( const map& other );
+
 			allocator_type get_allocator() const
 			{
 				return _alloc;
 			}
-			T& at( const Key& key );
-			const T& at( const Key& key ) const;
-			T& operator[]( const Key& key );
+
+			T& at( const Key& key )
+			{
+				return (find(key)->second);
+			}
+
+			const T& at( const Key& key ) const
+			{
+				return (find(key)->second);
+			}
+
+			T& operator[]( const Key& key )
+			{
+				return at(key);
+			}
+
 			iterator begin()
 			{
 				return (iterator(rbt.min(), rbt.getLast()));
@@ -124,13 +136,24 @@ namespace ft
 				rbt.insert(value);
 				return (make_pair(NULL, true));
 			}
+
 			iterator insert( iterator hint, const value_type& value );
 			void erase( iterator pos );
 			void erase( iterator first, iterator last );
 			size_type erase( const Key& key );
 			void swap( map& other );
 			size_type count( const Key& key ) const;
-			iterator find( const Key& key );
+
+			iterator find( const Key& key )
+			{
+				iterator ret;
+				value_type search;
+
+				search = make_pair(key, T());
+				ret = iterator(rbt.find(search), rbt.getLast());
+				return (ret);
+			}
+
 			const_iterator find( const Key& key ) const;
 			ft::pair<iterator,iterator> equal_range( const Key& key );
 			ft::pair<const_iterator,const_iterator> equal_range( const Key& key ) const;
