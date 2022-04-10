@@ -37,7 +37,6 @@ namespace ft {
 			T* _root;
 			T* _base;
 			T* _end;
-	
 		public:
 			bidirectional_iterator(void) : _base(NULL) {}
 			bidirectional_iterator(T *it, T *end) : _base(it), _end(end) {

@@ -3,7 +3,7 @@
 #include "vector.hpp"
 #include "../includes/map.hpp"
 
-#include "avl.hpp"
+#include "../includes/tree.hpp"
 #include "iterator/bidirectional_iterator.hpp"
 
 #include <iostream>    
@@ -17,6 +17,14 @@
 
 int main()
 {
+
+
+	ft::map<std::string, int> lol;
+
+	lol.insert(ft::make_pair(std::string("Coucou"), 213));
+	lol.insert(ft::make_pair(std::string("Code"), 7978978));
+
+
 	std::map<int, int> test;
 	ft::map<int, int>	youpi;
 
@@ -27,25 +35,47 @@ int main()
 	youpi.insert(ft::make_pair(89, 89));
 	youpi.insert(ft::make_pair(9, 89));
 	youpi.insert(ft::make_pair(65, 89));
-	youpi.insert(ft::make_pair(-12, 89));
-	youpi.insert(ft::make_pair(-12, 89));
-	youpi.insert(ft::make_pair(-12, 89));
-	youpi.insert(ft::make_pair(-12, 89));
-	youpi.insert(ft::make_pair(-12, 89));
-	youpi.insert(ft::make_pair(-12, 89));
 
 
 
 	typedef ft::map<int, int>::iterator anotheriterator;
+
+	anotheriterator q1 = youpi.begin();
+	anotheriterator q2 = youpi.begin();
+
+	++q2;
+	++q2;
+	std::cout << "size: " << youpi.size() << " q1 " << q1->first << " q2 " << q2->first << std::endl; 
+
+	youpi.erase(q1, q2);
+	youpi.insert(ft::make_pair(54, 12));
+	std::cout << "Size << " << youpi.size() << std::endl;
 	anotheriterator y = youpi.begin();
+
 	for (anotheriterator i = youpi.begin(); i != youpi.end(); i++)
 		std::cout << i->first << std::endl;
+
 	std::cout << "====== " <<  youpi.end()->first  << " " << youpi.size() <<"=========" << std::endl;
 	std::cout << "TEST MAP : " << (y)->first << std::endl;
 	std::cout << "TEST MAP : " << (++y)->first << std::endl;
 	std::cout << "TEST MAP : " << (++y)->first << std::endl;
 	std::cout << "TEST MAP : " << (++y)->first << std::endl;
 	std::cout << "TEST MAP : " << (++y)->first << std::endl;
+	std::cout << "TEST MAP : " << (++y)->first << std::endl;
+	std::cout << "TEST MAP : " << (++y)->first << std::endl;
+	std::cout << "TEST MAP : " << (++y)->first << std::endl;
+
+	try
+	{
+		youpi[9] = 5;
+		std::cout << "Find test : " <<  youpi[9] << std::endl;
+		/* code */
+	}
+	catch(const std::exception& e)
+	{
+		std::cerr << e.what() << '\n';
+	}
+	
 
 
 	std::cout << "===============" << std::endl;
@@ -64,45 +94,6 @@ int main()
 
 
 }
-
-
-//int main(void)
-//{
-// 	ft::AVL<int, std::string> avl;
-
-// 	avl._root = avl.insert(avl._root, ft::pair<int, std::string>(2, std::string("Caca 2")));
-// 	avl._root = avl.insert(avl._root, ft::pair<int, std::string>(3, std::string("Trop bien b 3")));
-// 	avl._root = avl.insert(avl._root, ft::pair<int, std::string>(1, std::string("ouou 1")));
-// 	avl._root = avl.insert(avl._root, ft::pair<int, std::string>(0, std::string("Youhou 0")));
-// 	avl._root = avl.insert(avl._root, ft::pair<int, std::string>(4, std::string("Caca lol 4")));
-
-// 	for (int i = 0; i < 5; i++)
-// 		std::cout << "Value find : " << avl.find(i) << std::endl;
-// 	try
-// 	{
-// 			std::cout << "Value find : " << avl.find(2) << std::endl;
-// 	}
-// 	catch(const std::exception& e)
-// 	{
-// 		std::cerr << e.what() << '\n';
-// 	}
-	
-// 	avl._root = avl.deleteNode(avl._root, 0);
-// 	avl._root = avl.deleteNode(avl._root, 5);
-// 	avl._root = avl.deleteNode(avl._root, 1);	
-// 	avl._root = avl.deleteNode(avl._root, 12);
-// 	avl._root = avl.deleteNode(avl._root, 3);
-// 	avl._root = avl.deleteNode(avl._root, 4);
-// 	avl._root = avl.insert(avl._root, ft::pair<int, std::string>(4, std::string("Caca lol 5")));
-
-// 	std::cout << " ===== Value find : " << avl.find(4) << std::endl;
-// 	avl._root = avl.deleteNode(avl._root, 4);
-
-// 	ft::AVL<std::string, std::string> test;
-// 	test._root = test.insert(test._root, ft::pair<std::string, std::string>("testouille", std::string("ouou 1")));
-// 	test._root = test.insert(test._root, ft::pair<std::string, std::string>("chalu", std::string("ouou 2")));
-// 	std::cout << " ===== Value find : " << test.find("testouille") << std::endl;
-// 	std::cout << " ===== Value find : " << test.find("chalu") << std::endl;
 
 
 // }

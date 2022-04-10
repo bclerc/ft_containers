@@ -244,8 +244,8 @@ namespace ft
 					node_y->left->parent = node_y;
 					node_y->color = node_z->color;
 				}
-				_alloc.destroy(node_z);
-				_alloc.deallocate(node_z, 1);
+				_node_alloc.destroy(node_z);
+				_node_alloc.deallocate(node_z, 1);
 			}
 
 			void destroy()
@@ -253,19 +253,24 @@ namespace ft
 				_destroy(root);
 			}
 
+			void destroy(T key)
+			{
+				deleteNode(key);
+			}
 
+			
 			Node *find(T key)
 			{
 				Node *ret = _search(root, key);
 				return (ret);
 			}
 
-			Node *getRoot(void)
+			Node *getRoot(void) const
 			{
 				return this->root;
 			}
 
-			Node *getLast(void)
+			Node *getLast(void) const
 			{
 				return this->TNULL;
 			}

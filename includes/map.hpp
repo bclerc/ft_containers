@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 01:48:13 by bclerc            #+#    #+#             */
-/*   Updated: 2022/04/09 11:05:10 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/04/10 10:49:02 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,8 +138,23 @@ namespace ft
 			}
 
 			iterator insert( iterator hint, const value_type& value );
-			void erase( iterator pos );
-			void erase( iterator first, iterator last );
+
+			void erase( iterator pos )
+			{
+				rbt.destroy(pos.base());
+				_size--;
+			}
+
+			void erase( iterator first, iterator last )
+			{
+				iterator tmp = first;
+				std::cout << "First :: " << first->first << " Last << " << last->first << std::endl;
+				if (first != last)
+					erase(++first, last);
+				rbt.destroy(tmp.base());
+				_size --;
+			}
+
 			size_type erase( const Key& key );
 			void swap( map& other );
 			size_type count( const Key& key ) const;
