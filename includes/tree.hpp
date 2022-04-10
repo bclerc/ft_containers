@@ -251,6 +251,7 @@ namespace ft
 			void destroy()
 			{
 				_destroy(root);
+				root = TNULL;
 			}
 
 			void destroy(T key)

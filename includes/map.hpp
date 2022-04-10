@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 01:48:13 by bclerc            #+#    #+#             */
-/*   Updated: 2022/04/10 10:49:02 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/04/10 10:57:02 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,6 @@ namespace ft
 			explicit map( const Compare& comp,
 						const Allocator& alloc = Allocator() );
 			template< class InputIt >
-
 			map( InputIt first, InputIt last, const Compare& comp = Compare(), const Allocator& alloc = Allocator());
 			map( const map& other );
 			~map() 	{}
@@ -129,7 +128,12 @@ namespace ft
 				return (this->_alloc.max_size());
 			}
 
-			void clear();
+			void clear()
+			{
+				rbt.destroy();
+				_size = 0;
+			}
+
 			ft::pair<long, bool> insert( const value_type& value )
 			{
 				_size++;
