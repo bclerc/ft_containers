@@ -65,6 +65,7 @@ namespace ft
 			Node			*root;
 			Allocator 		_alloc;
 			node_allocator	_node_alloc; 
+			Compare			_comp;
 
 			Node *_newNode(T data)
 			{
@@ -80,7 +81,7 @@ namespace ft
 
 				if (node == TNULL || key.first == node->data.first)
 					ret = node;
-				else if (key.first < node->data.first)
+				else if (_comp(key.first, node->data.first))
 					ret = _search(node->left, key);
 				else
 					ret = _search(node->right, key);
@@ -120,6 +121,7 @@ namespace ft
 
 			TREE()
 			{
+				_comp = Compare();
 				_alloc = Allocator();
 				_node_alloc = node_allocator();
 				TNULL = _node_alloc.allocate(1);
@@ -186,7 +188,7 @@ namespace ft
 					node_y = node_x;
 					if (data.first == node_x->data.first)
 						return (ft::make_pair(iterator(node_x, TNULL), false));
-					if (data.first < node_x->data.first)
+					if (_comp(data.first, node_x->data.first))
 						node_x = node_x->left;
 					else
 						node_x = node_x->right;
@@ -327,7 +329,7 @@ namespace ft
 				node->parent = node_y; // set new node to position
 				if (node_y == NULL)
 					root = node;
-				else if (node->data.first < node_y->data.first)
+				else if (_comp(node->data.first, node_y->data.first))
 					node_y->left = node;
 				else
 					node_y->right = node;
