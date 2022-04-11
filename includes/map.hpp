@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 01:48:13 by bclerc            #+#    #+#             */
-/*   Updated: 2022/04/11 15:34:11 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/04/11 17:08:28 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 #include <memory>
 #include "equal.hpp"
 #include "iterator/reverse_iterator.hpp"
+#include "iterator/bidirectional_iterator_const.hpp"
+
 #include "tree.hpp"
 
 
@@ -50,7 +52,7 @@ namespace ft
 			typedef typename Allocator::const_pointer						const_pointer;
 			typedef TREE<ft::pair<Key, T>, Compare, allocator_type>			tree;
 			typedef bidirectional_iterator<typename tree::t_node>			iterator;
-			typedef bidirectional_iterator<const typename  tree::t_node>	const_iterator;
+			typedef bidirectional_iterator_const<const typename  tree::t_node>	const_iterator;
 			typedef typename ft::reverse_iterator<iterator>							reverse_iterator;
 			typedef	typename ft::reverse_iterator<const_iterator>					const_reverse_iterator;
 		
@@ -132,13 +134,19 @@ namespace ft
 			{
 				return (reverse_iterator(begin()));
 			}
-			//const_reverse_iterator rbegin() const;
+			const_reverse_iterator rbegin() const
+			{
+				return (reverse_iterator(begin()));
+			}
 
 			reverse_iterator rend()
 			{
 				return (reverse_iterator(end()));
 			}
-			//const_reverse_iterator rend() const;
+			const_reverse_iterator rend() const
+			{
+				return (reverse_iterator(end()));
+			}
 
 			bool empty() const
 			{
@@ -244,7 +252,21 @@ namespace ft
 				return (end());
 			}
 
-			const_iterator lower_bound( const Key& key ) const;
+			const_iterator lower_bound( const Key& key ) const
+			{
+				iterator it = begin();
+				iterator m_end = end();
+				iterator parent = it;
+
+				while (it != m_end)
+				{
+					if (!_comp(key, it->first))
+						return (const_iterator(parent));
+					parent = it;
+					it++;
+				}
+				return (end());
+			};
 			
 			iterator upper_bound( const Key& key )
 			{
@@ -262,7 +284,21 @@ namespace ft
 				return (end());
 			}
 
-			const_iterator upper_bound( const Key& key ) const;
+			const_iterator upper_bound( const Key& key ) const
+			{
+								iterator it = begin();
+				iterator m_end = end();
+				iterator parent = it;
+
+				while (it != m_end)
+				{
+					if (_comp(key, it->first))
+						return (const_iterator(it));
+					parent = it;
+					it++;
+				}
+				return (end());
+			}
 	};
 };
 

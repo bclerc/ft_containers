@@ -18,27 +18,30 @@
 int main()
 {
 
-
-	ft::map<std::string, int> lol;
-
-	lol.insert(ft::make_pair(std::string("Coucou"), 213));
-	lol.insert(ft::make_pair(std::string("Code"), 7978978));
-
-
 	std::map<int, int> test;
 	ft::map<int, int>	youpi;
 
 
 	
+	std::cout << youpi.insert(ft::make_pair(5, 5)).second << " : Result" << std::endl;
 	youpi.insert(ft::make_pair(5, 5));
+	youpi.insert(ft::make_pair(5, 5));
+
 	youpi.insert(ft::make_pair(12, 12));
 	youpi.insert(ft::make_pair(89, 89));
-	youpi.insert(ft::make_pair(9, 89));
+	youpi.insert(ft::make_pair(8, 89));
+	youpi.insert(ft::make_pair(7, 89));
+
 	youpi.insert(ft::make_pair(65, 89));
 
-
-
+	std::cout << "Count of : " << ((youpi.equal_range(7)).first)->first << std::endl;
 	typedef ft::map<int, int>::iterator anotheriterator;
+	typedef ft::map<int, int>::reverse_iterator reverse_terator;
+
+	reverse_terator it = youpi.rend();
+
+
+	//std::cout << it->first << std::endl;
 
 	anotheriterator q1 = youpi.begin();
 	anotheriterator q2 = youpi.begin();
@@ -47,24 +50,18 @@ int main()
 	++q2;
 	std::cout << "size: " << youpi.size() << " q1 " << q1->first << " q2 " << q2->first << std::endl; 
 
-	youpi.erase(q1, q2);
+//	youpi.erase(q1, q2);
 	youpi.insert(ft::make_pair(54, 12));
 	std::cout << "Size << " << youpi.size() << std::endl;
+//	youpi.clear();
+//	youpi.clear();
+	youpi.insert(ft::make_pair(1, 1));
 	anotheriterator y = youpi.begin();
 
 	for (anotheriterator i = youpi.begin(); i != youpi.end(); i++)
 		std::cout << i->first << std::endl;
 
 	std::cout << "====== " <<  youpi.end()->first  << " " << youpi.size() <<"=========" << std::endl;
-	std::cout << "TEST MAP : " << (y)->first << std::endl;
-	std::cout << "TEST MAP : " << (++y)->first << std::endl;
-	std::cout << "TEST MAP : " << (++y)->first << std::endl;
-	std::cout << "TEST MAP : " << (++y)->first << std::endl;
-	std::cout << "TEST MAP : " << (++y)->first << std::endl;
-	std::cout << "TEST MAP : " << (++y)->first << std::endl;
-	std::cout << "TEST MAP : " << (++y)->first << std::endl;
-	std::cout << "TEST MAP : " << (++y)->first << std::endl;
-
 	try
 	{
 		youpi[9] = 5;
