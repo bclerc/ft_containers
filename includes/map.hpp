@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 01:48:13 by bclerc            #+#    #+#             */
-/*   Updated: 2022/04/10 10:57:02 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/04/11 10:04:24 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,9 +56,10 @@ namespace ft
 			//typedef	reverse_iterator<const_iterator>			const_reverse_iterator;
 		
 		private:
-			Allocator _alloc;
-			size_t _size;
-			tree	rbt;
+			Allocator 	_alloc;
+			Compare		_comp;
+			size_t 		_size;
+			tree		_rbt;
 
 		public:
 			map()
@@ -68,7 +69,12 @@ namespace ft
 			}
 
 			explicit map( const Compare& comp,
-						const Allocator& alloc = Allocator() );
+						const Allocator& alloc = Allocator() )
+			{
+				_size = 0;
+				_alloc = alloc;
+				_comp = comp;
+			}
 			template< class InputIt >
 			map( InputIt first, InputIt last, const Compare& comp = Compare(), const Allocator& alloc = Allocator());
 			map( const map& other );
@@ -102,11 +108,11 @@ namespace ft
 
 			iterator begin()
 			{
-				return (iterator(rbt.min(), rbt.getLast()));
+				return (iterator(_rbt.min(), _rbt.getLast()));
 			}
 			iterator end()
 			{
-				return iterator(rbt.getLast(), rbt.getLast());
+				return iterator(_rbt.getLast(), _rbt.getLast());
 			}
 			//reverse_iterator rbegin();
 			//const_reverse_iterator rbegin() const;
@@ -130,38 +136,64 @@ namespace ft
 
 			void clear()
 			{
-				rbt.destroy();
+				_rbt.destroy();
 				_size = 0;
 			}
 
-			ft::pair<long, bool> insert( const value_type& value )
+			ft::pair<iterator, bool> insert( const value_type& value )
 			{
-				_size++;
-				rbt.insert(value);
-				return (make_pair(NULL, true));
+				iterator ret;
+				try
+				{
+					ret = iterator(_rbt.insert(value), _rbt.getLast());
+					_size++;
+					return (make_pair(ret,	true));
+				}
+				catch (const std::exception& e)
+				{
+					ret = find(value.first);
+					return (make_pair(ret, false));
+				}
+				
 			}
 
 			iterator insert( iterator hint, const value_type& value );
 
 			void erase( iterator pos )
 			{
-				rbt.destroy(pos.base());
+				_rbt.destroy(pos.base());
 				_size--;
 			}
 
 			void erase( iterator first, iterator last )
 			{
 				iterator tmp = first;
-				std::cout << "First :: " << first->first << " Last << " << last->first << std::endl;
 				if (first != last)
 					erase(++first, last);
-				rbt.destroy(tmp.base());
+				_rbt.destroy(tmp.base());
 				_size --;
 			}
 
-			size_type erase( const Key& key );
+			size_type erase( const Key& key )
+			{
+				try
+				{
+					_rbt.destroy(ft::make_pair(key, T()));
+					_size--;
+				}
+				catch (std::exception  & e)
+				{
+					return (0);
+				}
+				return (1);
+			}
+
 			void swap( map& other );
-			size_type count( const Key& key ) const;
+
+			size_type count( const Key& key ) const
+			{
+				return (_rbt.count(ft::make_pair(key, T())));
+			}
 
 			iterator find( const Key& key )
 			{
@@ -169,7 +201,7 @@ namespace ft
 				value_type search;
 
 				search = ft::make_pair(key, T());
-				ret = iterator(rbt.find(search), rbt.getLast());
+				ret = iterator(_rbt.find(search), _rbt.getLast());
 				return (ret);
 			}
 

@@ -73,7 +73,7 @@ namespace ft
 				return node;
 			}
 
-			Node *_search(Node *node, T key)
+			Node *_search(Node *node, T key) const
 			{
 				Node *ret;
 
@@ -173,17 +173,21 @@ namespace ft
 
 			Node *insert(T data)
 			{
-				Node *node = _newNode(data);
+				Node *node;
 				Node *node_y = NULL;
 				Node *node_x = root;
+				
 				while (node_x != TNULL) //	find position of new node
 				{
+					if (node_x->data.first == data.first)
+						throw std::invalid_argument("Key already exist");
 					node_y = node_x;
-					if (node->data.first < node_x->data.first)
+					if (data.first < node_x->data.first)
 						node_x = node_x->left;
 					else
 						node_x = node_x->right;
 				}
+				node = _newNode(data);
 				node->parent = node_y; // set new node to position
 				if (node_y == NULL)
 					root = node;
@@ -259,7 +263,15 @@ namespace ft
 				deleteNode(key);
 			}
 
-			
+			int count (T key ) const
+			{
+				try {
+					_search(root, key);
+				} catch (const std::exception& e) {
+					return (0); }
+				return (1);
+			}
+		
 			Node *find(T key)
 			{
 				Node *ret = _search(root, key);
