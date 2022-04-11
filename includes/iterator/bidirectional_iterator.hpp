@@ -111,7 +111,7 @@ namespace ft {
 				T*	tmp;
 
 				if (this->_base->left != _end)
-					_base = ft::node_max(this->_base->left, _end);
+					_base = node_max(this->_base->left, _end);
 				else if (_base != _end && _min != _base)
 				{
 					tmp = _base->parent;

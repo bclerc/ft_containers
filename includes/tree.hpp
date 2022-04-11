@@ -14,6 +14,7 @@
 #define TREE_HPP
 
 #include "pair.tpp"
+#include "iterator/bidirectional_iterator.hpp"
 #include <ostream>
 
 #define BLACK 0
@@ -113,6 +114,9 @@ namespace ft
 
 		public:
 			typedef Node	t_node;
+			typedef typename	T::first_type			first_type;
+			typedef typename	T::second_type			second_type;
+			typedef bidirectional_iterator<Node>		iterator;
 
 			TREE()
 			{
@@ -171,31 +175,31 @@ namespace ft
 				node_x->parent = node_y;
 			}
 
-			Node *insert(T data)
+			ft::pair<iterator, bool> insert(T data)
 			{
 				Node *node;
 				Node *node_y = NULL;
 				Node *node_x = root;
 				
-				while (node_x != TNULL) //	find position of new node
+				while (node_x != TNULL)
 				{
-					if (node_x->data.first == data.first)
-						throw std::invalid_argument("Key already exist");
 					node_y = node_x;
+					if (data.first == node_x->data.first)
+						return (ft::make_pair(iterator(node_x, TNULL), false));
 					if (data.first < node_x->data.first)
 						node_x = node_x->left;
 					else
 						node_x = node_x->right;
 				}
 				node = _newNode(data);
-				node->parent = node_y; // set new node to position
+				node->parent = node_y;
 				if (node_y == NULL)
 					root = node;
 				else if (node->data.first < node_y->data.first)
 					node_y->left = node;
 				else
 					node_y->right = node;
-				return (node);
+				return (ft::make_pair(iterator(node, TNULL), true));
 			}
 
 			void deleteNode(T key)
@@ -300,6 +304,33 @@ namespace ft
 			Node *min()
 			{
 				return (min(root));
+			}
+
+			second_type &operator[] (const first_type &key)
+			{
+				Node *node;
+				Node *node_y = NULL;
+				Node *node_x = root;
+				
+				while (node_x != TNULL) //	find position of new node
+				{
+					node_y = node_x;
+					if (node_x->data.first == key)
+						return (node_x->data.second);
+					else if (key < node_x->data.first)
+						node_x = node_x->left;
+					else
+						node_x = node_x->right;
+				}
+				node = _newNode(T(key, second_type()));
+				node->parent = node_y; // set new node to position
+				if (node_y == NULL)
+					root = node;
+				else if (node->data.first < node_y->data.first)
+					node_y->left = node;
+				else
+					node_y->right = node;
+				return (node->data.second);
 			}
 	};
 

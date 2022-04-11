@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 01:48:13 by bclerc            #+#    #+#             */
-/*   Updated: 2022/04/11 10:04:24 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/04/11 11:27:51 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 #include <memory>
 #include "equal.hpp"
 #include "iterator/reverse_iterator.hpp"
-#include "iterator/bidirectional_iterator.hpp"
 #include "tree.hpp"
 
 
@@ -75,6 +74,7 @@ namespace ft
 				_alloc = alloc;
 				_comp = comp;
 			}
+
 			template< class InputIt >
 			map( InputIt first, InputIt last, const Compare& comp = Compare(), const Allocator& alloc = Allocator());
 			map( const map& other );
@@ -103,7 +103,7 @@ namespace ft
 
 			T& operator[]( const Key& key )
 			{
-				return at(key);
+				return(_rbt[key]);
 			}
 
 			iterator begin()
@@ -114,6 +114,7 @@ namespace ft
 			{
 				return iterator(_rbt.getLast(), _rbt.getLast());
 			}
+
 			//reverse_iterator rbegin();
 			//const_reverse_iterator rbegin() const;
 			//sreverse_iterator rend();
@@ -142,22 +143,14 @@ namespace ft
 
 			ft::pair<iterator, bool> insert( const value_type& value )
 			{
-				iterator ret;
-				try
-				{
-					ret = iterator(_rbt.insert(value), _rbt.getLast());
-					_size++;
-					return (make_pair(ret,	true));
-				}
-				catch (const std::exception& e)
-				{
-					ret = find(value.first);
-					return (make_pair(ret, false));
-				}
-				
+				return (_rbt.insert(value));				
 			}
 
-			iterator insert( iterator hint, const value_type& value );
+			iterator insert( iterator hint, const value_type& value )
+			{
+				(void)hint;
+				return (insert(value)->first);
+			}
 
 			void erase( iterator pos )
 			{
