@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 01:48:13 by bclerc            #+#    #+#             */
-/*   Updated: 2022/04/11 15:31:15 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/04/11 15:34:11 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -232,13 +232,13 @@ namespace ft
 			{
 				iterator it = begin();
 				iterator m_end = end();
+				iterator parent = it;
 
 				while (it != m_end)
 				{
 					if (!_comp(key, it->first))
-					{
-						return (iterator(it));
-					}
+						return (iterator(parent));
+					parent = it;
 					it++;
 				}
 				return (end());
@@ -250,11 +250,13 @@ namespace ft
 			{
 				iterator it = begin();
 				iterator m_end = end();
+				iterator parent = it;
 
 				while (it != m_end)
 				{
 					if (_comp(key, it->first))
 						return (iterator(it));
+					parent = it;
 					it++;
 				}
 				return (end());
