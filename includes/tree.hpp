@@ -85,8 +85,6 @@ namespace ft
 					ret = _search(node->left, key);
 				else
 					ret = _search(node->right, key);
-				if (ret == TNULL)
-					throw std::invalid_argument("Tree::Node: not found");
 				return (ret);
 			}
 
@@ -272,11 +270,9 @@ namespace ft
 
 			int count (T key ) const
 			{
-				try {
-					_search(root, key);
-				} catch (const std::exception& e) {
-					return (0); }
-				return (1);
+				if (_search(root, key) != TNULL)
+					return (1);
+				return (0);
 			}
 		
 			Node *find(T key)
