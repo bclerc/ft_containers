@@ -23,7 +23,7 @@
 namespace ft
 {
 
-	template <class T, class Compare, class Allocator = std::allocator<T> >
+	template <class T, class Compare, class Allocator>
 	class TREE
 	{
 	
@@ -59,7 +59,7 @@ namespace ft
 					~Node() {}
 			};
 
-			typedef std::allocator<Node> node_allocator;
+			typedef typename Allocator::template rebind<Node>::other node_allocator;
 
 			Node			*TNULL;
 			Node			*root;
@@ -202,7 +202,7 @@ namespace ft
 				return (ft::make_pair(iterator(node, TNULL), true));
 			}
 
-			void deleteNode(T key)
+			size_t deleteNode(T key)
 			{
 				Node *node = root;
 				Node *node_z = TNULL;
@@ -220,7 +220,7 @@ namespace ft
 						node = node->left;
 				}
 				if (node_z == TNULL)
-					throw std::invalid_argument("Key not found");
+					return (0);
 				node_y = node_z;
 				y_color = node_y->color;
 				if (node_z->left == TNULL)
@@ -254,6 +254,7 @@ namespace ft
 				}
 				_node_alloc.destroy(node_z);
 				_node_alloc.deallocate(node_z, 1);
+				return (1);
 			}
 
 			void destroy()
@@ -262,9 +263,9 @@ namespace ft
 				root = TNULL;
 			}
 
-			void destroy(T key)
+			size_t destroy(T key)
 			{
-				deleteNode(key);
+				return (deleteNode(key));
 			}
 
 			int count (T key ) const

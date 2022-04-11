@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 01:48:13 by bclerc            #+#    #+#             */
-/*   Updated: 2022/04/11 11:27:51 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/04/11 15:31:15 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,28 +31,28 @@ namespace ft
 	template<
 		class Key,
 		class T,
-		class Compare = ft::less<Key>,
+		class Compare = std::less<Key>,
 		class Allocator = std::allocator<ft::pair<const Key, T> >
 	>
 	class map
 	{
 		public:
-			typedef Key													key_type;
-			typedef T													mapped_type;
-			typedef	ft::pair<Key, T>									value_type;
-			typedef std::size_t											size_type;
-			typedef std::ptrdiff_t										difference_type;
-			typedef	Compare												key_compare;
-			typedef Allocator											allocator_type;
-			typedef value_type &										reference;
-			typedef const value_type & 									const_reference;
-			typedef	typename Allocator::pointer							pointer;
-			typedef typename Allocator::const_pointer					const_pointer;
-			typedef TREE<ft::pair<Key, T>, Compare>						tree;
-			typedef bidirectional_iterator<typename tree::t_node>		iterator;
-			typedef bidirectional_iterator<const typename  tree::t_node>			const_iterator;
-			//typedef reverse_iterator<Iterator>					reverse_iterator;
-			//typedef	reverse_iterator<const_iterator>			const_reverse_iterator;
+			typedef Key														key_type;
+			typedef T														mapped_type;
+			typedef	ft::pair<Key, T>										value_type;
+			typedef std::size_t												size_type;
+			typedef std::ptrdiff_t											difference_type;
+			typedef	Compare													key_compare;
+			typedef Allocator												allocator_type;
+			typedef value_type &											reference;
+			typedef const value_type & 										const_reference;
+			typedef	typename Allocator::pointer								pointer;
+			typedef typename Allocator::const_pointer						const_pointer;
+			typedef TREE<ft::pair<Key, T>, Compare, allocator_type>			tree;
+			typedef bidirectional_iterator<typename tree::t_node>			iterator;
+			typedef bidirectional_iterator<const typename  tree::t_node>	const_iterator;
+			typedef typename ft::reverse_iterator<iterator>							reverse_iterator;
+			typedef	typename ft::reverse_iterator<const_iterator>					const_reverse_iterator;
 		
 		private:
 			Allocator 	_alloc;
@@ -62,9 +62,10 @@ namespace ft
 
 		public:
 			map()
-			{
+			{	
 				_size = 0;
 				_alloc = Allocator();
+				_comp = Compare();
 			}
 
 			explicit map( const Compare& comp,
@@ -76,7 +77,19 @@ namespace ft
 			}
 
 			template< class InputIt >
-			map( InputIt first, InputIt last, const Compare& comp = Compare(), const Allocator& alloc = Allocator());
+			map( InputIt first, InputIt last, const Compare& comp = Compare(), const Allocator& alloc = Allocator())
+			{
+				_size = 0;
+				_alloc = alloc;
+				_comp = comp;
+
+				while (first != last)
+				{
+					_rbt[first->first] = first->second;
+					first++;
+				}				
+			}
+
 			map( const map& other );
 			~map() 	{}
 
@@ -115,9 +128,16 @@ namespace ft
 				return iterator(_rbt.getLast(), _rbt.getLast());
 			}
 
-			//reverse_iterator rbegin();
+			reverse_iterator rbegin()
+			{
+				return (reverse_iterator(begin()));
+			}
 			//const_reverse_iterator rbegin() const;
-			//sreverse_iterator rend();
+
+			reverse_iterator rend()
+			{
+				return (reverse_iterator(end()));
+			}
 			//const_reverse_iterator rend() const;
 
 			bool empty() const
@@ -143,7 +163,12 @@ namespace ft
 
 			ft::pair<iterator, bool> insert( const value_type& value )
 			{
-				return (_rbt.insert(value));				
+				ft::pair<iterator, bool> ret;
+
+				ret = _rbt.insert(value);
+				if (ret.second)
+					_size++;
+				return (ret);				
 			}
 
 			iterator insert( iterator hint, const value_type& value )
@@ -169,16 +194,12 @@ namespace ft
 
 			size_type erase( const Key& key )
 			{
-				try
+				if (_rbt.destroy(ft::make_pair(key, T())))
 				{
-					_rbt.destroy(ft::make_pair(key, T()));
 					_size--;
+					return (1);
 				}
-				catch (std::exception  & e)
-				{
-					return (0);
-				}
-				return (1);
+				return (0);
 			}
 
 			void swap( map& other );
@@ -199,11 +220,46 @@ namespace ft
 			}
 
 			const_iterator find( const Key& key ) const;
-			ft::pair<iterator,iterator> equal_range( const Key& key );
+
+			ft::pair<iterator,iterator> equal_range( const Key& key )
+			{
+				return (make_pair(lower_bound(key), upper_bound(key)));
+			}
+			
 			ft::pair<const_iterator,const_iterator> equal_range( const Key& key ) const;
-			iterator lower_bound( const Key& key );
+
+			iterator lower_bound( const Key& key )
+			{
+				iterator it = begin();
+				iterator m_end = end();
+
+				while (it != m_end)
+				{
+					if (!_comp(key, it->first))
+					{
+						return (iterator(it));
+					}
+					it++;
+				}
+				return (end());
+			}
+
 			const_iterator lower_bound( const Key& key ) const;
-			iterator upper_bound( const Key& key );
+			
+			iterator upper_bound( const Key& key )
+			{
+				iterator it = begin();
+				iterator m_end = end();
+
+				while (it != m_end)
+				{
+					if (_comp(key, it->first))
+						return (iterator(it));
+					it++;
+				}
+				return (end());
+			}
+
 			const_iterator upper_bound( const Key& key ) const;
 	};
 };
