@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 17:40:33 by bclerc            #+#    #+#             */
-/*   Updated: 2022/04/07 06:17:44 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/04/12 10:27:43 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ namespace ft {
 	template <class T>
 	struct iterator_traits<T*> {
 		public :
-			typedef ptrdiff_t				 	difference_type;
+			typedef std::ptrdiff_t				 	difference_type;
 			typedef T							value_type;
 			typedef T*							pointer;
 			typedef T&							reference;
@@ -42,7 +42,7 @@ namespace ft {
 	template <class T>
 	struct iterator_traits<const T*> {
 		public :
-			typedef ptrdiff_t				 	difference_type;
+			typedef std::ptrdiff_t				 	difference_type;
 			typedef T							value_type;
 			typedef const T*					pointer;
 			typedef const T						reference;

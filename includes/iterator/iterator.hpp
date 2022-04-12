@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 20:27:40 by bclerc            #+#    #+#             */
-/*   Updated: 2022/04/07 06:06:01 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/04/12 10:28:07 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 # include "iterators_traits.hpp"
 
 namespace ft {
-	template <class Category, class T, class Distance = ptrdiff_t,
+	template <class Category, class T, class Distance = std::ptrdiff_t,
 			class Pointer = T*, class Reference = T&>
 	struct iterator {
 		typedef T         value_type;

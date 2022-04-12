@@ -19,18 +19,16 @@
 #include "../tree.hpp"
 
 namespace ft {
-
-	template <class T>
+	template <class T, class Value>
 	class bidirectional_iterator : public ft::iterator<ft::bidirectional_iterator_tag, T> {
 
 		public:
-			typedef typename T::value_type																value_type;
+			typedef	Value																				value_type;
 			typedef typename ft::iterator<ft::bidirectional_iterator_tag, value_type>::value_type		iterator_type;
 			typedef typename ft::iterator<ft::bidirectional_iterator_tag, value_type>::difference_type	difference_type;
 			typedef typename ft::iterator<ft::bidirectional_iterator_tag, value_type>::pointer			pointer;
+			typedef const T*																		const_pointer;
 			typedef typename ft::iterator<ft::bidirectional_iterator_tag, value_type>::reference		reference;
-			typedef T*
-																							node;
 		private:
 			T* _min;
 			T* _max;
@@ -55,12 +53,12 @@ namespace ft {
 		
 			virtual ~bidirectional_iterator() {}
 
-			reference base() const
+			reference base()
 			{
 				return (this->_base->data);
 			}
 
-			reference operator*() const
+			reference operator*()
 			{
 				return (_base->data);
 			}
@@ -78,7 +76,7 @@ namespace ft {
 			{
 				T*	tmp;
 
-				if (this->_base->right != _end)
+				if (_base->right != _end)
 				{
 					_base = _base->right;
 					while (_base->left != _end)
@@ -139,23 +137,22 @@ namespace ft {
 				return &(_base->data);
 			}
 
-            operator bidirectional_iterator<const T> () const
+            operator bidirectional_iterator<const T, value_type> () const
             {
-				 return (bidirectional_iterator<const T>(this->_base));
+				 return (bidirectional_iterator<const T, value_type>(this->_base));
+			}
+
+			bool operator==(ft::bidirectional_iterator<T, value_type> const& rhs)
+			{
+				return (_base == rhs._base);	
+			}
+
+			bool operator!=(ft::bidirectional_iterator<T, value_type> const& rhs)
+			{
+				return (!(*this == rhs));	
 			}
 	};
 
-	template <class T, class Other>
-	bool operator==(ft::bidirectional_iterator<T> const & lhs, ft::bidirectional_iterator<Other> const& rhs)
-	{
-		return (lhs->first == rhs->first && lhs->second == lhs->second);	
-	}
-
-	template <class T, class Other>
-	bool operator!=(ft::bidirectional_iterator<T> const & lhs, ft::bidirectional_iterator<Other> const& rhs)
-	{
-		return (!(lhs == rhs));	
-	}
 };
 
 #endif

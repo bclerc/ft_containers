@@ -1,7 +1,7 @@
 /* *** *********************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   bidirectional_iterator_const.hpp                         :+:      :+:    :+:   */
+/*   const_bidirectional_iterator.hpp                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,34 +12,37 @@
 
 
 
-#ifndef BIDIRECTIONAL_ITERATOR_CONST_HPP
-# define BIDIRECTIONAL_ITERATOR_CONST_HPP
+#ifndef const_bidirectional_iterator_HPP
+# define const_bidirectional_iterator_HPP
 
 #include "iterator.hpp"
 #include "../tree.hpp"
 
 namespace ft {
 
-	template <class T>
-	class bidirectional_iterator_const : public ft::iterator<ft::bidirectional_iterator_tag, T> {
+	template <class T, class Value>
+	class const_bidirectional_iterator : public ft::iterator<ft::bidirectional_iterator_tag, T> {
 
 		public:
-			typedef typename T::value_type																value_type;
-			typedef typename ft::iterator<ft::bidirectional_iterator_tag, value_type>::value_type		iterator_type;
+			typedef Value																				value_type;
+			typedef typename ft::iterator<ft::bidirectional_iterator_tag, value_type>::value_type			iterator_type;
 			typedef typename ft::iterator<ft::bidirectional_iterator_tag, value_type>::difference_type	difference_type;
 			typedef typename ft::iterator<ft::bidirectional_iterator_tag, value_type>::pointer			pointer;
-			typedef typename ft::iterator<ft::bidirectional_iterator_tag, value_type>::reference		reference;
-			typedef T*
-																							node;
+			typedef typename ft::iterator<ft::bidirectional_iterator_tag, value_type>::reference			reference;
+		
 		private:
+
 			T* _min;
 			T* _max;
 			T* _root;
 			T* _base;
 			T* _end;
+
 		public:
-			bidirectional_iterator_const(void) : _base(NULL) {}
-			bidirectional_iterator_const(T *it, T *end) : _base(it), _end(end) {
+			const_bidirectional_iterator(void) : _base(NULL)
+			{}
+
+			const_bidirectional_iterator(T *it, T *end) : _base(it), _end(end) {
 				if (_base != _end)
 				{
 					_root = node_root(_base);
@@ -48,37 +51,44 @@ namespace ft {
 				}
 			}
 				
-			//bidirectional_iterator_const (const bidirectional_iterator_const & rev_it) : _base(rev_it.base())
-			//{
-			//	return ;
-			//}
-		
-			virtual ~bidirectional_iterator_const() {}
-
-			reference base() const
+			const_bidirectional_iterator (const const_bidirectional_iterator & rev_it)
 			{
-				return (this->_base->data);
+				_base = rev_it._base;
+				_min = rev_it._min;
+				_max = rev_it._max;
+				_end = rev_it._end;
+				_root = rev_it._root;
+				return ;
 			}
 
-			reference operator*() const
+			virtual ~const_bidirectional_iterator() {}
+
+			reference base()
 			{
 				return (_base->data);
 			}
 
-			bidirectional_iterator_const &operator=(const bidirectional_iterator_const & rhs)
+			const value_type & operator*() const
 			{
-				if (this == &rhs)
-					return (*this);
-				this->_base = (rhs._base);
+				return (&const_cast<value_type>(_base->data));
+			}
+
+			const_bidirectional_iterator &operator=(const const_bidirectional_iterator & rhs)
+			{
+				_base = rhs._base;
+				_min = rhs._min;
+				_max = rhs._max;
+				_end = rhs._end;
+				_root = rhs._root;
+				
 				return *this;
 			}
 
-
-			bidirectional_iterator_const & operator++()
+			const_bidirectional_iterator & operator++()
 			{
 				T*	tmp;
 
-				if (this->_base->right != _end)
+				if (_base->right != _end)
 				{
 					_base = _base->right;
 					while (_base->left != _end)
@@ -96,17 +106,18 @@ namespace ft {
 				}
 				else
 					_base = _end;
+				
 				return (*this);
 			}
 
-			bidirectional_iterator_const operator++(int)
+			const_bidirectional_iterator operator++(int)
 			{
-				bidirectional_iterator_const tmp = *this;
+				const_bidirectional_iterator tmp = *this;
 				++(*this);
 				return (tmp);
 			}
 
-			bidirectional_iterator_const & operator--() 
+			const_bidirectional_iterator & operator--() 
 			{
 				T*	tmp;
 
@@ -124,38 +135,39 @@ namespace ft {
 				}
 				else
 					_base = _end;
+				
 				return (*this);
 			}
 
-			bidirectional_iterator_const operator--(int)
+			const_bidirectional_iterator operator--(int)
 			{
-				bidirectional_iterator_const tmp = *this;
+				const_bidirectional_iterator tmp = *this;
 				--(*this);
 				return (tmp);
 			}
 
-			pointer operator->() const
+			value_type * operator->() const
 			{
-				return &(_base->data);
+				return &(operator*());
+			}
+			
+
+            operator const_bidirectional_iterator<const T, value_type> () const
+            {
+				 return (const_bidirectional_iterator<const T, value_type>(this->_base));
 			}
 
-            operator bidirectional_iterator_const<const T> () const
-            {
-				 return (bidirectional_iterator_const<const T>(this->_base));
+			bool operator==(ft::const_bidirectional_iterator<T, value_type> const& rhs)
+			{
+				return (_base == rhs._base);	
+			}
+
+			bool operator!=(ft::const_bidirectional_iterator<T, value_type> const& rhs)
+			{
+				return (!(*this == rhs));	
 			}
 	};
 
-	template <class T, class Other>
-	bool operator==(ft::bidirectional_iterator_const<T> const & lhs, ft::bidirectional_iterator_const<Other> const& rhs)
-	{
-		return (lhs->first == rhs->first && lhs->second == lhs->second);	
-	}
-
-	template <class T, class Other>
-	bool operator!=(ft::bidirectional_iterator_const<T> const & lhs, ft::bidirectional_iterator_const<Other> const& rhs)
-	{
-		return (!(lhs == rhs));	
-	}
 };
 
 #endif

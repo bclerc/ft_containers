@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 01:48:13 by bclerc            #+#    #+#             */
-/*   Updated: 2022/04/11 17:19:07 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/04/12 18:20:31 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ namespace ft
 		public:
 			typedef Key														key_type;
 			typedef T														mapped_type;
-			typedef	ft::pair<Key, T>										value_type;
+			typedef	ft::pair<const Key, T>									value_type;
 			typedef std::size_t												size_type;
 			typedef std::ptrdiff_t											difference_type;
 			typedef	Compare													key_compare;
@@ -50,11 +50,11 @@ namespace ft
 			typedef const value_type & 										const_reference;
 			typedef	typename Allocator::pointer								pointer;
 			typedef typename Allocator::const_pointer						const_pointer;
-			typedef TREE<ft::pair<Key, T>, Compare, allocator_type>			tree;
-			typedef bidirectional_iterator<typename tree::t_node>			iterator;
-			typedef bidirectional_iterator_const<const typename  tree::t_node>	const_iterator;
-			typedef typename ft::reverse_iterator<iterator>							reverse_iterator;
-			typedef	typename ft::reverse_iterator<const_iterator>					const_reverse_iterator;
+			typedef TREE<ft::pair<const Key, T>, Compare, allocator_type>			tree;
+			typedef bidirectional_iterator<typename tree::t_node, value_type>			iterator;
+			typedef const_bidirectional_iterator <typename tree::t_node, value_type>	const_iterator;
+			typedef typename ft::reverse_iterator<iterator>					reverse_iterator;
+			typedef	typename ft::reverse_iterator<const_iterator>			const_reverse_iterator;
 		
 		private:
 			Allocator 	_alloc;
@@ -92,7 +92,21 @@ namespace ft
 				}				
 			}
 
-			map( const map& other );
+			map( const map& other )
+			{
+				iterator it = other.begin();
+
+				_size = other._size;
+				_alloc = other._alloc;
+				_comp = other._comp;
+				while (it != other.end())
+				{
+					insert(make_pair(it->first, it->second));
+					it++;
+				}
+				return ;
+			}
+
 			~map() 	{}
 
 			map& operator=( const map& other )
@@ -128,6 +142,16 @@ namespace ft
 			iterator end()
 			{
 				return iterator(_rbt.getLast(), _rbt.getLast());
+			}
+
+			const_iterator begin() const
+			{
+				return (const_iterator(_rbt.min(), _rbt.getLast()));
+			}
+			
+			const_iterator end() const
+			{
+				return const_iterator(_rbt.getLast(), _rbt.getLast());
 			}
 
 			reverse_iterator rbegin()
@@ -227,14 +251,25 @@ namespace ft
 				return (ret);
 			}
 
-			const_iterator find( const Key& key ) const;
+			const_iterator find( const Key& key ) const
+			{
+				const_iterator ret;
+				value_type search;
+
+				search = ft::make_pair(key, T());
+				ret = const_iterator(_rbt.find(search), _rbt.getLast());
+				return (ret);
+			}
 
 			ft::pair<iterator,iterator> equal_range( const Key& key )
 			{
-				return (make_pair(lower_bound(key), upper_bound(key)));
+				return (ft::make_pair(lower_bound(key), upper_bound(key)));
 			}
 			
-			ft::pair<const_iterator,const_iterator> equal_range( const Key& key ) const;
+			ft::pair<const_iterator,const_iterator> equal_range( const Key& key ) const
+			{
+				return (ft::make_pair(lower_bound(key), upper_bound(key)));
+			}
 
 			iterator lower_bound( const Key& key )
 			{
@@ -254,9 +289,9 @@ namespace ft
 
 			const_iterator lower_bound( const Key& key ) const
 			{
-				iterator it = begin();
-				iterator m_end = end();
-				iterator parent = it;
+				const_iterator it = begin();
+				const_iterator m_end = end();
+				const_iterator parent = it;
 
 				while (it != m_end)
 				{
@@ -286,9 +321,9 @@ namespace ft
 
 			const_iterator upper_bound( const Key& key ) const
 			{
-								iterator it = begin();
-				iterator m_end = end();
-				iterator parent = it;
+				const_iterator it = begin();
+				const_iterator m_end = end();
+				const_iterator parent = it;
 
 				while (it != m_end)
 				{

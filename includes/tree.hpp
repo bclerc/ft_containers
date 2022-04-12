@@ -31,7 +31,8 @@ namespace ft
 			class Node
 			{
 				public:
-					typedef T		value_type;
+					typedef T				value_type;
+
 
 					T		data;
 					Node*	parent;
@@ -40,13 +41,13 @@ namespace ft
 					int		color;
 
 					Node()
-					: data(T()), parent(NULL), left(NULL), right(NULL), color(RED)
+					: data(), value_type(), parent(NULL), left(NULL), right(NULL), color(RED)
 					{
 						return ;
 					}
 					
 					Node(Node* parent, Node* left, Node* right)
-					: data(T()), parent(parent), left(left), right(right), color(RED)
+					: data(), parent(parent), left(left), right(right), color(RED)
 					{
 						return ;
 					}
@@ -55,6 +56,11 @@ namespace ft
 					: data(data), parent(parent), left(left), right(right), color(RED)
 					{
 						return ;
+					}
+					Node(const Node &other)
+					: data(other.data), parent(other.parent), left(other.left), right(other.right), color(RED)
+					{
+
 					}
 					~Node() {}
 			};
@@ -115,7 +121,7 @@ namespace ft
 			typedef Node	t_node;
 			typedef typename	T::first_type			first_type;
 			typedef typename	T::second_type			second_type;
-			typedef bidirectional_iterator<Node>		iterator;
+			typedef bidirectional_iterator<Node, T>		iterator;
 
 			TREE()
 			{
@@ -291,7 +297,7 @@ namespace ft
 				return this->TNULL;
 			}
 
-			Node *min(Node *node)
+			Node *min(Node *node) const
 			{
 				Node *tmp = node;
 
@@ -300,7 +306,7 @@ namespace ft
 				return (tmp);
 			}
 
-			Node *min()
+			Node *min() const
 			{
 				return (min(root));
 			}
