@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 01:48:13 by bclerc            #+#    #+#             */
-/*   Updated: 2022/04/12 18:20:31 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/04/13 09:50:19 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 #include <memory>
 #include "equal.hpp"
 #include "iterator/reverse_iterator.hpp"
-#include "iterator/bidirectional_iterator_const.hpp"
 
 #include "tree.hpp"
 
@@ -50,9 +49,9 @@ namespace ft
 			typedef const value_type & 										const_reference;
 			typedef	typename Allocator::pointer								pointer;
 			typedef typename Allocator::const_pointer						const_pointer;
-			typedef TREE<ft::pair<const Key, T>, Compare, allocator_type>			tree;
-			typedef bidirectional_iterator<typename tree::t_node, value_type>			iterator;
-			typedef const_bidirectional_iterator <typename tree::t_node, value_type>	const_iterator;
+			typedef TREE<value_type, Compare, allocator_type>				tree;
+			typedef typename tree::iterator									iterator;
+			typedef	typename tree::const_iterator							const_iterator;
 			typedef typename ft::reverse_iterator<iterator>					reverse_iterator;
 			typedef	typename ft::reverse_iterator<const_iterator>			const_reverse_iterator;
 		
