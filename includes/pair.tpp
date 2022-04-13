@@ -15,12 +15,17 @@ namespace ft {
 			T1 first;
 			T2 second;
 
-			pair(void) : first(T1()), second(T2())
+			pair(void) : first(), second()
 			{
 				
 				return  ;
 			}
-	
+		
+			pair( const pair& p ) : first(p.first), second(p.second)
+			{
+				return ;
+			}
+
 			pair(ft::pair<T1, T2> & other) : first(other.first), second(other.second)
 			{
 				return ;
@@ -37,14 +42,17 @@ namespace ft {
 				return ;
 			}
 
-			template<class U, class V>
-			pair & operator=(const pair<U, V> & rhs) {
-				this->first = static_cast<U>(rhs.first);
-				this->second = static_cast<V>(rhs.second);
+			~pair(void)	{};
+
+			pair& operator=( const pair& other )
+			{
+				if (this == &other)
+					return (*this);
+				first = other.first;
+				second = other.second;
 				return *this;
 			}
 
-			~pair(void)	{};
 	};
 
 	template<class T1, class T2>
