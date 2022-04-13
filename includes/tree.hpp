@@ -80,7 +80,7 @@ namespace ft
 		private:
 			Node *_min;
 			Node *_max;
-			Node *_root;
+			Node *root;
 			Node *_base;
 			Node *_end;
 
@@ -90,9 +90,9 @@ namespace ft
 			{
 				if (_base != _end)
 				{
-					_root = node_root(_base);
-					_max = node_max(_root, _end);
-					_min = node_min(_root, _end);
+					root = noderoot(_base);
+					_max = node_max(root, _end);
+					_min = node_min(root, _end);
 				}
 			}
 
@@ -131,13 +131,15 @@ namespace ft
 			bidirectional_iterator &operator++()
 			{
 				Node *tmp;
-				if (_base->right != _end)
+				if (_base == _end)
+					_base = _end->parent;
+				else if (_base->right != _end)
 				{
 					_base = _base->right;
 					while (_base->left != _end)
 						_base = _base->left;
 				}
-				else if (_base != _end && _max != _base)
+				else if (_max != _base)
 				{
 					tmp = _base->parent;
 					while (tmp && _base == tmp->right)
@@ -147,7 +149,7 @@ namespace ft
 					}
 					_base = tmp;
 				}
-				else
+				else 
 					_base = _end;
 				return (*this);
 			}
@@ -162,10 +164,11 @@ namespace ft
 			bidirectional_iterator &operator--()
 			{
 				Node *tmp;
-
-				if (this->_base->left != _end)
+				if (_base == _end)
+					_base = _end->parent;
+				else if (this->_base->left != _end)
 					_base = node_max(this->_base->left, _end);
-				else if (_base != _end && _min != _base)
+				else if (_min != _base)
 				{
 					tmp = _base->parent;
 					while (tmp && _base == tmp->left)
@@ -175,7 +178,7 @@ namespace ft
 					}
 					_base = tmp;
 				}
-				else
+				else 
 					_base = _end;
 				return (*this);
 			}
@@ -367,6 +370,7 @@ namespace ft
 				node_y->left = node;
 			else
 				node_y->right = node;
+			TNULL->parent = max(root);
 			return (ft::make_pair(iterator(node, TNULL), true));
 		}
 
@@ -422,6 +426,7 @@ namespace ft
 			}
 			_node_alloc.destroy(node_z);
 			_node_alloc.deallocate(node_z, 1);
+			TNULL->parent = max(root);
 			return (1);
 		}
 
@@ -459,6 +464,20 @@ namespace ft
 			return this->TNULL;
 		}
 
+		Node *max(Node *node) const
+		{
+			Node *tmp = node;
+
+			while (tmp->right != TNULL)
+				tmp = tmp->right;
+			return (tmp);
+		}
+
+		Node *max() const
+		{
+			return (max(root));
+		}
+
 		Node *min(Node *node) const
 		{
 			Node *tmp = node;
@@ -489,7 +508,7 @@ namespace ft
 				node_y = node_x;
 				if (node_x->data.first == key)
 					return (node_x->data.second);
-				else if (key < node_x->data.first)
+				else if (_comp(key, node_x->data.first))
 					node_x = node_x->left;
 				else
 					node_x = node_x->right;
@@ -503,6 +522,7 @@ namespace ft
 			else
 				node_y->right = node;
 			size++;
+			TNULL->parent = max(root);
 			return (node->data.second);
 		}
 	};
@@ -528,7 +548,7 @@ namespace ft
 	}
 
 	template <class T>
-	T *node_root(T *node)
+	T *noderoot(T *node)
 	{
 		T *tmp = node;
 

@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 01:48:13 by bclerc            #+#    #+#             */
-/*   Updated: 2022/04/13 14:47:05 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/04/13 20:48:34 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,20 +111,16 @@ namespace ft
 				_alloc = alloc;
 				_comp = comp;
 
-				while (first != last)
-				{
-					_rbt.insert(*first);
-					_size++;
-					first++;
-				}				
+				this->insert(first, last);
 			}
 
-			map( const map& other )
+			map( const map& other ) : _alloc(other._alloc), _comp(other._comp) , _rbt()
 			{
-				_size = other._size;
-				_rbt = other._rbt;
-				_comp = other._comp;
 				_alloc = other._alloc;
+				_comp = other._comp;
+				_size = 0;
+
+				this->insert(other.begin(), other.end());
 				return ;
 			}
 
@@ -135,10 +131,7 @@ namespace ft
 				if (this == &other)
 					return (*this);
 
-				_size = 0;
-				_alloc = other._alloc;
-				_comp = other._comp;
-				_rbt = tree();
+				this->clear();
 				insert(other.begin(), other.end());
 				return (*this);
 			}
@@ -240,9 +233,13 @@ namespace ft
 			template< class InputIt >
 			void insert( InputIt first, InputIt last )
 			{
+				ft::pair<iterator, bool> ret;
+
 				while (first != last)
 				{
-					_rbt.insert(ft::make_pair(first->first, first->second));
+					ret = _rbt.insert(ft::make_pair(first->first, first->second));
+					if (ret.second)
+						_size++;
 					first++;
 				}
 			}
@@ -255,10 +252,10 @@ namespace ft
 
 			void erase( iterator first, iterator last )
 			{
-				iterator tmp = first;
-				if (first != last)
-					erase(++first, last);
-				erase(first);
+				while (first != last && first.base())
+				{
+					erase((first++)->first);
+				}
 			}
 
 			size_type erase( const Key& key )
