@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 17:57:09 by bclerc            #+#    #+#             */
-/*   Updated: 2022/03/20 00:05:15 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/04/14 13:42:05 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ namespace ft {
 				return ;
 			}
 		
+
 			iterator_type base() const
 			{
 				return (this->_base);
@@ -101,7 +102,12 @@ namespace ft {
 				return (*this);
 			}
 
-			pointer operator->() const
+			pointer operator->()
+			{
+				return &(operator*());
+			}
+			
+			const pointer operator->() const
 			{
 				return &(operator*());
 			}

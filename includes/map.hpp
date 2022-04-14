@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 01:48:13 by bclerc            #+#    #+#             */
-/*   Updated: 2022/04/13 20:48:34 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/04/14 11:25:33 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,20 +178,20 @@ namespace ft
 
 			reverse_iterator rbegin()
 			{
-				return (reverse_iterator(begin()));
+				return (reverse_iterator(end()));
 			}
 			const_reverse_iterator rbegin() const
 			{
-				return (reverse_iterator(begin()));
+				return (reverse_iterator(end()));
 			}
 
 			reverse_iterator rend()
 			{
-				return (reverse_iterator(end()));
+				return (reverse_iterator(begin()));
 			}
 			const_reverse_iterator rend() const
 			{
-				return (reverse_iterator(end()));
+				return (reverse_iterator(begin()));
 			}
 
 			bool empty() const
@@ -381,7 +381,45 @@ namespace ft
 			{
 				return (value_compare(_comp));
 			}
-	};
-};
 
+			friend bool operator==( const ft::map<Key,T,Compare,Allocator>& lhs, const ft::map<Key,T,Compare,Allocator>& rhs )
+			{
+				if (rhs.begin() == rhs.end() && lhs.begin() != lhs.end())
+					return false;
+				if (lhs.size() != rhs.size())
+					return false;
+				return (ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
+
+			}
+	
+			friend bool operator!=( const ft::map<Key,T,Compare,Allocator>& lhs, const ft::map<Key,T,Compare,Allocator>& rhs )
+			{
+				return (!(lhs == rhs));
+			}
+
+			friend bool operator<  (const ft::map<Key, T, Compare, Allocator>& lhs, const ft::map<Key, T, Compare, Allocator>& rhs)
+			{
+				
+				return (ft::lexicographical_compare(lhs.begin(), lhs.end(),
+													rhs.begin(), rhs.end()));
+			}
+
+			friend bool operator<= (const ft::map<Key, T, Compare, Allocator>& lhs, const ft::map<Key, T, Compare, Allocator>& rhs)
+			{
+				return (!(lhs > rhs));
+			}
+
+			friend bool operator> (const ft::map<Key, T, Compare, Allocator>& lhs, const ft::map<Key, T, Compare, Allocator>& rhs)
+			{
+				return (ft::lexicographical_compare(rhs.begin(), rhs.end(),
+													lhs.begin(), lhs.end()));
+			}
+
+			friend bool operator>= (const ft::map<Key, T, Compare, Allocator>& lhs, const ft::map<Key, T, Compare, Allocator>& rhs)
+			{
+				return (!(lhs < rhs));
+			}
+		};
+
+};
 #endif

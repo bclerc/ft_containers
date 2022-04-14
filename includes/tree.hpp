@@ -40,13 +40,13 @@ namespace ft
 			int color;
 
 			Node()
-				: data(), value_type(), parent(NULL), left(NULL), right(NULL), color(RED)
+				: data(T()), value_type(), parent(NULL), left(NULL), right(NULL), color(RED)
 			{
 				return;
 			}
 
 			Node(Node *parent, Node *left, Node *right)
-				: data(), parent(parent), left(left), right(right), color(RED)
+				: data(T()), parent(parent), left(left), right(right), color(RED)
 			{
 				return;
 			}
@@ -131,7 +131,7 @@ namespace ft
 			bidirectional_iterator &operator++()
 			{
 				Node *tmp;
-				if (_base == _end)
+				if (_base == _end || !_base)
 					_base = _end->parent;
 				else if (_base->right != _end)
 				{
@@ -164,7 +164,7 @@ namespace ft
 			bidirectional_iterator &operator--()
 			{
 				Node *tmp;
-				if (_base == _end)
+				if (_base == _end || !_base)
 					_base = _end->parent;
 				else if (this->_base->left != _end)
 					_base = node_max(this->_base->left, _end);
