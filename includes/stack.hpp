@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   stack.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
+/*   By: vscode <vscode@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:56:08 by bclerc            #+#    #+#             */
-/*   Updated: 2022/03/20 02:29:52 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/04/15 15:42:28 by vscode           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,18 +28,18 @@ namespace ft {
 			typedef typename Container::const_reference	const_reference;
 
 		private: 
-			Container container;
 
 		public :
+			Container c;
 
 			explicit stack( const Container& cont = Container())
 			{
-				container = cont;
+				c = cont;
 			}
 
 			stack (const stack<T, Container> & other)
 			{
-				this->container = other.container;
+				this->c = other.c;
 				return ;
 			}
 
@@ -52,52 +52,52 @@ namespace ft {
 
 			size_type	size()
 			{
-				return (container.size());
+				return (c.size());
 			}
 
 			bool empty() const
 			{
-				return (container.empty());
+				return (c.empty());
 			}
 
 			size_type	capacity()
 			{
-				return (container.capacity());
+				return (c.capacity());
 			}
 
 			reference top()
 			{
-				return (container.back());
+				return (c.back());
 			}
 
 			const_reference top() const
 			{
-				return (container.back());
+				return (c.back());
 			}
 
 			void	push( const value_type & value)
 			{
-				container.push_back(value);
+				c.push_back(value);
 			}
 
 			void	pop()
 			{
-				container.pop_back();
+				c.pop_back();
 			}
 
 			friend bool operator== ( const stack<T,Container>& lhs, const stack<T,Container>& rhs )
 			{
-				return (lhs.container == rhs.container);
+				return (lhs.c == rhs.c);
 			}
 
 			friend bool operator!= (const stack<T, Container>& lhs, const stack<T, Container>& rhs)
 			{
-				return (lhs.container != rhs.container);
+				return (lhs.c != rhs.c);
 			}
 
 			friend bool operator<  (const stack<T, Container>& lhs, const stack<T, Container>& rhs)
 			{
-				return (lhs.container < rhs.container);
+				return (lhs.c < rhs.c);
 			}
 
 			friend bool operator<= (const stack<T, Container>& lhs, const stack<T, Container>& rhs)
