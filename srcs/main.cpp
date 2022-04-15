@@ -65,10 +65,8 @@ int main(int argc, char** argv) {
 	for (int i = 0; i < COUNT; i++)
 	{
 		vector_buffer.push_back(Buffer());
-	std::cout << "Count : Size max " << i  << " " << vector_buffer.max_size() << std::endl;
 	}
 
-	return 1;
 	for (int i = 0; i < COUNT; i++)
 	{
 		const int idx = rand() % COUNT;
