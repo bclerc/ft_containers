@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
+/*   By: vscode <vscode@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 01:48:13 by bclerc            #+#    #+#             */
-/*   Updated: 2022/04/14 11:25:33 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/04/15 15:28:13 by vscode           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,7 +182,7 @@ namespace ft
 			}
 			const_reverse_iterator rbegin() const
 			{
-				return (reverse_iterator(end()));
+				return (const_reverse_iterator(end()));
 			}
 
 			reverse_iterator rend()
@@ -191,7 +191,7 @@ namespace ft
 			}
 			const_reverse_iterator rend() const
 			{
-				return (reverse_iterator(begin()));
+				return (const_reverse_iterator(begin()));
 			}
 
 			bool empty() const
@@ -268,8 +268,6 @@ namespace ft
 				return (0);
 			}
 
-			void swap( map& other );
-
 			size_type count( const Key& key ) const
 			{
 				return (_rbt.count(ft::make_pair(key, T())));
@@ -321,7 +319,6 @@ namespace ft
 						return (it);
 					it++;
 				}
-				std::cout << "coucou" << std::endl;
 				return (end());
 			}
 
@@ -377,9 +374,16 @@ namespace ft
 			{
 				return (_comp);
 			}
+
 			value_compare value_comp(void) const
 			{
 				return (value_compare(_comp));
+			}
+			void swap(map & rhs)
+			{
+				std::swap(_comp, rhs._comp);
+				std::swap(_size, rhs._size);	
+				_rbt.swap(rhs._rbt);
 			}
 
 			friend bool operator==( const ft::map<Key,T,Compare,Allocator>& lhs, const ft::map<Key,T,Compare,Allocator>& rhs )

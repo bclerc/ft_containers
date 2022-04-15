@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vector.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
+/*   By: vscode <vscode@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:56:08 by bclerc            #+#    #+#             */
-/*   Updated: 2022/04/02 05:06:29 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/04/15 15:20:08 by vscode           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,9 +78,9 @@ namespace ft {
 		}
 
 		public :
-			vector (void) : _data(NULL), _size(0), _capacity(0), _alloc(Allocator()) {}
+			vector (void) : _data(), _size(0), _capacity(0), _alloc(Allocator()) {}
 
-			explicit vector (const Allocator & alloc) : _data(NULL), _size(0), _capacity(0), _alloc(alloc) {}
+			explicit vector (const Allocator & alloc) : _data(), _size(0), _capacity(0), _alloc(alloc) {}
 
 			explicit vector (size_type count, const T& value = T(), const Allocator & alloc = Allocator()) : _size(count), _capacity(count), _alloc(alloc)
 			{
@@ -90,7 +90,7 @@ namespace ft {
 				return ;
 			}
 
-			vector (vector const & cpy) : _data(NULL), _size(0), _capacity(0), _alloc(cpy.get_allocator())
+			vector (vector const & cpy) : _data(), _size(0), _capacity(0), _alloc(cpy.get_allocator())
 			{
 				reserve(cpy.capacity());
 				this->assign(cpy.begin(), cpy.end());

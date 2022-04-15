@@ -40,7 +40,7 @@ namespace ft
 			int color;
 
 			Node()
-				: data(T()), value_type(), parent(NULL), left(NULL), right(NULL), color(RED)
+				: data(T()), parent(NULL), left(NULL), right(NULL), color(RED)
 			{
 				return;
 			}
@@ -94,6 +94,12 @@ namespace ft
 					_max = node_max(root, _end);
 					_min = node_min(root, _end);
 				}
+				else
+				{
+					root = NULL;
+					_max = NULL;
+					_min = NULL;
+				}
 			}
 
 			// bidirectional_iterator (const bidirectional_iterator & rev_it) : _base(rev_it.base())
@@ -125,15 +131,16 @@ namespace ft
 					return (*this);
 				this->_base = rhs._base;
 				this->_end = rhs._end;
+				this->_max = rhs._max;
+				this->_min = rhs._min;
 				return *this;
 			}
 
 			bidirectional_iterator &operator++()
 			{
 				Node *tmp;
-				if (_base == _end || !_base)
-					_base = _end->parent;
-				else if (_base->right != _end)
+
+				if (_base->right != _end)
 				{
 					_base = _base->right;
 					while (_base->left != _end)
@@ -149,6 +156,8 @@ namespace ft
 					}
 					_base = tmp;
 				}
+				else if (_base == _end || !_base)
+					_base = _end->parent;
 				else 
 					_base = _end;
 				return (*this);
@@ -495,6 +504,15 @@ namespace ft
 		size_t	max_size() const
 		{
 			return (_node_alloc.max_size());
+		}
+
+		void swap(TREE & other)
+		{
+			std::swap(root, other.root);
+			std::swap(TNULL, other.TNULL);
+			std::swap(_comp, other._comp);
+			std::swap(_alloc, other._alloc);
+			std::swap(_node_alloc, other._node_alloc);
 		}
 
 		second_type &get_insert(const first_type &key, size_t &size)
