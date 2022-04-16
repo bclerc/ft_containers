@@ -268,6 +268,50 @@ namespace ft
 			return (ret);
 		}
 
+		void insertFix(Node* k) {
+		Node* u;
+		while (k->parent->color == 1) {
+		if (k->parent == k->parent->parent->right) {
+			u = k->parent->parent->left;
+			if (u->color == 1) {
+			u->color = 0;
+			k->parent->color = 0;
+			k->parent->parent->color = 1;
+			k = k->parent->parent;
+			} else {
+			if (k == k->parent->left) {
+				k = k->parent;
+				rightRotate(k);
+			}
+			k->parent->color = 0;
+			k->parent->parent->color = 1;
+			leftRotate(k->parent->parent);
+			}
+		} else {
+			u = k->parent->parent->right;
+
+			if (u->color == 1) {
+			u->color = 0;
+			k->parent->color = 0;
+			k->parent->parent->color = 1;
+			k = k->parent->parent;
+			} else {
+			if (k == k->parent->right) {
+				k = k->parent;
+				leftRotate(k);
+			}
+			k->parent->color = 0;
+			k->parent->parent->color = 1;
+			rightRotate(k->parent->parent);
+			}
+		}
+		if (k == root) {
+			break;
+		}
+		}
+		root->color = 0;
+	}
+
 		// Replace the first node by second for detach the deleted node from rbt
 		void _transplant(Node *first, Node *second)
 		{
@@ -364,7 +408,7 @@ namespace ft
 			while (node_x != TNULL)
 			{
 				node_y = node_x;
-				if (TNULL->parent->data.first == data.first + 1)
+				if (TNULL->parent->data.first == data.first - 1)
 				{
 					node_y = TNULL->parent;
 					break ;
@@ -385,6 +429,7 @@ namespace ft
 			else
 				node_y->right = node;
 			TNULL->parent = max(root);
+			insertFix(node);
 			return (ft::make_pair(iterator(node, TNULL), true));
 		}
 
