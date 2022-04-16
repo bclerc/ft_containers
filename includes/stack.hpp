@@ -6,7 +6,7 @@
 /*   By: vscode <vscode@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:56:08 by bclerc            #+#    #+#             */
-/*   Updated: 2022/04/15 15:42:28 by vscode           ###   ########.fr       */
+/*   Updated: 2022/04/15 15:45:12 by vscode           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,10 @@ namespace ft {
 			typedef typename Container::reference		reference;
 			typedef typename Container::const_reference	const_reference;
 
-		private: 
+		protected: 
+			Container c;
 
 		public :
-			Container c;
 
 			explicit stack( const Container& cont = Container())
 			{

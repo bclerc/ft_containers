@@ -364,6 +364,11 @@ namespace ft
 			while (node_x != TNULL)
 			{
 				node_y = node_x;
+				if (TNULL->parent->data.first == data.first + 1)
+				{
+					node_y = TNULL->parent;
+					break ;
+				}
 				if (data.first == node_x->data.first)
 					return (ft::make_pair(iterator(node_x, TNULL), false));
 				if (_comp(data.first, node_x->data.first))
@@ -513,6 +518,7 @@ namespace ft
 			std::swap(_comp, other._comp);
 			std::swap(_alloc, other._alloc);
 			std::swap(_node_alloc, other._node_alloc);
+
 		}
 
 		second_type &get_insert(const first_type &key, size_t &size)
