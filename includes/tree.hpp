@@ -241,7 +241,7 @@ namespace ft
 	private:
 		typedef typename Allocator::template rebind<Node>::other node_allocator;
 
-		Node *TNULL;
+		Node *TNULL; 
 		Node *root;
 		Allocator _alloc;
 		node_allocator _node_alloc;
@@ -252,7 +252,7 @@ namespace ft
 			Node *node = _node_alloc.allocate(1);
 			_node_alloc.construct(node, Node(data, NULL, TNULL, TNULL));
 			node->color = RED; // Red by default
-			return node;
+			return (node);
 		}
 
 		Node *_search(Node *node, T key) const
@@ -267,50 +267,6 @@ namespace ft
 				ret = _search(node->right, key);
 			return (ret);
 		}
-
-		void insertFix(Node* k) {
-		Node* u;
-		while (k->parent->color == 1) {
-		if (k->parent == k->parent->parent->right) {
-			u = k->parent->parent->left;
-			if (u->color == 1) {
-			u->color = 0;
-			k->parent->color = 0;
-			k->parent->parent->color = 1;
-			k = k->parent->parent;
-			} else {
-			if (k == k->parent->left) {
-				k = k->parent;
-				rightRotate(k);
-			}
-			k->parent->color = 0;
-			k->parent->parent->color = 1;
-			leftRotate(k->parent->parent);
-			}
-		} else {
-			u = k->parent->parent->right;
-
-			if (u->color == 1) {
-			u->color = 0;
-			k->parent->color = 0;
-			k->parent->parent->color = 1;
-			k = k->parent->parent;
-			} else {
-			if (k == k->parent->right) {
-				k = k->parent;
-				leftRotate(k);
-			}
-			k->parent->color = 0;
-			k->parent->parent->color = 1;
-			rightRotate(k->parent->parent);
-			}
-		}
-		if (k == root) {
-			break;
-		}
-		}
-		root->color = 0;
-	}
 
 		// Replace the first node by second for detach the deleted node from rbt
 		void _transplant(Node *first, Node *second)
@@ -334,6 +290,120 @@ namespace ft
 				_node_alloc.deallocate(node, 1);
 				node = NULL;
 			}
+		}
+
+		void _deleteFix(Node *node)
+		{
+			Node *brother;
+
+			while (node != root && node->color == BLACK)
+			{
+				if (node == node->parent->left)
+				{
+					brother = node->parent->right;
+					if (brother->color == RED)
+					{
+						brother->color = BLACK;
+
+						leftRotate(node->parent);
+						brother = node->parent->right;
+					}
+
+					if (brother->left->color == BLACK && brother->right->color == BLACK)
+					{
+						brother->color = RED;
+						node = node->parent;
+					}
+					else
+					{
+						if (brother->right->color == 0)
+						{
+							brother->left->color = 0;
+							brother->color = RED;
+							rightRotate(brother);
+							brother = node->parent->right;
+						}
+						if (brother->right->color == BLACK)
+						{
+							brother->color = RED;
+							node = node->parent;
+						}
+						else
+						{
+							if (brother->left->color == BLACK)
+							{
+								brother->right = BLACK;
+								brother->color = 1;
+								leftRotate(brother);
+								brother = node->parent->left;
+							}
+							brother->color = node->parent->color;
+							node->parent->color = BLACK;
+							brother->left->color = BLACK;
+							rightRotate(node->parent);
+							node = root;
+						}
+					}
+				}
+				node->color = 0;
+			}
+	
+		}
+		void _insertFix(Node * node)
+		{
+			Node* uncle;
+		
+			while (node->parent->color == RED)
+			{
+				if (node->parent == node->parent->parent->right)
+				{
+					uncle = node->parent->parent->left;
+					// case 1 if the uncle of node is red, set color of their child to black and grandparent to red 
+					if (uncle->color == RED)
+					{
+						uncle->color = BLACK;
+						node->parent->color = BLACK;
+						node->parent->parent->color =RED;
+						node = node->parent->parent;
+					}
+					else  //case 3
+					{
+						if (node == node->parent->left) // case 2
+						{
+							node = node->parent;
+							rightRotate(node);
+						}
+						node->parent->color = BLACK;
+						node->parent->parent->color = RED;
+						leftRotate(node->parent->parent);
+					}
+				}
+				else
+				{
+					uncle = node->parent->parent->right;
+					if (uncle->color == RED)
+					{
+						uncle->color = BLACK;
+						node->parent->color = BLACK;
+						node->parent->parent->color = RED;
+						node = node->parent->parent;
+					}
+					else
+					{
+						if (node == node->parent->right)
+						{
+							node = node->parent;
+							leftRotate(node);
+						}
+						node->parent->color = BLACK;
+						node->parent->parent->color = RED;
+						rightRotate(node->parent->parent);
+					}
+				}
+				if (node == root)
+					break ;
+			}
+			root->color = 0;
 		}
 
 	public:
@@ -386,6 +456,8 @@ namespace ft
 		{
 			Node *node_y = node_x->left;
 
+
+			node_x->left = node_y->right;
 			if (node_y->right != TNULL)
 				node_y->right->parent = node_x;
 			node_y->parent = node_x->parent;
@@ -397,6 +469,7 @@ namespace ft
 				node_x->parent->left = node_y;
 			node_y->right = node_x;
 			node_x->parent = node_y;
+			root->parent = NULL;
 		}
 
 		ft::pair<iterator, bool> insert(T data)
@@ -408,11 +481,6 @@ namespace ft
 			while (node_x != TNULL)
 			{
 				node_y = node_x;
-				if (TNULL->parent->data.first == data.first - 1)
-				{
-					node_y = TNULL->parent;
-					break ;
-				}
 				if (data.first == node_x->data.first)
 					return (ft::make_pair(iterator(node_x, TNULL), false));
 				if (_comp(data.first, node_x->data.first))
@@ -428,8 +496,11 @@ namespace ft
 				node_y->left = node;
 			else
 				node_y->right = node;
+			if (node->parent == NULL)
+				node->color = BLACK;
 			TNULL->parent = max(root);
-			insertFix(node);
+			if (node->parent && node->parent->parent)
+				_insertFix(node);
 			return (ft::make_pair(iterator(node, TNULL), true));
 		}
 
@@ -485,6 +556,8 @@ namespace ft
 			}
 			_node_alloc.destroy(node_z);
 			_node_alloc.deallocate(node_z, 1);
+			if (y_color == BLACK)
+				_deleteFix(node_x);
 			TNULL->parent = max(root);
 			return (1);
 		}
