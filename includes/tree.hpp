@@ -60,7 +60,20 @@ namespace ft
 				: data(other.data), parent(other.parent), left(other.left), right(other.right), color(RED)
 			{
 			}
-			~Node() {}
+
+
+			Node& operator=(const Node &rhs)
+			{
+				if (rhs == *this)
+					return *this;
+				data = rhs.data;
+				parent = rhs.parent;
+				left = rhs.left;
+				right = rhs.right;
+				color = rhs.color;
+				return *this;
+			}
+			virtual ~Node() {}
 		};
 
 	public:
@@ -296,58 +309,62 @@ namespace ft
 		{
 			Node *brother;
 
-			while (node != root && node->color == BLACK)
-			{
-				if (node == node->parent->left)
-				{
-					brother = node->parent->right;
-					if (brother->color == RED)
-					{
-						brother->color = BLACK;
-
-						leftRotate(node->parent);
-						brother = node->parent->right;
-					}
-
-					if (brother->left->color == BLACK && brother->right->color == BLACK)
-					{
-						brother->color = RED;
-						node = node->parent;
-					}
-					else
-					{
-						if (brother->right->color == 0)
-						{
-							brother->left->color = 0;
-							brother->color = RED;
-							rightRotate(brother);
-							brother = node->parent->right;
-						}
-						if (brother->right->color == BLACK)
-						{
-							brother->color = RED;
-							node = node->parent;
-						}
-						else
-						{
-							if (brother->left->color == BLACK)
-							{
-								brother->right = BLACK;
-								brother->color = 1;
-								leftRotate(brother);
-								brother = node->parent->left;
-							}
-							brother->color = node->parent->color;
-							node->parent->color = BLACK;
-							brother->left->color = BLACK;
-							rightRotate(node->parent);
-							node = root;
-						}
-					}
+			while (node != root && node->color == 0) {
+			if (node == node->parent->left) {
+				brother = node->parent->right;
+				if (brother->color == 1) {
+				brother->color = 0;
+				node->parent->color = 1;
+				leftRotate(node->parent);
+				brother = node->parent->right;
 				}
-				node->color = 0;
+
+				if (brother->left->color == 0 && brother->right->color == 0) {
+				brother->color = 1;
+				node = node->parent;
+				} else {
+				if (brother->right->color == 0) {
+					brother->left->color = 0;
+					brother->color = 1;
+					rightRotate(brother);
+					brother = node->parent->right;
+				}
+
+				brother->color = node->parent->color;
+				node->parent->color = 0;
+				brother->right->color = 0;
+				leftRotate(node->parent);
+				node = root;
+				}
+			} else {
+				brother = node->parent->left;
+				if (brother->color == 1) {
+				brother->color = 0;
+				node->parent->color = 1;
+				rightRotate(node->parent);
+				brother = node->parent->left;
+				}
+
+				if (brother->right->color == 0 && brother->right->color == 0) {
+				brother->color = 1;
+				node = node->parent;
+				} else {
+				if (brother->left->color == 0) {
+					brother->right->color = 0;
+					brother->color = 1;
+					leftRotate(brother);
+					brother = node->parent->left;
+				}
+
+				brother->color = node->parent->color;
+				node->parent->color = 0;
+				brother->left->color = 0;
+				rightRotate(node->parent);
+				node = root;
+				}
 			}
-	
+			}
+			node->color = 0;
 		}
 		void _insertFix(Node * node)
 		{
