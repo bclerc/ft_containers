@@ -23,7 +23,8 @@ namespace ft {
 	class random_access_iterator : public ft::iterator<ft::random_access_iterator_tag, T> {
 
 		public:
-			typedef typename ft::iterator<ft::random_access_iterator_tag, T>::value_type		iterator_type;
+			typedef typename std::random_access_iterator_tag									iterator_category;
+			typedef typename ft::iterator<ft::random_access_iterator_tag, T>::value_type		value_type;
 			typedef typename ft::iterator<ft::random_access_iterator_tag, T>::difference_type	difference_type;
 			typedef T*																			pointer;
 			typedef T&																			reference;
@@ -54,6 +55,10 @@ namespace ft {
 				return (*this->_base);
 			}
 
+			reference operator*()
+			{
+				return (*this->_base);
+			}
 
 			random_access_iterator &operator=(const random_access_iterator & rhs)
 			{

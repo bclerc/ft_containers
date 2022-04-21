@@ -2,7 +2,7 @@
 # define EQUAL_TPP
  
 # include <iostream>
-# include "pair.tpp"
+# include "pair.hpp"
 
 namespace ft 
 {

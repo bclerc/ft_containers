@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vscode <vscode@student.42.fr>              +#+  +:+       +#+        */
+/*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 01:48:13 by bclerc            #+#    #+#             */
-/*   Updated: 2022/04/19 12:26:28 by vscode           ###   ########.fr       */
+/*   Updated: 2022/04/21 13:01:04 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,10 @@
 #include <memory>
 #include "iterator/reverse_iterator.hpp"
 #include "equal.hpp"
-
+#include <limits> 
 #include "tree.hpp"
 
-
+//
 namespace ft 
 {
 	template <class T> struct less : std::binary_function <T,T,bool> {
@@ -132,7 +132,6 @@ namespace ft
 					return (*this);
 
 				this->clear();
-			
 				insert(other.begin(), other.end());
 				return (*this);
 			}
@@ -208,6 +207,11 @@ namespace ft
 			size_type max_size() const
 			{
 				return (_rbt.max_size());
+			//	size_type ms = sizeof(value_type);
+
+			//	if (ms < 8)
+			//		return (std::numeric_limits<difference_type>::max() / (8 + 32));
+			//	return (std::numeric_limits<difference_type>::max() / (sizeof(value_type) + 32));
 			}
 
 			void clear()
@@ -380,8 +384,10 @@ namespace ft
 			{
 				return (value_compare(_comp));
 			}
+
 			void swap(map & rhs)
 			{
+
 				std::swap(_comp, rhs._comp);
 				std::swap(_size, rhs._size);	
 				_rbt.swap(rhs._rbt);
@@ -426,5 +432,11 @@ namespace ft
 			}
 		};
 
+		template <class Key, class T, class Compare, class Alloc>
+		void swap (map<Key,T,Compare,Alloc>& x, map<Key,T,Compare,Alloc>& y)
+		{
+				x.swap(y);
+		}
+	
 };
 #endif

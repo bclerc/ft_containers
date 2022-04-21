@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   stack.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vscode <vscode@student.42.fr>              +#+  +:+       +#+        */
+/*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:56:08 by bclerc            #+#    #+#             */
-/*   Updated: 2022/04/15 15:45:12 by vscode           ###   ########.fr       */
+/*   Updated: 2022/04/20 14:27:57 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,17 +102,17 @@ namespace ft {
 
 			friend bool operator<= (const stack<T, Container>& lhs, const stack<T, Container>& rhs)
 			{
-				return (lhs.container <= rhs.container);
+				return (lhs.c <= rhs.c);
 			}
 
 			friend bool operator> (const stack<T, Container>& lhs, const stack<T, Container>& rhs)
 			{
-				return (lhs.container > rhs.container);
+				return (lhs.c > rhs.c);
 			}
 
 			friend bool operator>= (const stack<T, Container>& lhs, const stack<T, Container>& rhs)
 			{
-				return (lhs.container >= rhs.container);
+				return (lhs.c >= rhs.c);
 			}
 	};
 

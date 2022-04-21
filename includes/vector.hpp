@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vector.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vscode <vscode@student.42.fr>              +#+  +:+       +#+        */
+/*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:56:08 by bclerc            #+#    #+#             */
-/*   Updated: 2022/04/15 15:20:08 by vscode           ###   ########.fr       */
+/*   Updated: 2022/04/21 13:55:58 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ namespace ft {
 
 			~vector(void)
 			{
-				_destruct_data(this->begin(), _capacity);
+				_destruct_data(this->begin(), _size);
 				_alloc.deallocate(_data, _capacity);
 				_data = NULL;
 			};
@@ -251,7 +251,6 @@ namespace ft {
 			void reserve(size_type new_cap)
 			{
 				T*	new_data;
-				T	new_value = T();
 				size_type i		= _size;
 
 				if (new_cap < 1)
@@ -263,8 +262,6 @@ namespace ft {
 				new_data = _alloc.allocate(new_cap);
 				for (size_type i = 0; i < _size; i++)
 					_alloc.construct(new_data + i, *(_data + i));
-				for (size_type i = _size; i < new_cap; i++)
-					_alloc.construct(new_data + i, new_value);
 				_destruct_data(this->begin(), this->end());
 				if (_capacity)
 					_alloc.deallocate(_data, _capacity);
@@ -332,7 +329,10 @@ namespace ft {
 						_alloc.destroy((_data + _size) - i - 1);
 					}
  					for (size_type i = 0; i < dist; i++)
+					 {
 						_alloc.construct(_data + size_first + i, *(first++));
+					 	first++;
+					 }
 					_size += dist;
 				}
 

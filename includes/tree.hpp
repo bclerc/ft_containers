@@ -13,7 +13,7 @@
 #ifndef TREE_HPP
 #define TREE_HPP
 
-#include "pair.tpp"
+#include "pair.hpp"
 #include "iterator/iterator.hpp"
 #include <ostream>
 
@@ -590,6 +590,12 @@ namespace ft
 			return (deleteNode(key));
 		}
 
+
+		size_t	max_size() const
+		{
+			return (_node_alloc.max_size());
+		}
+
 		int count(T key) const
 		{
 			if (_search(root, key) != TNULL)
@@ -639,11 +645,6 @@ namespace ft
 		Node *min() const
 		{
 			return (min(root));
-		}
-
-		size_t	max_size() const
-		{
-			return (_node_alloc.max_size());
 		}
 
 		void swap(TREE & other)

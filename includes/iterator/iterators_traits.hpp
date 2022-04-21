@@ -6,7 +6,7 @@
 /*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 17:40:33 by bclerc            #+#    #+#             */
-/*   Updated: 2022/04/13 12:19:12 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/04/21 12:49:50 by bclerc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <iostream>
 
 namespace ft {
+	struct	forward_iterator_tag {};
 	struct	random_access_iterator_tag {};
 	struct	bidirectional_iterator_tag {};
 
