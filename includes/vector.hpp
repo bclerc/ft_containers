@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vector.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bclerc <bclerc@student.42.fr>              +#+  +:+       +#+        */
+/*   By: vscode <vscode@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:56:08 by bclerc            #+#    #+#             */
-/*   Updated: 2022/04/21 13:55:58 by bclerc           ###   ########.fr       */
+/*   Updated: 2022/04/22 12:45:28 by vscode           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -329,10 +329,7 @@ namespace ft {
 						_alloc.destroy((_data + _size) - i - 1);
 					}
  					for (size_type i = 0; i < dist; i++)
-					 {
 						_alloc.construct(_data + size_first + i, *(first++));
-					 	first++;
-					 }
 					_size += dist;
 				}
 
