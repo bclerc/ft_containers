@@ -1,116 +1,282 @@
-#include <iostream>
-#include <string>
-#include <deque>
-#if 0 //CREATE A REAL STL EXAMPLE
-	#include <map>
-	#include <stack>
-	#include <vector>
-	namespace ft = std;
-#else
-	#include <map.hpp>
-	#include <stack.hpp>
-	#include <vector.hpp>
-#endif
+#include "pair.tpp"
+#include "stack.hpp"
+#include "vector.hpp"
+#include <iostream>    
+#include <algorithm>
+#include <vector>
+#include <map>
 
-#include <stdlib.h>
 
-#define MAX_RAM 4294967296
-#define BUFFER_SIZE 4096
-struct Buffer
+
+#define TESTED_TYPE int
+#define TESTED_NAMESPACE ft
+
+void construct_test()
 {
-	int idx;
-	char buff[BUFFER_SIZE];
-};
+	// constructors used in the same order as described above:
+  std::vector<int> first;                                // empty vector of ints
+  std::vector<int> second (4,100);                       // four ints with value 100
+  std::vector<int> third (second.begin(),second.end());  // iterating through second
+  std::vector<int> fourth (third);                       // a copy of third
 
+  // the iterator constructor can also be used to construct from arrays:
+  int myints[] = {16,2,77,29};
+  std::vector<int> fifth (myints, myints + sizeof(myints) / sizeof(int) );
 
-#define COUNT (MAX_RAM / (int)sizeof(Buffer))
+  std::cout << "The contents of fifth are:";
+  for (std::vector<int>::iterator it = fifth.begin(); it != fifth.end(); ++it)
+    std::cout << ' ' << *it;
+  std::cout << '\n';
 
-template<typename T>
-class MutantStack : public ft::stack<T>
+  return 0;
+}
+
+void assign_test()
 {
-public:
-	MutantStack() {}
-	MutantStack(const MutantStack<T>& src) { *this = src; }
-	MutantStack<T>& operator=(const MutantStack<T>& rhs) 
-	{
-		this->c = rhs.c;
-		return *this;
-	}
-	~MutantStack() {}
+  std::vector<int> first;
+  std::vector<int> second;
+  std::vector<int> third;
 
-	typedef typename ft::stack<T>::container_type::iterator iterator;
+  first.assign (7,100);             // 7 ints with a value of 100
 
-	iterator begin() { return this->c.begin(); }
-	iterator end() { return this->c.end(); }
-};
+  std::vector<int>::iterator it;
+  it=first.begin()+1;
 
-int main(int argc, char** argv) {
-	if (argc != 2)
-	{
-		std::cerr << "Usage: ./test seed" << std::endl;
-		std::cerr << "Provide a seed please" << std::endl;
-		std::cerr << "Count value:" << COUNT << std::endl;
-		return 1;
-	}
-	const int seed = atoi(argv[1]);
-	srand(seed);
+  second.assign (it,first.end()-1); // the 5 central values of first
 
-	ft::vector<std::string> vector_str;
-	ft::vector<int> vector_int;
-	ft::stack<int> stack_int;
-	ft::vector<Buffer> vector_buffer;
-	ft::stack<Buffer, std::deque<Buffer> > stack_deq_buffer;
-	ft::map<int, int> map_int;
+  int myints[] = {1776,7,4};
+  third.assign (myints,myints+3);   // assigning from array.
 
-	for (int i = 0; i < COUNT; i++)
-	{
-		vector_buffer.push_back(Buffer());
-	}
+  std::cout << "Size of first: " << int (first.size()) << '\n';
+  std::cout << "Size of second: " << int (second.size()) << '\n';
+  std::cout << "Size of third: " << int (third.size()) << '\n';
+  return 0;
+}
 
-	for (int i = 0; i < COUNT; i++)
-	{
-		const int idx = rand() % COUNT;
-		vector_buffer[idx].idx = 5;
-	}
-	ft::vector<Buffer>().swap(vector_buffer);
+void at_test()
+{
+ std::vector<int> myvector (10);   // 10 zero-initialized ints
 
-	try
-	{
-		for (int i = 0; i < COUNT; i++)
-		{
-			const int idx = rand() % COUNT;
-			vector_buffer.at(idx);
-			std::cerr << "Error: THIS VECTOR SHOULD BE EMPTY!!" <<std::endl;
-		}
-	}
-	catch(const std::exception& e)
-	{
-		//NORMAL ! :P
-	}
+  // assign some values:
+  for (unsigned i=0; i<myvector.size(); i++)
+    myvector.at(i)=i;
+
+  std::cout << "myvector contains:";
+  for (unsigned i=0; i<myvector.size(); i++)
+    std::cout << ' ' << myvector.at(i);
+  std::cout << '\n';
+
+  return 0;
+}
+
+void back_test()
+{
+std::vector<int> myvector;
+  myvector.push_back(10);
+
+  while (myvector.back() != 0)
+  {
+    myvector.push_back ( myvector.back() -1 );
+  }
+
+  std::cout << "myvector contains:";
+  for (unsigned i=0; i<myvector.size() ; i++)
+    std::cout << ' ' << myvector[i];
+  std::cout << '\n';
+
+  return 0;
+}
+
+void capacity_test()
+{
+	std::vector<int> myvector;
+
+  // set some content in the vector:
+  for (int i=0; i<100; i++) myvector.push_back(i);
+
+  std::cout << "size: " << (int) myvector.size() << '\n';
+  std::cout << "capacity: " << (int) myvector.capacity() << '\n';
+  std::cout << "max_size: " << (int) myvector.max_size() << '\n';
+  return 0;
+}
+
+void cbegin_test()
+{
+	 std::vector<int> myvector;
+
+  // set some content in the vector:
+  for (int i=0; i<100; i++) myvector.push_back(i);
+
+  std::cout << "size: " << (int) myvector.size() << '\n';
+  std::cout << "capacity: " << (int) myvector.capacity() << '\n';
+  std::cout << "max_size: " << (int) myvector.max_size() << '\n';
+  return 0;
+}
+
+void clear_test()
+{
+	 std::vector<int> myvector;
+  myvector.push_back (100);
+  myvector.push_back (200);
+  myvector.push_back (300);
+
+  std::cout << "myvector contains:";
+  for (unsigned i=0; i<myvector.size(); i++)
+    std::cout << ' ' << myvector[i];
+  std::cout << '\n';
+
+  myvector.clear();
+  myvector.push_back (1101);
+  myvector.push_back (2202);
+
+  std::cout << "myvector contains:";
+  for (unsigned i=0; i<myvector.size(); i++)
+    std::cout << ' ' << myvector[i];
+  std::cout << '\n';
+
+}
+
+void empty_test()
+{
 	
-	for (int i = 0; i < COUNT; ++i)
-	{
-		map_int.insert(ft::make_pair(rand(), rand()));
-	}
+	 std::vector<int> myvector;
+  int sum (0);
 
-	int sum = 0;
-	for (int i = 0; i < 10000; i++)
-	{
-		int access = rand();
-		sum += map_int[access];
-	}
-	std::cout << "should be constant with the same seed: " << sum << std::endl;
+  for (int i=1;i<=10;i++) myvector.push_back(i);
 
-	{
-		ft::map<int, int> copy = map_int;
-	}
-	MutantStack<char> iterable_stack;
-	for (char letter = 'a'; letter <= 'z'; letter++)
-		iterable_stack.push(letter);
-	for (MutantStack<char>::iterator it = iterable_stack.begin(); it != iterable_stack.end(); it++)
-	{
-		std::cout << *it;
-	}
-	std::cout << std::endl;
-	return (0);
+  while (!myvector.empty())
+  {
+     sum += myvector.back();
+     myvector.pop_back();
+  }
+
+  std::cout << "total: " << sum << '\n';
+
+}
+
+void end_test()
+{
+	  std::vector<int> myvector;
+  for (int i=1; i<=5; i++) myvector.push_back(i);
+
+  std::cout << "myvector contains:";
+  for (std::vector<int>::iterator it = myvector.begin() ; it != myvector.end(); ++it)
+    std::cout << ' ' << *it;
+  std::cout << '\n';
+}
+
+void erase_test()
+{
+	 std::vector<int> myvector;
+
+  // set some values (from 1 to 10)
+  for (int i=1; i<=10; i++) myvector.push_back(i);
+
+  // erase the 6th element
+  myvector.erase (myvector.begin()+5);
+
+  // erase the first 3 elements:
+  myvector.erase (myvector.begin(),myvector.begin()+3);
+
+  std::cout << "myvector contains:";
+  for (unsigned i=0; i<myvector.size(); ++i)
+    std::cout << ' ' << myvector[i];
+  std::cout << '\n';
+}
+
+void front_test()
+{
+	 std::vector<int> myvector;
+
+  myvector.push_back(78);
+  myvector.push_back(16);
+
+  // now front equals 78, and back 16
+
+  myvector.front() -= myvector.back();
+
+  std::cout << "myvector.front() is now " << myvector.front() << '\n';
+
+}
+
+void allocator_test()
+{
+	  std::vector<int> myvector;
+  int * p;
+  unsigned int i;
+
+  // allocate an array with space for 5 elements using vector's allocator:
+  p = myvector.get_allocator().allocate(5);
+
+  // construct values in-place on the array:
+  for (i=0; i<5; i++) myvector.get_allocator().construct(&p[i],i);
+
+  std::cout << "The allocated array contains:";
+  for (i=0; i<5; i++) std::cout << ' ' << p[i];
+  std::cout << '\n';
+
+  // destroy and deallocate:
+  for (i=0; i<5; i++) myvector.get_allocator().destroy(&p[i]);
+  myvector.get_allocator().deallocate(p,5);
+}
+
+void insert_test()
+{
+	 std::vector<int> myvector (3,100);
+  std::vector<int>::iterator it;
+
+  it = myvector.begin();
+  it = myvector.insert ( it , 200 );
+
+  myvector.insert (it,2,300);
+
+  // "it" no longer valid, get a new one:
+  it = myvector.begin();
+
+  std::vector<int> anothervector (2,400);
+  myvector.insert (it+2,anothervector.begin(),anothervector.end());
+
+  int myarray [] = { 501,502,503 };
+  myvector.insert (myvector.begin(), myarray, myarray+3);
+
+  std::cout << "myvector contains:";
+  for (it=myvector.begin(); it<myvector.end(); it++)
+    std::cout << ' ' << *it;
+  std::cout << '\n';
+}
+
+int main(void)
+{
+	void construct_test();
+	void assign_test();
+	void at_test()
+	void back_test()
+	void cbegin_test();
+void clear_test()
+void empty_test()
+void end_test()
+void erase_test()
+void allocator_test()
+void insert_test()
+
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
