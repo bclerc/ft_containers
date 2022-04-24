@@ -1,12 +1,13 @@
 #include "../includes/stack.hpp"
 #include "../includes/vector.hpp"
+#include "../includes/map.hpp"
+
 #include <iostream>    
 #include <algorithm>
 #include <vector>
 #include <stack>
 #include <map>
 
-#define TESTED_NAMESPACE ft
 void construct_test()
 {
 	// constructors used in the same order as described above:
@@ -519,6 +520,287 @@ TESTED_NAMESPACE::stack<int> mystack;
   std::cout << "mystack.top() is now " << mystack.top() << '\n';
 
 }
+
+void map_begin()
+{
+	TESTED_NAMESPACE::map<char,int> mymap;
+
+  mymap['b'] = 100;
+  mymap['a'] = 200;
+  mymap['c'] = 300;
+
+  // show content:
+  for (TESTED_NAMESPACE::map<char,int>::iterator it=mymap.begin(); it!=mymap.end(); ++it)
+    std::cout << it->first << " => " << it->second << '\n';
+
+}
+
+void map_clear()
+{
+	  TESTED_NAMESPACE::map<char,int> mymap;
+
+  mymap['x']=100;
+  mymap['y']=200;
+  mymap['z']=300;
+
+  std::cout << "mymap contains:\n";
+  for (TESTED_NAMESPACE::map<char,int>::iterator it=mymap.begin(); it!=mymap.end(); ++it)
+    std::cout << it->first << " => " << it->second << '\n';
+
+  mymap.clear();
+  mymap['a']=1101;
+  mymap['b']=2202;
+
+  std::cout << "mymap contains:\n";
+  for (TESTED_NAMESPACE::map<char,int>::iterator it=mymap.begin(); it!=mymap.end(); ++it)
+    std::cout << it->first << " => " << it->second << '\n';
+
+}
+
+void map_count()
+{
+	  TESTED_NAMESPACE::map<char,int> mymap;
+  char c;
+
+  mymap ['a']=101;
+  mymap ['c']=202;
+  mymap ['f']=303;
+
+  for (c='a'; c<'h'; c++)
+  {
+    std::cout << c;
+    if (mymap.count(c)>0)
+      std::cout << " is an element of mymap.\n";
+    else 
+      std::cout << " is not an element of mymap.\n";
+  }
+}
+
+void map_empty()
+{
+	TESTED_NAMESPACE::map<char,int> mymap;
+
+  mymap['a']=10;
+  mymap['b']=20;
+  mymap['c']=30;
+
+  while (!mymap.empty())
+  {
+    std::cout << mymap.begin()->first << " => " << mymap.begin()->second << '\n';
+    mymap.erase(mymap.begin());
+  }
+}
+
+void map_end()
+{
+	  TESTED_NAMESPACE::map<char,int> mymap;
+
+  mymap['b'] = 100;
+  mymap['a'] = 200;
+  mymap['c'] = 300;
+
+  // show content:
+  for (TESTED_NAMESPACE::map<char,int>::iterator it=mymap.begin(); it!=mymap.end(); ++it)
+    std::cout << it->first << " => " << it->second << '\n';
+
+}
+
+void map_equal_range()
+{
+	 TESTED_NAMESPACE::map<char,int> mymap;
+
+  mymap['a']=10;
+  mymap['b']=20;
+  mymap['c']=30;
+
+  TESTED_NAMESPACE::pair<TESTED_NAMESPACE::map<char,int>::iterator,TESTED_NAMESPACE::map<char,int>::iterator> ret;
+  ret = mymap.equal_range('b');
+
+  std::cout << "lower bound points to: ";
+  std::cout << ret.first->first << " => " << ret.first->second << '\n';
+
+  std::cout << "upper bound points to: ";
+  std::cout << ret.second->first << " => " << ret.second->second << '\n';
+
+}
+
+void map_erase()
+{
+	  TESTED_NAMESPACE::map<char,int> mymap;
+  TESTED_NAMESPACE::map<char,int>::iterator it;
+
+  // insert some values:
+  mymap['a']=10;
+  mymap['b']=20;
+  mymap['c']=30;
+  mymap['d']=40;
+  mymap['e']=50;
+  mymap['f']=60;
+
+  it=mymap.find('b');
+  mymap.erase (it);                   // erasing by iterator
+
+  mymap.erase ('c');                  // erasing by key
+
+  it=mymap.find ('e');
+  mymap.erase ( it, mymap.end() );    // erasing by range
+
+  // show content:
+  for (it=mymap.begin(); it!=mymap.end(); ++it)
+    std::cout << it->first << " => " << it->second << '\n';
+
+}
+
+void map_find()
+{
+	 TESTED_NAMESPACE::map<char,int> mymap;
+  TESTED_NAMESPACE::map<char,int>::iterator it;
+
+  mymap['a']=50;
+  mymap['b']=100;
+  mymap['c']=150;
+  mymap['d']=200;
+
+  it = mymap.find('b');
+  if (it != mymap.end())
+    mymap.erase (it);
+
+  // print content:
+  std::cout << "elements in mymap:" << '\n';
+  std::cout << "a => " << mymap.find('a')->second << '\n';
+  std::cout << "c => " << mymap.find('c')->second << '\n';
+  std::cout << "d => " << mymap.find('d')->second << '\n';
+
+}
+
+void map_allocator()
+{
+	 int psize;
+  TESTED_NAMESPACE::map<char,int> mymap;
+  TESTED_NAMESPACE::pair<const char,int>* p;
+
+  // allocate an array of 5 elements using mymap's allocator:
+  p=mymap.get_allocator().allocate(5);
+
+  // assign some values to array
+  psize = sizeof(TESTED_NAMESPACE::map<char,int>::value_type)*5;
+
+  std::cout << "The allocated array has a size of " << psize << " bytes.\n";
+
+  mymap.get_allocator().deallocate(p,5);
+
+}
+
+void map_insert()
+{
+	 TESTED_NAMESPACE::map<char,int> mymap;
+
+  // first insert function version (single parameter):
+  mymap.insert ( TESTED_NAMESPACE::pair<char,int>('a',100) );
+  mymap.insert ( TESTED_NAMESPACE::pair<char,int>('z',200) );
+
+  TESTED_NAMESPACE::pair<TESTED_NAMESPACE::map<char,int>::iterator,bool> ret;
+  ret = mymap.insert ( TESTED_NAMESPACE::pair<char,int>('z',500) );
+  if (ret.second==false) {
+    std::cout << "element 'z' already existed";
+    std::cout << " with a value of " << ret.first->second << '\n';
+  }
+
+  // second insert function version (with hint position):
+  TESTED_NAMESPACE::map<char,int>::iterator it = mymap.begin();
+  mymap.insert (it, TESTED_NAMESPACE::pair<char,int>('b',300));  // max efficiency inserting
+  mymap.insert (it, TESTED_NAMESPACE::pair<char,int>('c',400));  // no max efficiency inserting
+
+  // third insert function version (range insertion):
+  TESTED_NAMESPACE::map<char,int> anothermap;
+  anothermap.insert(mymap.begin(),mymap.find('c'));
+
+  // showing contents:
+  std::cout << "mymap contains:\n";
+  for (it=mymap.begin(); it!=mymap.end(); ++it)
+    std::cout << it->first << " => " << it->second << '\n';
+
+  std::cout << "anothermap contains:\n";
+  for (it=anothermap.begin(); it!=anothermap.end(); ++it)
+    std::cout << it->first << " => " << it->second << '\n';
+}
+
+void map_max_size()
+{  int i;
+  TESTED_NAMESPACE::map<int,int> mymap;
+
+  if (mymap.max_size()>1000)
+  {
+    for (i=0; i<1000; i++) mymap[i]=0;
+    std::cout << "The map contains 1000 elements.\n";
+  }
+  else std::cout << "The map could not hold 1000 elements.\n";
+}
+
+void map_rbegin()
+{
+	 TESTED_NAMESPACE::map<char,int> mymap;
+
+  mymap['x'] = 100;
+  mymap['y'] = 200;
+  mymap['z'] = 300;
+
+  // show content:
+  TESTED_NAMESPACE::map<char,int>::reverse_iterator rit;
+  for (rit=mymap.rbegin(); rit!=mymap.rend(); ++rit)
+    std::cout << rit->first << " => " << rit->second << '\n';
+
+}
+
+void map_rend()
+{
+	 TESTED_NAMESPACE::map<char,int> mymap;
+
+  mymap['x'] = 100;
+  mymap['y'] = 200;
+  mymap['z'] = 300;
+
+  // show content:
+  TESTED_NAMESPACE::map<char,int>::reverse_iterator rit;
+  for (rit=mymap.rbegin(); rit!=mymap.rend(); ++rit)
+    std::cout << rit->first << " => " << rit->second << '\n';
+
+}
+
+void map_size()
+{
+	 TESTED_NAMESPACE::map<char,int> mymap;
+  mymap['a']=101;
+  mymap['b']=202;
+  mymap['c']=302;
+
+  std::cout << "mymap.size() is " << mymap.size() << '\n';
+
+}
+
+void map_swap()
+{
+	 TESTED_NAMESPACE::map<char,int> foo,bar;
+
+  foo['x']=100;
+  foo['y']=200;
+
+  bar['a']=11;
+  bar['b']=22;
+  bar['c']=33;
+
+  foo.swap(bar);
+
+  std::cout << "foo contains:\n";
+  for (TESTED_NAMESPACE::map<char,int>::iterator it=foo.begin(); it!=foo.end(); ++it)
+    std::cout << it->first << " => " << it->second << '\n';
+
+  std::cout << "bar contains:\n";
+  for (TESTED_NAMESPACE::map<char,int>::iterator it=bar.begin(); it!=bar.end(); ++it)
+    std::cout << it->first << " => " << it->second << '\n';
+
+}
+
 int main(void)
 {
 	std::cout << "TEST VECTOR " << std::endl;
@@ -550,6 +832,22 @@ int main(void)
 	stack_size();
 	stack_top();
 	std::cout << "TEST MAP" << std::endl;
+	map_begin();
+	map_clear();
+	map_count();
+	map_empty();
+	map_equal_range();
+	map_end();
+	map_find();
+	map_erase();
+	map_allocator();
+	map_insert();
+	map_max_size();
+	map_rbegin();
+	map_rend();
+	map_size();
+	map_swap();
+
 	return (0);
 }
 

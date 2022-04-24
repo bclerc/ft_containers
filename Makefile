@@ -1,7 +1,3 @@
-# this Makefile make two exuctable of C++ code with includes folder at ./includes and srcs folder at ./srcs/
-# the executable name are containers_ft and containers_std.
-# containers_ft compile all obects with flag "-d TESTED_NAMESPECE=ft"
-# containers_std compile all obects with flag "-d TESTED_NAMESPECE=std"
 EXEC_NAME_FT = containers_ft
 EXEC_NAME_STD = containers_std
 

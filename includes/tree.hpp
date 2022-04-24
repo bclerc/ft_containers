@@ -85,10 +85,11 @@ namespace ft
 			typedef Value value_type;
 			typedef typename ft::iterator<ft::bidirectional_iterator_tag, value_type>::value_type iterator_type;
 			typedef typename ft::iterator<ft::bidirectional_iterator_tag, value_type>::difference_type difference_type;
+			typedef typename ft::iterator<ft::bidirectional_iterator_tag, value_type>::iterator_category iterator_category;
 			typedef typename ft::iterator<ft::bidirectional_iterator_tag, value_type>::pointer pointer;
-			typedef const pointer const_pointer;
 			typedef typename ft::iterator<ft::bidirectional_iterator_tag, value_type>::reference reference;
 			typedef const reference const_reference;
+			typedef const pointer const_pointer;
 
 		private:
 			Node *_min;
@@ -115,10 +116,15 @@ namespace ft
 				}
 			}
 
-			// bidirectional_iterator (const bidirectional_iterator & rev_it) : _base(rev_it.base())
-			//{
-			//	return ;
-			// }
+			bidirectional_iterator (const bidirectional_iterator & rev_it)
+			{
+				_min = rev_it._min;
+				_max = rev_it._max;
+				root = rev_it.root;
+				_base = rev_it._base;
+				_end = rev_it._end;
+				return ;
+		 	}
 
 			virtual ~bidirectional_iterator() {}
 
