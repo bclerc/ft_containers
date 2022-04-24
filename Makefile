@@ -1,47 +1,51 @@
+# this Makefile make two exuctable of C++ code with includes folder at ./includes and srcs folder at ./srcs/
+# the executable name are containers_ft and containers_std.
+# containers_ft compile all obects with flag "-d TESTED_NAMESPECE=ft"
+# containers_std compile all obects with flag "-d TESTED_NAMESPECE=std"
+EXEC_NAME_FT = containers_ft
+EXEC_NAME_STD = containers_std
 
-NAME = containers
 PROJECT_NAME = ft_containers
 
-SOURCES_FOLDER = ./
-INCLUDES_FOLDER = includes
+SOURCES_FOLDER = ./srcs
+INCLUDES_FOLDER = includes/
 
-OBJECTS_FOLDER = ./
+SOURCES_FILES = ./srcs/main.cpp
+OBJECTS_FILES_FT = $(patsubst $(SOURCES_FOLDER)%.cpp, $(OBJECTS_FOLDER)%_ft.o, $(SOURCES_FILES))
+OBJECTS_FILES_STD = $(patsubst $(SOURCES_FOLDER)%.cpp, $(OBJECTS_FOLDER)%_std.o, $(SOURCES_FILES))
 
-LIBS =
-PURPLE = \033[1;35m
-CYAN = \033[1;36m
-GREEN = \033[1;32m
+OBJECTS_FOLDER = ./objs/
 
-SOURCES =	srcs/main.cpp
+INCLUDES_FLAGS = -I $(INCLUDES_FOLDER)
 
-OBJECTS = $(SOURCES:.cpp=.o)
+CC = clang++
+CFLAGS = -Wall -Wextra -Werror -std=c++98
 
-FSANITIZE = -fsanitize=address 
-CFLAGS = --std=c++98 -g3  -Wall -Wextra
-.PHONY: all re clean fclean libft force doclean
+all: $(EXEC_NAME_FT) $(EXEC_NAME_STD)
 
-all: $(NAME)
+$(EXEC_NAME_FT): $(OBJECTS_FILES_FT)
+	@$(CC) $(CFLAGS) $(INCLUDES_FLAGS) $(OBJECTS_FILES_FT) -o $(EXEC_NAME_FT) -D TESTED_NAMESPACE=ft
 
-$(NAME): $(OBJECTS) $(LIBS)
-	@c++ $(CFLAGS) -o $(NAME) $(OBJECTS) -L$(INCLUDES_FOLDER)
-	@printf "$(PURPLE)$(NAME) $(CYAN)successfully compiled. $(GREEN)✓$(CYAN)\n"
-force: $(OBJECTS)
-	@printf "$(CYAN) All objectsfor $(PURPLE)$(PROJECT_NAME)$(CYAN) where successfully created.\n"
-	@c++ $(CFLAGS) -o $(NAME) $(OBJECTS) -g
-	@printf "$(PURPLE)$(NAME)$(CYAN) successfully compiled. $(CGREEN)✓$(CYAN)\n"
+$(EXEC_NAME_STD): $(OBJECTS_FILES_STD)
+	@$(CC) $(CFLAGS) $(INCLUDES_FLAGS) $(OBJECTS_FILES_STD) -o $(EXEC_NAME_STD) -D TESTED_NAMESPACE=std
 
-%.o: %.cpp
-	@c++ $(CFLAGS) -I$(INCLUDES_FOLDER) -c $< -o $@ -Iinclude
-	@printf "$(CYAN)Creating $(PURPLE)%-40s$(GREEN) ✓$(CYAN)\r" "$@"
+$(OBJECTS_FOLDER)%_ft.o: $(SOURCES_FOLDER)/%.cpp
+	@mkdir -p $(OBJECTS_FOLDER)
+	@$(CC) $(CFLAGS) $(INCLUDES_FLAGS) -c $< -o $@ -D TESTED_NAMESPACE=ft
+
+$(OBJECTS_FOLDER)%_std.o: $(SOURCES_FOLDER)/%.cpp
+	@mkdir -p $(OBJECTS_FOLDER)
+	@$(CC) $(CFLAGS) $(INCLUDES_FLAGS) -c $< -o $@ -D TESTED_NAMESPACE=std
+	@echo "Compiling $< \r"
 
 clean:
-	@rm -f $(OBJECTS)
-	@printf "$(PURPLE)$(PROJECT_NAME) $(CYAN)Removed all objects.\n"
+	@rm -rf $(OBJECTS_FOLDER)
 
 fclean: clean
-	@rm -f $(NAME)
-	@printf "$(PURPLE)$(PROJECT_NAME) $(CYAN)Removed $(PURPLE)$(NAME)$(CYAN).\n"
-
-doclean: all clean
+	@rm -f $(EXEC_NAME_FT)
+	@rm -f $(EXEC_NAME_STD)
+	@echo "clean"
 
 re: fclean all
+
+.PHONY: all clean fclean re
